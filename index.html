@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GBblitz Video Gallery & Showcase</title>
+  <meta name="description" content="Cinematic dark mode video gallery featuring glowing hover-play thumbnails, cycling photo album, and Google Drive folder integration." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ambient-glow ambient-glow-top"></div>
+  <div class="ambient-glow ambient-glow-bottom"></div>
+
+  <!-- Main Navigation Bar -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">GBblitz</h1>
+          <p class="brand-subtitle">Cinematic Gallery</p>
+        </div>
+      </div>
+
+      <nav class="header-actions">
+        <button id="open-drive-settings-btn" class="btn btn-secondary" title="Configure Google Drive Source">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+            <circle cx="12" cy="12" r="4"></circle>
+          </svg>
+          <span>Drive Settings</span>
+        </button>
+        <button id="add-video-btn" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Add Video</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Top Cycling Photo Album Section -->
+    <section class="album-section" aria-label="Featured Photo Album">
+      <div class="album-container">
+        <div class="section-header">
+          <div class="badge">Featured Showcase</div>
+          <h2 class="section-title">Cycling Photo Album</h2>
+          <p class="section-desc">Curated highlights and visual stills from our collection.</p>
+        </div>
+
+        <div class="carousel-wrapper" id="photo-carousel">
+          <div class="carousel-track-container">
+            <ul class="carousel-track" id="carousel-track">
+              <!-- Slides rendered by JavaScript -->
+            </ul>
+          </div>
+
+          <!-- Carousel Controls -->
+          <button class="carousel-nav carousel-prev" id="carousel-prev-btn" aria-label="Previous Slide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button class="carousel-nav carousel-next" id="carousel-next-btn" aria-label="Next Slide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+
+          <!-- Carousel Progress & Indicators -->
+          <div class="carousel-indicators" id="carousel-indicators"></div>
+          <div class="carousel-progress-bar">
+            <div class="carousel-progress-fill" id="carousel-progress-fill"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Video Gallery Section -->
+    <section class="gallery-section" id="video-gallery-section" aria-label="Video Gallery">
+      <div class="gallery-container">
+        <div class="gallery-header-row">
+          <div>
+            <div class="badge badge-accent">Google Drive Connected</div>
+            <h2 class="section-title">Video Gallery</h2>
+            <p class="section-desc">Hover over any thumbnail to preview. Click to open full theater player.</p>
+          </div>
+
+          <!-- Current Source Info Badge -->
+          <div class="drive-status-card" id="drive-status-card">
+            <div class="drive-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
+                <path d="M12 12v9"></path>
+                <path d="m8 17 4 4 4-4"></path>
+              </svg>
+            </div>
+            <div class="drive-status-info">
+              <span class="drive-status-label">Active Drive Folder</span>
+              <span class="drive-folder-id" id="active-folder-display">18x3yVSkUv8jiAAeRnQ8CgeOBkzgiVx6uufIjG6rVmSYbzu75VALwxyi5ra19LFmg_5F2NxFA</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter & Search Controls -->
+        <div class="gallery-filter-bar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="video-search-input" placeholder="Search videos by title or tags..." />
+          </div>
+
+          <div class="filter-pills" id="category-filters">
+            <button class="filter-pill active" data-category="all">All Videos</button>
+            <button class="filter-pill" data-category="drive">Google Drive</button>
+            <button class="filter-pill" data-category="cinematic">Cinematic</button>
+            <button class="filter-pill" data-category="nature">Nature & City</button>
+          </div>
+
+          <div class="video-counter" id="video-count-badge">Showing 0 videos</div>
+        </div>
+
+        <!-- Videos Grid -->
+        <div class="video-grid" id="video-grid">
+          <!-- Cards rendered by app.js -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="empty-state" style="display: none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+          <h3>No videos found</h3>
+          <p>Try adjusting your search terms or add new videos in the Drive settings.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Expanded Theater Video Modal -->
+  <div class="modal-backdrop" id="theater-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="theater-card">
+      <div class="theater-header">
+        <div class="theater-title-group">
+          <span class="theater-badge" id="modal-category-badge">Video Preview</span>
+          <h3 class="theater-title" id="modal-title">Video Title</h3>
+        </div>
+        <div class="theater-actions">
+          <a id="modal-drive-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-icon-only" title="Open in Google Drive">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+          <button class="btn btn-icon-only" id="modal-fullscreen-btn" title="Toggle Fullscreen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+            </svg>
+          </button>
+          <button class="btn btn-icon-only btn-close" id="modal-close-btn" title="Close player">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Player Frame Container -->
+      <div class="theater-media-container" id="theater-player-container">
+        <!-- Direct HTML5 video or Drive iframe will be injected here -->
+      </div>
+
+      <!-- Theater Footer & Navigation -->
+      <div class="theater-footer">
+        <p class="theater-description" id="modal-desc">Video description goes here.</p>
+        <div class="theater-nav-controls">
+          <button class="btn btn-secondary" id="modal-prev-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            <span>Previous</span>
+          </button>
+          <button class="btn btn-secondary" id="modal-next-btn">
+            <span>Next</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drive Configuration Modal / Drawer -->
+  <div class="modal-backdrop" id="drive-config-modal" aria-hidden="true" role="dialog">
+    <div class="config-card">
+      <div class="config-header">
+        <div>
+          <h3 class="config-title">Google Drive Settings</h3>
+          <p class="config-subtitle">Configure the Drive folder and manage video feeds.</p>
+        </div>
+        <button class="btn btn-icon-only btn-close" id="config-close-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="drive-config-form" class="config-form">
+        <div class="form-group">
+          <label for="drive-folder-input">Google Drive Folder Link or Folder ID</label>
+          <div class="input-with-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="input-icon">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <input 
+              type="text" 
+              id="drive-folder-input" 
+              placeholder="https://drive.google.com/drive/folders/..." 
+              required
+            />
+          </div>
+          <span class="field-hint">Paste full sharing URL or 33+ character folder ID.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="drive-api-key-input">Optional Google Drive API Key (for auto-syncing Drive files)</label>
+          <input 
+            type="text" 
+            id="drive-api-key-input" 
+            placeholder="AIzaSy..." 
+          />
+          <span class="field-hint">If you have a Google Cloud API Key with Drive API v3 enabled, public files will be fetched dynamically.</span>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="reset-default-drive-btn">Reset to Default Folder</button>
+          <button type="submit" class="btn btn-primary">Save & Apply</button>
+        </div>
+      </form>
+
+      <hr class="config-divider" />
+
+      <!-- Quick Add Single Video / Drive Link -->
+      <div class="quick-add-section">
+        <h4 class="quick-add-title">Quick Add Video Link</h4>
+        <form id="quick-add-video-form" class="quick-add-form">
+          <div class="form-group">
+            <label for="new-video-title">Video Title</label>
+            <input type="text" id="new-video-title" placeholder="e.g. Cinematic Sunset Reel" required />
+          </div>
+          <div class="form-group">
+            <label for="new-video-url">Video Stream or Drive File URL / ID</label>
+            <input type="text" id="new-video-url" placeholder="https://drive.google.com/file/d/.../view or MP4 URL" required />
+          </div>
+          <div class="form-group">
+            <label for="new-video-thumb">Optional Thumbnail Image URL</label>
+            <input type="text" id="new-video-thumb" placeholder="https://images.unsplash.com/..." />
+          </div>
+          <button type="submit" class="btn btn-accent">Add to Gallery</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p>© 2026 GBblitz Video Gallery. Built for dark-mode cinematic experiences.</p>
+      <div class="footer-meta">
+        <span>Google Drive Connected</span>
+        <span class="dot-separator">•</span>
+        <span id="storage-status">Active Session</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
