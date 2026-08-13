@@ -857,6 +857,47 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
+/* Center Play Button on Hover */
+.hover-play-center-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.85);
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(6, 7, 9, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(56, 189, 248, 0.6);
+  color: var(--accent-cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all var(--transition-normal);
+  z-index: 5;
+  box-shadow: 0 0 28px rgba(56, 189, 248, 0.4);
+  pointer-events: none;
+}
+
+.hover-play-center-btn svg {
+  width: 24px;
+  height: 24px;
+  margin-left: 3px;
+}
+
+.video-card:hover .hover-play-center-btn {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.card-winner:hover .hover-play-center-btn {
+  border-color: rgba(250, 204, 21, 0.8);
+  color: #facc15;
+  box-shadow: 0 0 28px rgba(250, 204, 21, 0.5);
+}
+
 /* Hover Playing Pill */
 .hover-play-indicator {
   position: absolute;

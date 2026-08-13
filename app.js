@@ -2144,6 +2144,13 @@ class VideoGalleryApp {
             <span class="duration-pill">${video.duration || 'HD'}</span>
           </div>
 
+          <!-- Center Play Action Icon on Hover -->
+          <div class="hover-play-center-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          </div>
+
           <div class="hover-play-indicator">
             <span class="pulse-dot"></span>
             <span>Playing Preview</span>
@@ -2248,13 +2255,14 @@ class VideoGalleryApp {
     this.modalCategoryBadge.textContent = video.type.toUpperCase();
     this.modalDriveLink.href = video.driveUrl;
 
-    // Clear and render player frame
+    // Clear and render player frame with explicit autoplay
     this.theaterPlayerContainer.innerHTML = '';
     
     const iframe = document.createElement('iframe');
     iframe.className = 'theater-iframe-element';
-    iframe.src = video.videoUrl;
-    iframe.allow = 'autoplay; fullscreen';
+    const autoplayUrl = video.videoUrl + (video.videoUrl.includes('?') ? '&' : '?') + 'autoplay=1';
+    iframe.src = autoplayUrl;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
     iframe.allowFullscreen = true;
     this.theaterPlayerContainer.appendChild(iframe);
 
