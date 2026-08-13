@@ -670,6 +670,27 @@ body {
   box-shadow: 0 0 14px var(--accent-cyan-glow);
 }
 
+.filter-pill-winner.active {
+  background: #facc15;
+  color: #000;
+  border-color: #facc15;
+  box-shadow: 0 0 16px rgba(250, 204, 21, 0.4);
+}
+
+.filter-pill-runner.active {
+  background: #fb923c;
+  color: #000;
+  border-color: #fb923c;
+  box-shadow: 0 0 16px rgba(251, 146, 60, 0.4);
+}
+
+.filter-pill-approved.active {
+  background: #2dd4bf;
+  color: #000;
+  border-color: #2dd4bf;
+  box-shadow: 0 0 16px rgba(45, 212, 191, 0.4);
+}
+
 .video-counter {
   font-size: 0.82rem;
   color: var(--text-muted);
@@ -773,18 +794,55 @@ body {
   z-index: 4;
 }
 
-.drive-pill {
+.type-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(8px);
-  padding: 0.2rem 0.55rem;
+  padding: 0.25rem 0.65rem;
   border-radius: var(--radius-full);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--accent-cyan);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.badge-winner {
+  background: rgba(234, 179, 8, 0.2);
+  color: #facc15;
+  border: 1px solid rgba(250, 204, 21, 0.4);
+  box-shadow: 0 0 12px rgba(234, 179, 8, 0.25);
+}
+
+.badge-runner-up {
+  background: rgba(251, 146, 60, 0.18);
+  color: #fdba74;
+  border: 1px solid rgba(251, 146, 60, 0.35);
+}
+
+.badge-approved {
+  background: rgba(45, 212, 191, 0.15);
+  color: #2dd4bf;
+  border: 1px solid rgba(45, 212, 191, 0.3);
+}
+
+.badge-general {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.video-type-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+.card-winner:hover {
+  border-color: rgba(250, 204, 21, 0.6);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.9),
+              0 0 32px -2px rgba(250, 204, 21, 0.4);
 }
 
 .duration-pill {
