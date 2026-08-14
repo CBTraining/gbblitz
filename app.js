@@ -2144,13 +2144,6 @@ class VideoGalleryApp {
             <span class="duration-pill">${video.duration || 'HD'}</span>
           </div>
 
-          <!-- Center Play Action Icon on Hover -->
-          <div class="hover-play-center-btn">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="5 3 19 12 5 21 5 3"></polygon>
-            </svg>
-          </div>
-
           <div class="hover-play-indicator">
             <span class="pulse-dot"></span>
             <span>Playing Preview</span>
