@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GBblitz Video Gallery & Showcase</title>
-  <meta name="description" content="Cinematic dark mode video gallery featuring glowing hover-play thumbnails, cycling photo album, and Google Drive folder integration." />
+  <title>GBblitz - Video Gallery & Showcase</title>
+  <meta name="description" content="Cinematic dark mode video gallery showcasing GBblitz highlighted submissions and Wave 1-5 certified videos." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
@@ -25,37 +25,20 @@
         </div>
         <div>
           <h1 class="brand-title">GBblitz</h1>
-          <p class="brand-subtitle">Cinematic Gallery</p>
+          <p class="brand-subtitle">Cinematic Showcase</p>
         </div>
       </div>
-
-      <nav class="header-actions">
-        <button id="open-drive-settings-btn" class="btn btn-secondary" title="Configure Google Drive Source">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
-            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
-            <circle cx="12" cy="12" r="4"></circle>
-          </svg>
-          <span>Drive Settings</span>
-        </button>
-        <button id="add-video-btn" class="btn btn-primary">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          <span>Add Video</span>
-        </button>
-      </nav>
     </div>
   </header>
 
   <main class="main-content">
-    <!-- Top Cycling Photo Album Section -->
-    <section class="album-section" aria-label="Featured Photo Album">
+    <!-- Top Highlighted Video Carousel Section -->
+    <section class="album-section" aria-label="Featured Highlighted Videos">
       <div class="album-container">
         <div class="section-header">
-          <div class="badge">Featured Showcase</div>
-          <h2 class="section-title">Cycling Photo Album</h2>
-          <p class="section-desc">Curated highlights and visual stills from our collection.</p>
+          <div class="badge">Featured Selection</div>
+          <h2 class="section-title">Highlighted Videos</h2>
+          <p class="section-desc">Spotlighting standout missions and top certified presentations.</p>
         </div>
 
         <div class="carousel-wrapper" id="photo-carousel">
@@ -65,13 +48,13 @@
             </ul>
           </div>
 
-          <!-- Carousel Controls -->
-          <button class="carousel-nav carousel-prev" id="carousel-prev-btn" aria-label="Previous Slide">
+          <!-- Carousel Navigation Controls -->
+          <button class="carousel-nav carousel-prev" id="carousel-prev-btn" aria-label="Previous Highlighted Video">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
           </button>
-          <button class="carousel-nav carousel-next" id="carousel-next-btn" aria-label="Next Slide">
+          <button class="carousel-nav carousel-next" id="carousel-next-btn" aria-label="Next Highlighted Video">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
@@ -86,31 +69,14 @@
       </div>
     </section>
 
-    <!-- Video Gallery Section -->
+    <!-- Video Gallery Section with Wave Filtering -->
     <section class="gallery-section" id="video-gallery-section" aria-label="Video Gallery">
       <div class="gallery-container">
         <div class="gallery-header-row">
           <div>
-            <div class="badge badge-accent">Google Sheets Connected</div>
+            <div class="badge">Community Collection</div>
             <h2 class="section-title">Video Gallery</h2>
-            <p class="section-desc">Hover over any thumbnail to preview. Click to open full theater player.</p>
-          </div>
-
-          <!-- Current Source Info Badge -->
-          <div class="drive-status-card" id="drive-status-card">
-            <div class="drive-icon-wrap">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
-              </svg>
-            </div>
-            <div class="drive-status-info">
-              <span class="drive-status-label">Active Sheet Source</span>
-              <span class="drive-folder-id" id="sync-status">Live Connected (138 Usable Videos)</span>
-            </div>
+            <p class="section-desc">Hover over any thumbnail to preview. Click to open full auto-playing theater player.</p>
           </div>
         </div>
 
@@ -125,15 +91,15 @@
           </div>
 
           <div class="filter-pills" id="wave-filters">
-            <button class="filter-pill active" data-wave="all">All Videos (138)</button>
-            <button class="filter-pill" data-wave="Wave 1">Wave 1 (8)</button>
-            <button class="filter-pill" data-wave="Wave 2">Wave 2 (28)</button>
-            <button class="filter-pill" data-wave="Wave 3">Wave 3 (30)</button>
-            <button class="filter-pill" data-wave="Wave 4">Wave 4 (30)</button>
-            <button class="filter-pill" data-wave="Wave 5">Wave 5 (42)</button>
+            <button class="filter-pill active" data-wave="all">All Videos</button>
+            <button class="filter-pill" data-wave="Wave 1">Wave 1</button>
+            <button class="filter-pill" data-wave="Wave 2">Wave 2</button>
+            <button class="filter-pill" data-wave="Wave 3">Wave 3</button>
+            <button class="filter-pill" data-wave="Wave 4">Wave 4</button>
+            <button class="filter-pill" data-wave="Wave 5">Wave 5</button>
           </div>
 
-          <div class="video-counter" id="video-count-badge">Showing 138 videos</div>
+          <div class="video-counter" id="video-count-badge">Loading videos...</div>
         </div>
 
         <!-- Videos Grid -->
@@ -148,7 +114,7 @@
             <line x1="8" y1="12" x2="16" y2="12"></line>
           </svg>
           <h3>No videos found</h3>
-          <p>Try adjusting your search terms or add new videos in the Drive settings.</p>
+          <p>Try adjusting your search terms or selecting another wave.</p>
         </div>
       </div>
     </section>
@@ -192,12 +158,12 @@
 
       <!-- Player Frame Container -->
       <div class="theater-media-container" id="theater-player-container">
-        <!-- Direct HTML5 video or Drive iframe will be injected here -->
+        <!-- Google Drive auto-playing iframe injected here -->
       </div>
 
       <!-- Theater Footer & Navigation -->
       <div class="theater-footer">
-        <p class="theater-description" id="modal-desc">Video description goes here.</p>
+        <p class="theater-description" id="modal-desc">Video details</p>
         <div class="theater-nav-controls">
           <button class="btn btn-secondary" id="modal-prev-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
@@ -216,87 +182,9 @@
     </div>
   </div>
 
-  <!-- Drive Configuration Modal / Drawer -->
-  <div class="modal-backdrop" id="drive-config-modal" aria-hidden="true" role="dialog">
-    <div class="config-card">
-      <div class="config-header">
-        <div>
-          <h3 class="config-title">Google Drive Settings</h3>
-          <p class="config-subtitle">Configure the Drive folder and manage video feeds.</p>
-        </div>
-        <button class="btn btn-icon-only btn-close" id="config-close-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-
-      <form id="drive-config-form" class="config-form">
-        <div class="form-group">
-          <label for="drive-folder-input">Google Drive Folder Link or Folder ID</label>
-          <div class="input-with-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="input-icon">
-              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-            </svg>
-            <input 
-              type="text" 
-              id="drive-folder-input" 
-              placeholder="https://drive.google.com/drive/folders/..." 
-              required
-            />
-          </div>
-          <span class="field-hint">Paste full sharing URL or 33+ character folder ID.</span>
-        </div>
-
-        <div class="form-group">
-          <label for="drive-api-key-input">Optional Google Drive API Key (for auto-syncing Drive files)</label>
-          <input 
-            type="text" 
-            id="drive-api-key-input" 
-            placeholder="AIzaSy..." 
-          />
-          <span class="field-hint">If you have a Google Cloud API Key with Drive API v3 enabled, public files will be fetched dynamically.</span>
-        </div>
-
-        <div class="form-actions">
-          <button type="button" class="btn btn-secondary" id="reset-default-drive-btn">Reset to Default Folder</button>
-          <button type="submit" class="btn btn-primary">Save & Apply</button>
-        </div>
-      </form>
-
-      <hr class="config-divider" />
-
-      <!-- Quick Add Single Video / Drive Link -->
-      <div class="quick-add-section">
-        <h4 class="quick-add-title">Quick Add Video Link</h4>
-        <form id="quick-add-video-form" class="quick-add-form">
-          <div class="form-group">
-            <label for="new-video-title">Video Title</label>
-            <input type="text" id="new-video-title" placeholder="e.g. Cinematic Sunset Reel" required />
-          </div>
-          <div class="form-group">
-            <label for="new-video-url">Video Stream or Drive File URL / ID</label>
-            <input type="text" id="new-video-url" placeholder="https://drive.google.com/file/d/.../view or MP4 URL" required />
-          </div>
-          <div class="form-group">
-            <label for="new-video-thumb">Optional Thumbnail Image URL</label>
-            <input type="text" id="new-video-thumb" placeholder="https://images.unsplash.com/..." />
-          </div>
-          <button type="submit" class="btn btn-accent">Add to Gallery</button>
-        </form>
-      </div>
-    </div>
-  </div>
-
   <footer class="site-footer">
     <div class="footer-container">
-      <p>© 2026 GBblitz Video Gallery. Built for dark-mode cinematic experiences.</p>
-      <div class="footer-meta">
-        <span>Google Drive Connected</span>
-        <span class="dot-separator">•</span>
-        <span id="storage-status">Active Session</span>
-      </div>
+      <p>© 2026 GBblitz. Cinematic Video Showcase.</p>
     </div>
   </footer>
 

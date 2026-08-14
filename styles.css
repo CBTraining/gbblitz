@@ -413,18 +413,37 @@ body {
   max-width: 700px;
 }
 
+.carousel-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
 .carousel-slide-tag {
   display: inline-block;
-  background: rgba(56, 189, 248, 0.15);
+  background: rgba(56, 189, 248, 0.2);
   color: var(--accent-cyan);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  border: 1px solid rgba(56, 189, 248, 0.4);
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0.25rem 0.7rem;
   border-radius: var(--radius-full);
-  margin-bottom: 0.6rem;
+  backdrop-filter: blur(8px);
+}
+
+.carousel-wave-badge {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-full);
   backdrop-filter: blur(8px);
 }
 
@@ -439,6 +458,24 @@ body {
 .carousel-slide-desc {
   font-size: 0.92rem;
   color: var(--text-secondary);
+}
+
+.carousel-play-btn {
+  margin-top: 1.25rem;
+  padding: 0.75rem 1.6rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: #f8fafc;
+  color: #060709;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.carousel-play-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 28px rgba(255, 255, 255, 0.4);
 }
 
 .carousel-nav {
@@ -823,6 +860,13 @@ body {
   -webkit-backdrop-filter: blur(8px);
 }
 
+.badge-highlight {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+}
+
 .badge-winner {
   background: rgba(234, 179, 8, 0.2);
   color: #facc15;
@@ -863,6 +907,12 @@ body {
   font-weight: 700;
   padding: 0.15rem 0.55rem;
   border-radius: var(--radius-full);
+}
+
+.card-highlight:hover {
+  border-color: rgba(56, 189, 248, 0.75);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.9),
+              0 0 32px -2px rgba(56, 189, 248, 0.5);
 }
 
 .card-winner:hover {
