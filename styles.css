@@ -892,6 +892,14 @@ body {
   transform: translate(-50%, -50%) scale(1);
 }
 
+/* Hide center play icon when preview is active so video is not obstructed */
+.video-card.is-playing .hover-play-center-btn {
+  opacity: 0 !important;
+  transform: translate(-50%, -50%) scale(0.5) !important;
+  pointer-events: none !important;
+  visibility: hidden;
+}
+
 .card-winner:hover .hover-play-center-btn {
   border-color: rgba(250, 204, 21, 0.8);
   color: #facc15;
