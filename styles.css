@@ -1,6 +1,33 @@
 /* ==========================================================================
+   Google Sans Typography (Regular 400 & Medium 500)
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Google Sans';
+  src: url('Fonts/GoogleSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Google Sans';
+  src: url('Fonts/GoogleSans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Google Sans';
+  src: url('Fonts/GoogleSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==========================================================================
    GBblitz - Googlebook / Gemini Cinematic Dark Mode Theme
-   Inspired by Googlebook Design System & Gemini Ambient Glow
    ========================================================================== */
 
 :root {
@@ -47,8 +74,14 @@
   --transition-smooth: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Typography */
-  --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Google Sans', sans-serif;
+  --font-main: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'Space Grotesk', monospace;
+}
+
+/* Headings default to Medium */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-main);
+  font-weight: 500;
 }
 
 /* Reset & Base */
@@ -177,8 +210,8 @@ body {
 
 .section-title {
   font-size: 1.85rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   color: #ffffff;
   margin-top: 0.4rem;
 }
@@ -186,6 +219,7 @@ body {
 .section-desc {
   color: var(--text-secondary);
   font-size: 0.95rem;
+  font-weight: 400;
   margin-top: 0.25rem;
 }
 
@@ -197,7 +231,7 @@ body {
   color: var(--accent-blue);
   border: 1px solid rgba(49, 134, 255, 0.3);
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 0.25rem 0.75rem;
@@ -303,7 +337,7 @@ body {
   color: var(--accent-blue);
   border: 1px solid rgba(49, 134, 255, 0.4);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 0.3rem 0.8rem;
@@ -316,7 +350,7 @@ body {
   color: #ffffff;
   border: 1px solid var(--border-subtle);
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: 0.05em;
   padding: 0.3rem 0.8rem;
   border-radius: var(--radius-pill);
@@ -325,15 +359,16 @@ body {
 
 .carousel-slide-title {
   font-size: 2.1rem;
-  font-weight: 800;
+  font-weight: 500;
   color: #ffffff;
   line-height: 1.22;
   margin-bottom: 0.5rem;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
 }
 
 .carousel-slide-desc {
   font-size: 0.95rem;
+  font-weight: 400;
   color: var(--text-secondary);
 }
 
@@ -341,7 +376,7 @@ body {
   margin-top: 1.5rem;
   padding: 0.8rem 1.8rem;
   font-size: 0.95rem;
-  font-weight: 700;
+  font-weight: 500;
   background: #ffffff;
   color: #000000;
   border: none;
@@ -814,7 +849,7 @@ body {
 
 .video-title {
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: 500;
   color: #ffffff;
   line-height: 1.38;
   display: -webkit-box;
@@ -834,7 +869,7 @@ body {
 
 .video-wave-tag {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--accent-blue);
   background: var(--bg-surface-inner);
   border: 1px solid rgba(49, 134, 255, 0.25);
@@ -844,7 +879,7 @@ body {
 
 .video-designation-badge {
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 400;
   padding: 0.2rem 0.6rem;
   border-radius: var(--radius-pill);
 }
@@ -854,7 +889,7 @@ body {
   align-items: center;
   gap: 0.3rem;
   color: var(--text-secondary);
-  font-weight: 600;
+  font-weight: 400;
   margin-left: auto;
   transition: color var(--transition-fast), transform var(--transition-fast);
 }
@@ -978,7 +1013,7 @@ body {
 .theater-badge {
   display: inline-block;
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent-blue);
@@ -986,7 +1021,7 @@ body {
 
 .theater-title {
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 500;
   color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
