@@ -701,10 +701,9 @@ body {
   position: absolute;
   top: 0.65rem;
   left: 0.65rem;
-  right: 0.65rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 0.35rem;
   pointer-events: none;
   z-index: 4;
 }
@@ -776,47 +775,6 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* Hover Playing Pill */
-.hover-play-indicator {
-  position: absolute;
-  bottom: 0.85rem;
-  left: 0.85rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: rgba(49, 134, 255, 0.92);
-  color: #ffffff;
-  padding: 0.25rem 0.7rem;
-  border-radius: var(--radius-pill);
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  opacity: 0;
-  transform: translateY(4px);
-  transition: all var(--transition-fast);
-  z-index: 4;
-}
-
-.video-card.is-playing .hover-play-indicator {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.pulse-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #ffffff;
-  animation: pulseAnimation 1.2s infinite;
-}
-
-@keyframes pulseAnimation {
-  0% { transform: scale(0.9); opacity: 0.6; }
-  50% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(0.9); opacity: 0.6; }
-}
-
 /* Hover Scrub Bar with Googlebook Gradient */
 .hover-scrub-bar {
   position: absolute;
@@ -875,8 +833,10 @@ body {
   color: var(--accent-blue);
   background: var(--bg-surface-inner);
   border: 1px solid rgba(49, 134, 255, 0.25);
-  padding: 0.16rem 0.5rem;
+  padding: 0.18rem 0.55rem;
   border-radius: var(--radius-pill);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .video-designation-badge {
@@ -884,6 +844,7 @@ body {
   font-weight: 400;
   padding: 0.16rem 0.5rem;
   border-radius: var(--radius-pill);
+  white-space: nowrap;
 }
 
 .video-click-prompt {
@@ -894,6 +855,8 @@ body {
   font-weight: 400;
   font-size: 0.72rem;
   margin-left: auto;
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: color var(--transition-fast), transform var(--transition-fast);
 }
 

@@ -2459,15 +2459,9 @@ class VideoGalleryApp {
           <div class="preview-iframe-slot"></div>
 
           <div class="thumb-badges">
-            <span class="wave-pill">${video.wave.toUpperCase()}</span>
             <span class="type-pill ${badgeClass}">
               ${isHighlight ? '✨ ' : (isWinner ? '🏆 ' : (isRunner ? '🥈 ' : ''))}${video.designation.toUpperCase()}
             </span>
-          </div>
-
-          <div class="hover-play-indicator">
-            <span class="pulse-dot"></span>
-            <span>Playing Preview</span>
           </div>
 
           <div class="hover-scrub-bar">
@@ -2479,7 +2473,6 @@ class VideoGalleryApp {
           <h3 class="video-title">${video.title}</h3>
           <div class="video-meta-row">
             <span class="video-wave-tag">${video.wave}</span>
-            <span class="video-designation-badge ${badgeClass}">${video.designation}</span>
             <span class="video-click-prompt">
               <span>Watch</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
