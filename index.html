@@ -19,13 +19,22 @@
     <div class="header-container">
       <div class="brand">
         <div class="brand-logo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          <!-- Multi-color Sparkle Icon inspired by Google Gemini -->
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C12 7.52285 7.52285 12 2 12C7.52285 12 12 16.4771 12 22C12 16.4771 16.4771 12 22 12C16.4771 12 12 7.52285 12 2Z" fill="url(#sparkle-grad)" />
+            <defs>
+              <linearGradient id="sparkle-grad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#3186ff" />
+                <stop offset="35%" stop-color="#0ebc5f" />
+                <stop offset="70%" stop-color="#ffcc00" />
+                <stop offset="100%" stop-color="#ff4641" />
+              </linearGradient>
+            </defs>
           </svg>
         </div>
-        <div>
+        <div class="brand-text-wrap">
           <h1 class="brand-title">GBblitz</h1>
-          <p class="brand-subtitle">Cinematic Showcase</p>
+          <div class="brand-accent-bar"></div>
         </div>
       </div>
     </div>
