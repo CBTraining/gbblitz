@@ -1,6 +1,6 @@
-# GBblitz - Dark Mode Video Gallery & Cycling Photo Showcase
+# Googlebook Launch Blitz Video Gallery
 
-A responsive dark mode video gallery web application featuring glowing hover-play video thumbnails, an auto-cycling top photo album carousel, an expanded theater player modal, and Google Drive folder integration.
+A responsive cinematic dark mode video gallery web application showcasing community mission submissions, glowing hover-play video thumbnails, an auto-cycling top highlighted video carousel, an expanded auto-playing theater player modal, and live Google Sheets database integration.
 
 ![GBblitz Dark Mode Gallery](https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1200&q=80)
 
