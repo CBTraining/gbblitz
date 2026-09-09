@@ -2464,6 +2464,11 @@ class VideoGalleryApp {
             </span>
           </div>
 
+          <div class="hover-play-indicator">
+            <span class="pulse-dot"></span>
+            <span>Previewing</span>
+          </div>
+
           <div class="hover-scrub-bar">
             <div class="hover-scrub-progress"></div>
           </div>
@@ -2515,7 +2520,7 @@ class VideoGalleryApp {
         const iframe = document.createElement('iframe');
         iframe.className = 'video-preview-iframe';
         iframe.src = video.videoUrl + '?autoplay=1&mute=1';
-        iframe.allow = 'autoplay; encrypted-media';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
         iframe.loading = 'eager';
         slot.appendChild(iframe);
       }
