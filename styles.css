@@ -131,56 +131,29 @@ body {
 }
 
 .brand {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 1rem;
   text-decoration: none;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
 }
 
-.brand-logo {
-  width: 44px;
-  height: 44px;
-  background: var(--bg-surface);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-inner);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 20px rgba(49, 134, 255, 0.2);
-  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+.brand:hover {
+  transform: scale(1.02);
+  opacity: 0.95;
 }
 
-.brand-logo svg {
-  width: 24px;
-  height: 24px;
+.brand-logo-img {
+  height: 52px;
+  width: auto;
+  max-width: 260px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 0 16px rgba(49, 134, 255, 0.25));
+  transition: filter var(--transition-normal);
 }
 
-.brand:hover .brand-logo {
-  transform: scale(1.05);
-  box-shadow: 0 0 26px rgba(49, 134, 255, 0.4);
-}
-
-.brand-text-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.brand-title {
-  font-size: 1.45rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #ffffff;
-  line-height: 1.1;
-}
-
-/* Googlebook Horizontal Gradient Accent Bar */
-.brand-accent-bar {
-  width: 100%;
-  height: 3.5px;
-  border-radius: var(--radius-pill);
-  background: var(--googlebook-gradient);
-  box-shadow: 0 0 10px rgba(49, 134, 255, 0.4);
+.brand:hover .brand-logo-img {
+  filter: drop-shadow(0 0 24px rgba(49, 134, 255, 0.45));
 }
 
 /* ==========================================================================
@@ -1167,6 +1140,10 @@ body {
 @media (max-width: 600px) {
   .header-container {
     padding: 1rem 1.25rem;
+  }
+  .brand-logo-img {
+    height: 40px;
+    max-width: 180px;
   }
   .main-content {
     padding: 1.5rem 1.25rem 4rem;
