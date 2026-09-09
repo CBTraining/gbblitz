@@ -200,7 +200,7 @@ body {
   width: 80%;
   max-width: 1600px;
   margin: 0 auto;
-  padding: 2.5rem 0 5rem;
+  padding: 2.5rem 0 6.5rem;
   display: flex;
   flex-direction: column;
   gap: 3.5rem;
@@ -1131,29 +1131,6 @@ body {
 }
 
 /* ==========================================================================
-   Footer
-   ========================================================================== */
-
-.site-footer {
-  border-top: 1px solid var(--border-subtle);
-  padding: 2.5rem 0;
-  margin-top: 4rem;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.7);
-}
-
-.footer-container {
-  width: 80%;
-  max-width: 1600px;
-  margin: 0 auto;
-}
-
-.site-footer p {
-  color: var(--text-muted);
-  font-size: 0.88rem;
-}
-
-/* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
 
@@ -1165,8 +1142,7 @@ body {
 
 @media (max-width: 1100px) {
   .header-container,
-  .main-content,
-  .footer-container {
+  .main-content {
     width: 90%;
   }
   .video-grid {
@@ -1188,8 +1164,7 @@ body {
 
 @media (max-width: 768px) {
   .header-container,
-  .main-content,
-  .footer-container {
+  .main-content {
     width: 92%;
   }
   .video-grid {
