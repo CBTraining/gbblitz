@@ -2443,6 +2443,7 @@ class VideoGalleryApp {
       card.className = 'video-card ' + (isHighlight ? 'card-highlight' : (isWinner ? 'card-winner' : (isRunner ? 'card-runner' : '')));
       card.setAttribute('role', 'button');
       card.setAttribute('tabindex', '0');
+      card.setAttribute('data-id', video.id);
       card.setAttribute('aria-label', 'Play ' + video.title);
 
       card.innerHTML = `
@@ -2464,11 +2465,6 @@ class VideoGalleryApp {
             </span>
           </div>
 
-          <div class="hover-play-indicator">
-            <span class="pulse-dot"></span>
-            <span>Previewing</span>
-          </div>
-
           <div class="hover-scrub-bar">
             <div class="hover-scrub-progress"></div>
           </div>
@@ -2487,6 +2483,30 @@ class VideoGalleryApp {
           </div>
         </div>
       `;
+
+      // Detect content aspect ratio from thumbnail
+      const thumbImg = card.querySelector('.video-thumb-img');
+      const detectAspect = () => {
+        if (thumbImg.naturalWidth && thumbImg.naturalHeight) {
+          const ratio = thumbImg.naturalWidth / thumbImg.naturalHeight;
+          const isPortrait = ratio < 0.85;
+          if (isPortrait) {
+            card.classList.add('is-portrait');
+            video.isPortrait = true;
+            const clamped = Math.max(ratio, 9 / 16);
+            card.style.setProperty('--content-aspect', clamped.toFixed(4));
+          } else {
+            card.classList.add('is-landscape');
+            video.isPortrait = false;
+            card.style.setProperty('--content-aspect', ratio.toFixed(4));
+          }
+        }
+      };
+      if (thumbImg.complete && thumbImg.naturalWidth) {
+        detectAspect();
+      } else {
+        thumbImg.addEventListener('load', detectAspect);
+      }
 
       // Setup Hover-to-Play
       this.attachHoverPreviewListeners(card, video);
@@ -2571,6 +2591,14 @@ class VideoGalleryApp {
     // Clear and render player frame with explicit autoplay
     this.theaterPlayerContainer.innerHTML = '';
     
+    // Check if current video is portrait
+    const activeCard = this.videoGrid ? this.videoGrid.querySelector(`[data-id="${video.id}"]`) : null;
+    const isPort = video.isPortrait || (activeCard && activeCard.classList.contains('is-portrait'));
+    const theaterCard = this.theaterModal.querySelector('.theater-card');
+    if (theaterCard) {
+      theaterCard.classList.toggle('is-portrait', !!isPort);
+    }
+
     const iframe = document.createElement('iframe');
     iframe.className = 'theater-iframe-element';
     const autoplayUrl = video.videoUrl + (video.videoUrl.includes('?') ? '&' : '?') + 'autoplay=1';
