@@ -573,11 +573,7 @@ class VideoGalleryApp {
       this.attachHoverPreviewListeners(card, video);
 
       // Setup Click to Open Theater Modal
-      card.addEventListener('click', (e) => {
-        // If clicking inside the active preview iframe, allow direct player interaction
-        if (e.target.closest('.preview-iframe-slot')) {
-          return;
-        }
+      card.addEventListener('click', () => {
         this.openTheaterModal(video.id);
       });
 
@@ -603,9 +599,20 @@ class VideoGalleryApp {
       if (slot && !slot.hasChildNodes()) {
         const iframe = document.createElement('iframe');
         iframe.className = 'video-preview-iframe';
-        iframe.src = video.videoUrl;
+        const sep = video.videoUrl.includes('?') ? '&' : '?';
+        iframe.src = video.videoUrl + sep + 'autoplay=1&mute=1';
         iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
         iframe.loading = 'eager';
+
+        const revealPreview = () => {
+          if (card.classList.contains('is-playing')) {
+            slot.classList.add('is-loaded');
+          }
+        };
+
+        iframe.addEventListener('load', revealPreview);
+        setTimeout(revealPreview, 700);
+
         slot.appendChild(iframe);
       }
 
@@ -618,6 +625,7 @@ class VideoGalleryApp {
     const stopHoverPreview = () => {
       card.classList.remove('is-playing');
       if (slot) {
+        slot.classList.remove('is-loaded');
         slot.innerHTML = '';
       }
       if (scrubBar) {
@@ -627,7 +635,7 @@ class VideoGalleryApp {
     };
 
     card.addEventListener('mouseenter', () => {
-      hoverTimer = setTimeout(startHoverPreview, 150);
+      hoverTimer = setTimeout(startHoverPreview, 220);
     });
 
     card.addEventListener('mouseleave', () => {
@@ -684,7 +692,8 @@ class VideoGalleryApp {
 
     const iframe = document.createElement('iframe');
     iframe.className = 'theater-iframe-element';
-    iframe.src = video.videoUrl;
+    const sep = video.videoUrl.includes('?') ? '&' : '?';
+    iframe.src = video.videoUrl + sep + 'autoplay=1';
     iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
     iframe.allowFullscreen = true;
     this.theaterPlayerContainer.appendChild(iframe);
