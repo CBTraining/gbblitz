@@ -492,7 +492,14 @@ class VideoGalleryApp {
       const badgeClass = this.getBadgeClass(video.designation);
       const isHighlight = video.designation.toLowerCase().includes('highlight');
       const isWinner = video.designation.toLowerCase().includes('winner');
-      const isRunner = video.designation.toLowerCase().includes('runner');
+      const isApproved = video.designation.toLowerCase().includes('approved');
+      const showThumbBadge = (isHighlight || isWinner || isRunner) && !isApproved;
+      const thumbBadgeHtml = showThumbBadge ? `
+          <div class="thumb-badges">
+            <span class="type-pill ${badgeClass}">
+              ${isHighlight ? '✨ ' : (isWinner ? '🏆 ' : (isRunner ? '🥈 ' : ''))}${video.designation.toUpperCase()}
+            </span>
+          </div>` : '';
 
       const card = document.createElement('div');
       card.className = 'video-card ' + (isHighlight ? 'card-highlight' : (isWinner ? 'card-winner' : (isRunner ? 'card-runner' : '')));
@@ -514,11 +521,7 @@ class VideoGalleryApp {
           <!-- Preview Frame Container for Hover-to-Play -->
           <div class="preview-iframe-slot"></div>
 
-          <div class="thumb-badges">
-            <span class="type-pill ${badgeClass}">
-              ${isHighlight ? '✨ ' : (isWinner ? '🏆 ' : (isRunner ? '🥈 ' : ''))}${video.designation.toUpperCase()}
-            </span>
-          </div>
+          ${thumbBadgeHtml}
 
           <div class="hover-scrub-bar">
             <div class="hover-scrub-progress"></div>
@@ -655,9 +658,10 @@ class VideoGalleryApp {
 
     this.currentModalIndex = index !== -1 ? index : 0;
 
-    this.modalTitle.textContent = video.title;
-    this.modalDesc.textContent = video.wave + ' • ' + video.designation + ' • Google Drive Full Playback';
-    this.modalCategoryBadge.textContent = (video.wave + ' • ' + video.designation).toUpperCase();
+    const isApprovedDesig = (video.designation || '').toLowerCase().includes('approved');
+    const displayDesig = isApprovedDesig ? 'Featured Video' : video.designation;
+    this.modalDesc.textContent = video.wave + (displayDesig ? ' • ' + displayDesig : '') + ' • Google Drive Full Playback';
+    this.modalCategoryBadge.textContent = (video.wave + (isApprovedDesig ? '' : ' • ' + video.designation)).toUpperCase();
     if (this.modalDriveLink) this.modalDriveLink.href = video.driveUrl;
 
     const footerDriveBtn = document.getElementById('modal-footer-drive-btn');
