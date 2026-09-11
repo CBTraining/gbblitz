@@ -489,11 +489,12 @@ class VideoGalleryApp {
     }
 
     filtered.forEach((video) => {
+      const desig = (video.designation || '').toLowerCase();
       const badgeClass = this.getBadgeClass(video.designation);
-      const isHighlight = video.designation.toLowerCase().includes('highlight');
-      const isWinner = video.designation.toLowerCase().includes('winner');
-      const isApproved = video.designation.toLowerCase().includes('approved');
-      const showThumbBadge = (isHighlight || isWinner || isRunner) && !isApproved;
+      const isHighlight = desig.includes('highlight');
+      const isWinner = desig.includes('winner');
+      const isRunner = desig.includes('runner');
+      const showThumbBadge = isHighlight || isWinner || isRunner;
       const thumbBadgeHtml = showThumbBadge ? `
           <div class="thumb-badges">
             <span class="type-pill ${badgeClass}">
