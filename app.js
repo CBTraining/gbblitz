@@ -511,8 +511,13 @@ class VideoGalleryApp {
             onerror="if (!this.dataset.retried) { this.dataset.retried = '1'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w800'; } else { this.onerror=null; this.src='https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80'; }"
           />
 
-          <!-- Preview Frame Placeholder Container for Hover-to-Play -->
-          <div class="preview-iframe-slot"></div>
+          <!-- Hover Play Center Indicator -->
+          <div class="hover-play-trigger">
+            <svg viewBox="0 0 24 24">
+              <polygon points="6 3 20 12 6 21 6 3"></polygon>
+            </svg>
+            <span>Play</span>
+          </div>
 
           <div class="thumb-badges">
             <span class="type-pill ${badgeClass}">
@@ -589,58 +594,26 @@ class VideoGalleryApp {
   }
 
   attachHoverPreviewListeners(card, video) {
-    const slot = card.querySelector('.preview-iframe-slot');
     const scrubBar = card.querySelector('.hover-scrub-progress');
     let hoverTimer = null;
 
-    const startHoverPreview = () => {
-      card.classList.add('is-playing');
-      
-      if (slot && !slot.hasChildNodes()) {
-        const iframe = document.createElement('iframe');
-        iframe.className = 'video-preview-iframe';
-        const sep = video.videoUrl.includes('?') ? '&' : '?';
-        iframe.src = video.videoUrl + sep + 'autoplay=1&mute=1';
-        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
-        iframe.loading = 'eager';
-
-        const revealPreview = () => {
-          if (card.classList.contains('is-playing')) {
-            slot.classList.add('is-loaded');
-          }
-        };
-
-        iframe.addEventListener('load', revealPreview);
-        setTimeout(revealPreview, 700);
-
-        slot.appendChild(iframe);
-      }
-
-      if (scrubBar) {
-        scrubBar.style.transition = 'width 10s linear';
-        scrubBar.style.width = '100%';
-      }
-    };
-
-    const stopHoverPreview = () => {
-      card.classList.remove('is-playing');
-      if (slot) {
-        slot.classList.remove('is-loaded');
-        slot.innerHTML = '';
-      }
-      if (scrubBar) {
-        scrubBar.style.transition = 'none';
-        scrubBar.style.width = '0%';
-      }
-    };
-
     card.addEventListener('mouseenter', () => {
-      hoverTimer = setTimeout(startHoverPreview, 220);
+      hoverTimer = setTimeout(() => {
+        card.classList.add('is-playing');
+        if (scrubBar) {
+          scrubBar.style.transition = 'width 6s linear';
+          scrubBar.style.width = '100%';
+        }
+      }, 100);
     });
 
     card.addEventListener('mouseleave', () => {
       clearTimeout(hoverTimer);
-      stopHoverPreview();
+      card.classList.remove('is-playing');
+      if (scrubBar) {
+        scrubBar.style.transition = 'none';
+        scrubBar.style.width = '0%';
+      }
     });
   }
 
@@ -690,6 +663,14 @@ class VideoGalleryApp {
       theaterCard.classList.toggle('is-portrait', !!isPort);
     }
 
+    // Set poster as seamless backdrop while Google Drive player initializes
+    if (video.thumbnail) {
+      this.theaterPlayerContainer.style.backgroundImage = `url('${video.thumbnail}')`;
+      this.theaterPlayerContainer.style.backgroundSize = isPort ? 'contain' : 'cover';
+      this.theaterPlayerContainer.style.backgroundPosition = 'center center';
+      this.theaterPlayerContainer.style.backgroundRepeat = 'no-repeat';
+    }
+
     const iframe = document.createElement('iframe');
     iframe.className = 'theater-iframe-element';
     const sep = video.videoUrl.includes('?') ? '&' : '?';
@@ -707,6 +688,7 @@ class VideoGalleryApp {
     this.theaterModal.classList.remove('active');
     this.theaterModal.setAttribute('aria-hidden', 'true');
     this.theaterPlayerContainer.innerHTML = '';
+    this.theaterPlayerContainer.style.backgroundImage = '';
     document.body.style.overflow = '';
   }
 
