@@ -15,9 +15,115 @@ const GOOGLE_SHEET_ID = '1-tUxNTmDerBRmzS7xbG6fiHMn1Ix5e2G4cI_dGFY3RA';
 const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/' + GOOGLE_SHEET_ID + '/export?format=csv';
 
 // Preloaded Usable Videos:
-// Initialized empty because all rows currently undesignated in Column C count as unuseable.
-// Videos populate dynamically as soon as an approved designation is entered in the Google Sheet.
-const PRELOADED_VIDEOS = [];
+// Pre-populated with currently usable videos so the gallery renders instantly,
+// even offline, via file:///, or before the live Google Sheet sync completes.
+const PRELOADED_VIDEOS = [
+  {
+    id: 'drive-1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF',
+    driveFileId: '1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF',
+    title: 'Gemini Magic: From Smart Home Hacks to Creative Canvas Art',
+    designation: 'Approved',
+    type: 'Approved',
+    wave: 'Wave 1',
+    category: 'Wave 1',
+    duration: 'HD',
+    thumbnail: 'https://lh3.googleusercontent.com/d/1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF=s800',
+    videoUrl: 'https://drive.google.com/file/d/1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF/preview',
+    streamUrl: 'https://drive.google.com/uc?export=download&id=1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF',
+    driveUrl: 'https://drive.google.com/file/d/1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF/view',
+    description: 'Wave 1'
+  },
+  {
+    id: 'drive-1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8',
+    driveFileId: '1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8',
+    title: 'Unlocking Creative Brilliance with Gemini: From Smart Living to Masterpieces',
+    designation: 'Approved',
+    type: 'Approved',
+    wave: 'Wave 1',
+    category: 'Wave 1',
+    duration: 'HD',
+    thumbnail: 'https://lh3.googleusercontent.com/d/1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8=s800',
+    videoUrl: 'https://drive.google.com/file/d/1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8/preview',
+    streamUrl: 'https://drive.google.com/uc?export=download&id=1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8',
+    driveUrl: 'https://drive.google.com/file/d/1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8/view',
+    description: 'Wave 1'
+  },
+  {
+    id: 'drive-1un9shx6qb1r5hejoMlrJdF-fjmsEvFem',
+    driveFileId: '1un9shx6qb1r5hejoMlrJdF-fjmsEvFem',
+    title: 'Unlocking Creativity: Exploring Google Gemini in Action',
+    designation: 'Approved',
+    type: 'Approved',
+    wave: 'Wave 1',
+    category: 'Wave 1',
+    duration: 'HD',
+    thumbnail: 'https://lh3.googleusercontent.com/d/1un9shx6qb1r5hejoMlrJdF-fjmsEvFem=s800',
+    videoUrl: 'https://drive.google.com/file/d/1un9shx6qb1r5hejoMlrJdF-fjmsEvFem/preview',
+    streamUrl: 'https://drive.google.com/uc?export=download&id=1un9shx6qb1r5hejoMlrJdF-fjmsEvFem',
+    driveUrl: 'https://drive.google.com/file/d/1un9shx6qb1r5hejoMlrJdF-fjmsEvFem/view',
+    description: 'Wave 1'
+  },
+  {
+    id: 'drive-1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp',
+    driveFileId: '1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp',
+    title: 'Unleashing the Magic: How Google Gemini Transforms Daily Tasks into Works of Art',
+    designation: 'Approved',
+    type: 'Approved',
+    wave: 'Wave 1',
+    category: 'Wave 1',
+    duration: 'HD',
+    thumbnail: 'https://lh3.googleusercontent.com/d/1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp=s800',
+    videoUrl: 'https://drive.google.com/file/d/1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp/preview',
+    streamUrl: 'https://drive.google.com/uc?export=download&id=1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp',
+    driveUrl: 'https://drive.google.com/file/d/1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp/view',
+    description: 'Wave 1'
+  },
+  {
+    id: 'drive-1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY',
+    driveFileId: '1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY',
+    title: 'Unleashing Gemini: From Backyard Barbecues to Creative Masterpieces',
+    designation: 'Highlighted',
+    type: 'Highlighted',
+    wave: 'Wave 1',
+    category: 'Wave 1',
+    duration: 'HD',
+    thumbnail: 'https://lh3.googleusercontent.com/d/1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY=s800',
+    videoUrl: 'https://drive.google.com/file/d/1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY/preview',
+    streamUrl: 'https://drive.google.com/uc?export=download&id=1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY',
+    driveUrl: 'https://drive.google.com/file/d/1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY/view',
+    description: 'Wave 1 • Highlighted'
+  },
+  {
+    id: 'drive-1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf',
+    driveFileId: '1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf',
+    title: 'Unlocking Tomorrow: How Google Gemini Redefines Everyday Magic',
+    designation: 'Highlighted',
+    type: 'Highlighted',
+    wave: 'Wave 1',
+    category: 'Wave 1',
+    duration: 'HD',
+    thumbnail: 'https://lh3.googleusercontent.com/d/1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf=s800',
+    videoUrl: 'https://drive.google.com/file/d/1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf/preview',
+    streamUrl: 'https://drive.google.com/uc?export=download&id=1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf',
+    driveUrl: 'https://drive.google.com/file/d/1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf/view',
+    description: 'Wave 1 • Highlighted'
+  },
+  {
+    id: 'drive-19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0',
+    driveFileId: '19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0',
+    title: 'Gemini in Action: From Canvas Masterpieces to Smart Life Hacks',
+    designation: 'Highlighted',
+    type: 'Highlighted',
+    wave: 'Wave 1',
+    category: 'Wave 1',
+    duration: 'HD',
+    thumbnail: 'https://lh3.googleusercontent.com/d/19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0=s800',
+    videoUrl: 'https://drive.google.com/file/d/19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0/preview',
+    streamUrl: 'https://drive.google.com/uc?export=download&id=19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0',
+    driveUrl: 'https://drive.google.com/file/d/19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0/view',
+    description: 'Wave 1 • Highlighted'
+  }
+];
 
 /**
  * Determines if a designation from Column C represents an approved/usable video.
