@@ -92,6 +92,15 @@ class VideoGalleryApp {
     this.progressStartTime = 0;
     this.lastDataSignature = null;
     this.isSyncing = false;
+    this.aspectRatioCache = {
+      '1un9shx6qb1r5hejoMlrJdF-fjmsEvFem': 0.5625,
+      '1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf': 1.6,
+      '1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF': 1.7778,
+      '1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8': 1.7817,
+      '1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp': 1.7778,
+      '1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY': 1.7778,
+      '19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0': 1.7778
+    };
 
     this.initElements();
     this.initCarousel();
@@ -539,8 +548,7 @@ class VideoGalleryApp {
         video.aspectRatio = ratio;
         card.classList.toggle('is-portrait', isPortrait);
         card.classList.toggle('is-landscape', !isPortrait);
-        const clamped = Math.max(ratio, 9 / 16);
-        card.style.setProperty('--content-aspect', clamped.toFixed(4));
+        card.style.setProperty('--content-aspect', ratio.toFixed(4));
       };
 
       if (this.aspectRatioCache[video.driveFileId]) {
@@ -666,7 +674,9 @@ class VideoGalleryApp {
     
     // Check if current video is portrait
     const activeCard = this.videoGrid ? this.videoGrid.querySelector(`[data-id="${video.id}"]`) : null;
-    const isPort = video.isPortrait || (activeCard && activeCard.classList.contains('is-portrait'));
+    const isPort = video.isPortrait || 
+                   (activeCard && activeCard.classList.contains('is-portrait')) || 
+                   (this.aspectRatioCache && this.aspectRatioCache[video.driveFileId] < 0.85);
     const theaterCard = this.theaterModal.querySelector('.theater-card');
     if (theaterCard) {
       theaterCard.classList.toggle('is-portrait', !!isPort);
