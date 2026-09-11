@@ -511,13 +511,8 @@ class VideoGalleryApp {
             onerror="if (!this.dataset.retried) { this.dataset.retried = '1'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w800'; } else { this.onerror=null; this.src='https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80'; }"
           />
 
-          <!-- Hover Play Center Indicator -->
-          <div class="hover-play-trigger">
-            <svg viewBox="0 0 24 24">
-              <polygon points="6 3 20 12 6 21 6 3"></polygon>
-            </svg>
-            <span>Play</span>
-          </div>
+          <!-- Preview Frame Container for Hover-to-Play -->
+          <div class="preview-iframe-slot"></div>
 
           <div class="thumb-badges">
             <span class="type-pill ${badgeClass}">
@@ -545,15 +540,26 @@ class VideoGalleryApp {
       `;
 
       // Aspect Ratio Caching & Detection
-      if (!this.aspectRatioCache) this.aspectRatioCache = {};
+      if (!this.aspectRatioCache) {
+        this.aspectRatioCache = {
+          '1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF': 0.5625,
+          '1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8': 1.7778,
+          '1un9shx6qb1r5hejoMlrJdF-fjmsEvFem': 0.5625,
+          '1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp': 1.7778,
+          '1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY': 1.7778,
+          '1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf': 1.7778,
+          '19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0': 1.7778
+        };
+      }
 
       const applyAspect = (ratio) => {
-        const isPortrait = ratio < 0.85;
+        const isPortrait = ratio < 0.95;
         video.isPortrait = isPortrait;
         video.aspectRatio = ratio;
         card.classList.toggle('is-portrait', isPortrait);
         card.classList.toggle('is-landscape', !isPortrait);
-        card.style.setProperty('--content-aspect', ratio.toFixed(4));
+        const clamped = Math.max(ratio, 9 / 16);
+        card.style.setProperty('--content-aspect', clamped.toFixed(4));
       };
 
       if (this.aspectRatioCache[video.driveFileId]) {
@@ -594,26 +600,47 @@ class VideoGalleryApp {
   }
 
   attachHoverPreviewListeners(card, video) {
+    const slot = card.querySelector('.preview-iframe-slot');
     const scrubBar = card.querySelector('.hover-scrub-progress');
     let hoverTimer = null;
 
-    card.addEventListener('mouseenter', () => {
-      hoverTimer = setTimeout(() => {
-        card.classList.add('is-playing');
-        if (scrubBar) {
-          scrubBar.style.transition = 'width 6s linear';
-          scrubBar.style.width = '100%';
-        }
-      }, 100);
-    });
+    const startHoverPreview = () => {
+      card.classList.add('is-playing');
 
-    card.addEventListener('mouseleave', () => {
-      clearTimeout(hoverTimer);
+      if (slot && !slot.hasChildNodes()) {
+        const iframe = document.createElement('iframe');
+        iframe.className = 'video-preview-iframe';
+        const sep = video.videoUrl.includes('?') ? '&' : '?';
+        iframe.src = video.videoUrl + sep + 'autoplay=1&mute=1';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
+        iframe.loading = 'eager';
+        slot.appendChild(iframe);
+      }
+
+      if (scrubBar) {
+        scrubBar.style.transition = 'width 8s linear';
+        scrubBar.style.width = '100%';
+      }
+    };
+
+    const stopHoverPreview = () => {
       card.classList.remove('is-playing');
+      if (slot) {
+        slot.innerHTML = '';
+      }
       if (scrubBar) {
         scrubBar.style.transition = 'none';
         scrubBar.style.width = '0%';
       }
+    };
+
+    card.addEventListener('mouseenter', () => {
+      hoverTimer = setTimeout(startHoverPreview, 120);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      clearTimeout(hoverTimer);
+      stopHoverPreview();
     });
   }
 
@@ -650,18 +677,35 @@ class VideoGalleryApp {
       }
     }
 
-    // Clear and render player frame with explicit autoplay
-    this.theaterPlayerContainer.innerHTML = '';
-    
-    // Check if current video is portrait
+    // Determine exact Orientation & Aspect Ratio
     const activeCard = this.videoGrid ? this.videoGrid.querySelector(`[data-id="${video.id}"]`) : null;
+    const cachedAspect = (this.aspectRatioCache && this.aspectRatioCache[video.driveFileId]) || video.aspectRatio;
+    
+    // Check if portrait: ratio < 0.95 or card has is-portrait class
     const isPort = video.isPortrait || 
                    (activeCard && activeCard.classList.contains('is-portrait')) || 
-                   (this.aspectRatioCache && this.aspectRatioCache[video.driveFileId] < 0.85);
+                   (cachedAspect && cachedAspect < 0.95);
+
     const theaterCard = this.theaterModal.querySelector('.theater-card');
-    if (theaterCard) {
-      theaterCard.classList.toggle('is-portrait', !!isPort);
+    const mediaContainer = this.theaterPlayerContainer;
+
+    // Dynamically shape the theater modal window to fit the video orientation
+    if (isPort) {
+      const portAspect = cachedAspect ? Math.max(cachedAspect, 0.52) : 9 / 16;
+      theaterCard.classList.add('is-portrait');
+      theaterCard.classList.remove('is-landscape');
+      theaterCard.style.maxWidth = `min(440px, calc((84vh - 130px) * ${portAspect}))`;
+      mediaContainer.style.aspectRatio = `${portAspect}`;
+    } else {
+      const landAspect = cachedAspect ? Math.min(cachedAspect, 2.35) : 16 / 9;
+      theaterCard.classList.remove('is-portrait');
+      theaterCard.classList.add('is-landscape');
+      theaterCard.style.maxWidth = `min(92vw, calc((84vh - 130px) * ${landAspect}))`;
+      mediaContainer.style.aspectRatio = `${landAspect}`;
     }
+
+    // Clear and render player frame with explicit autoplay
+    this.theaterPlayerContainer.innerHTML = '';
 
     // Set poster as seamless backdrop while Google Drive player initializes
     if (video.thumbnail) {
@@ -689,6 +733,12 @@ class VideoGalleryApp {
     this.theaterModal.setAttribute('aria-hidden', 'true');
     this.theaterPlayerContainer.innerHTML = '';
     this.theaterPlayerContainer.style.backgroundImage = '';
+    const theaterCard = this.theaterModal.querySelector('.theater-card');
+    if (theaterCard) {
+      theaterCard.style.maxWidth = '';
+      theaterCard.classList.remove('is-portrait', 'is-landscape');
+    }
+    this.theaterPlayerContainer.style.aspectRatio = '';
     document.body.style.overflow = '';
   }
 
