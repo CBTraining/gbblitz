@@ -695,17 +695,19 @@ body {
   opacity: 0.85;
 }
 
-/* Hover Preview iFrame Slot - Full video fit into preview window with exact framing */
+/* Hover Preview iFrame Slot - Hidden & transparent until hover preview is active */
 .preview-iframe-slot {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  pointer-events: auto;
+  pointer-events: none;
   z-index: 2;
   overflow: hidden;
-  background: #000000;
+  background: transparent;
+  opacity: 0;
   border-radius: var(--radius-card) var(--radius-card) 0 0;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .video-preview-iframe {
@@ -716,12 +718,12 @@ body {
   height: 100%;
   border: none;
   pointer-events: auto;
-  opacity: 0;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.video-card.is-playing .video-preview-iframe {
+.video-card.is-playing .preview-iframe-slot {
   opacity: 1;
+  pointer-events: auto;
+  background: #000000;
 }
 
 /* Thumbnail Badges */
