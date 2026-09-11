@@ -710,23 +710,29 @@ body {
   transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Landscape Video Preview - Fits 100% width, crops Drive top bar */
+/* Landscape Video Preview - Scaled 160% down to fit width cleanly, cropping Drive top bar */
 .video-preview-iframe {
   position: absolute;
-  top: -36px;
+  top: -46px;
   left: 0;
-  width: 100%;
-  height: calc(100% + 42px);
+  width: 160%;
+  height: calc(160% + 56px);
+  transform: scale(0.625);
+  transform-origin: 0 0;
   border: none;
   pointer-events: none;
 }
 
-/* Portrait Video Preview - Fits 100% width in portrait mode, crops Drive top bar */
+/* Portrait Video Preview - Scaled 185% down to prevent Drive mobile layout breaks and crop top bar */
 .video-card.is-portrait .video-preview-iframe {
-  top: -38px;
+  top: -52px;
   left: 0;
-  width: 100%;
-  height: calc(100% + 46px);
+  width: 185%;
+  height: calc(185% + 62px);
+  transform: scale(0.54054);
+  transform-origin: 0 0;
+  border: none;
+  pointer-events: none;
 }
 
 .video-card.is-playing .preview-iframe-slot {
