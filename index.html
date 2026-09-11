@@ -154,8 +154,22 @@
 
       <!-- Theater Footer & Navigation -->
       <div class="theater-footer">
-        <p class="theater-description" id="modal-desc">Video details</p>
+        <div class="theater-footer-left">
+          <p class="theater-description" id="modal-desc">Video details</p>
+          <div class="theater-playback-notice" id="modal-playback-notice" style="display: none;">
+            <span id="modal-playback-notice-text">Playback issue?</span>
+            <a id="modal-drive-direct-link" href="#" target="_blank" rel="noopener noreferrer" class="notice-link">Open directly in Google Drive ↗</a>
+          </div>
+        </div>
         <div class="theater-nav-controls">
+          <a id="modal-footer-drive-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-drive-action" title="Open and play directly in Google Drive">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+            <span>Open in Drive</span>
+          </a>
           <button class="btn btn-secondary" id="modal-prev-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
               <polyline points="15 18 9 12 15 6"></polyline>

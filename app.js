@@ -530,28 +530,35 @@ class VideoGalleryApp {
         </div>
       `;
 
-      // Detect content aspect ratio from thumbnail
-      const thumbImg = card.querySelector('.video-thumb-img');
-      const detectAspect = () => {
-        if (thumbImg.naturalWidth && thumbImg.naturalHeight) {
-          const ratio = thumbImg.naturalWidth / thumbImg.naturalHeight;
-          const isPortrait = ratio < 0.85;
-          if (isPortrait) {
-            card.classList.add('is-portrait');
-            video.isPortrait = true;
-            const clamped = Math.max(ratio, 9 / 16);
-            card.style.setProperty('--content-aspect', clamped.toFixed(4));
-          } else {
-            card.classList.add('is-landscape');
-            video.isPortrait = false;
-            card.style.setProperty('--content-aspect', ratio.toFixed(4));
-          }
-        }
+      // Aspect Ratio Caching & Detection
+      if (!this.aspectRatioCache) this.aspectRatioCache = {};
+
+      const applyAspect = (ratio) => {
+        const isPortrait = ratio < 0.85;
+        video.isPortrait = isPortrait;
+        video.aspectRatio = ratio;
+        card.classList.toggle('is-portrait', isPortrait);
+        card.classList.toggle('is-landscape', !isPortrait);
+        const clamped = Math.max(ratio, 9 / 16);
+        card.style.setProperty('--content-aspect', clamped.toFixed(4));
       };
-      if (thumbImg.complete && thumbImg.naturalWidth) {
-        detectAspect();
+
+      if (this.aspectRatioCache[video.driveFileId]) {
+        applyAspect(this.aspectRatioCache[video.driveFileId]);
       } else {
-        thumbImg.addEventListener('load', detectAspect);
+        const thumbImg = card.querySelector('.video-thumb-img');
+        const detect = () => {
+          if (thumbImg.naturalWidth && thumbImg.naturalHeight) {
+            const ratio = thumbImg.naturalWidth / thumbImg.naturalHeight;
+            this.aspectRatioCache[video.driveFileId] = ratio;
+            applyAspect(ratio);
+          }
+        };
+        if (thumbImg.complete && thumbImg.naturalWidth) {
+          detect();
+        } else {
+          thumbImg.addEventListener('load', detect);
+        }
       }
 
       // Setup Hover-to-Play
@@ -559,7 +566,10 @@ class VideoGalleryApp {
 
       // Setup Click to Open Theater Modal
       card.addEventListener('click', (e) => {
-        e.stopPropagation();
+        // If clicking inside the active preview iframe, allow direct player interaction
+        if (e.target.closest('.preview-iframe-slot')) {
+          return;
+        }
         this.openTheaterModal(video.id);
       });
 
@@ -585,7 +595,7 @@ class VideoGalleryApp {
       if (slot && !slot.hasChildNodes()) {
         const iframe = document.createElement('iframe');
         iframe.className = 'video-preview-iframe';
-        iframe.src = video.videoUrl + '?autoplay=1&mute=1';
+        iframe.src = video.videoUrl;
         iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
         iframe.loading = 'eager';
         slot.appendChild(iframe);
@@ -609,7 +619,7 @@ class VideoGalleryApp {
     };
 
     card.addEventListener('mouseenter', () => {
-      hoverTimer = setTimeout(startHoverPreview, 180);
+      hoverTimer = setTimeout(startHoverPreview, 150);
     });
 
     card.addEventListener('mouseleave', () => {
@@ -632,7 +642,24 @@ class VideoGalleryApp {
     this.modalTitle.textContent = video.title;
     this.modalDesc.textContent = video.wave + ' • ' + video.designation + ' • Google Drive Full Playback';
     this.modalCategoryBadge.textContent = (video.wave + ' • ' + video.designation).toUpperCase();
-    this.modalDriveLink.href = video.driveUrl;
+    if (this.modalDriveLink) this.modalDriveLink.href = video.driveUrl;
+
+    const footerDriveBtn = document.getElementById('modal-footer-drive-btn');
+    if (footerDriveBtn) footerDriveBtn.href = video.driveUrl;
+
+    const directLink = document.getElementById('modal-drive-direct-link');
+    if (directLink) directLink.href = video.driveUrl;
+
+    const playbackNotice = document.getElementById('modal-playback-notice');
+    const noticeText = document.getElementById('modal-playback-notice-text');
+    const isMov = (video.title && video.title.toLowerCase().includes('.mov')) || 
+                  (video.driveUrl && video.driveUrl.toLowerCase().includes('.mov'));
+    if (playbackNotice) {
+      playbackNotice.style.display = isMov ? 'flex' : 'none';
+      if (isMov && noticeText) {
+        noticeText.textContent = 'Apple QuickTime (.MOV) video:';
+      }
+    }
 
     // Clear and render player frame with explicit autoplay
     this.theaterPlayerContainer.innerHTML = '';
@@ -647,8 +674,7 @@ class VideoGalleryApp {
 
     const iframe = document.createElement('iframe');
     iframe.className = 'theater-iframe-element';
-    const autoplayUrl = video.videoUrl + (video.videoUrl.includes('?') ? '&' : '?') + 'autoplay=1';
-    iframe.src = autoplayUrl;
+    iframe.src = video.videoUrl;
     iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
     iframe.allowFullscreen = true;
     this.theaterPlayerContainer.appendChild(iframe);
