@@ -595,7 +595,8 @@ class VideoGalleryApp {
     }
 
     filtered.forEach((video) => {
-      const desig = (video.designation || '').toLowerCase();
+      try {
+        const desig = (video.designation || '').toLowerCase();
       const badgeClass = this.getBadgeClass(video.designation);
       const isHighlight = desig.includes('highlight');
       const isWinner = desig.includes('winner');
@@ -705,7 +706,10 @@ class VideoGalleryApp {
         }
       });
 
-      this.videoGrid.appendChild(card);
+        this.videoGrid.appendChild(card);
+      } catch (cardErr) {
+        console.error('Error rendering card for video', video.id, cardErr);
+      }
     });
   }
 
