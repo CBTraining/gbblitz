@@ -199,9 +199,9 @@ class VideoGalleryApp {
     this.lastDataSignature = null;
     this.isSyncing = false;
     this.aspectRatioCache = {
+      '1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF': 0.5625,
       '1un9shx6qb1r5hejoMlrJdF-fjmsEvFem': 0.5625,
       '1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf': 1.6,
-      '1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF': 1.7778,
       '1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8': 1.7817,
       '1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp': 1.7778,
       '1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY': 1.7778,

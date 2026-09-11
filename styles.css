@@ -673,6 +673,16 @@ body {
   transform: scale(1.02);
 }
 
+/* For portrait videos, Google Drive bakes side bars into the 16:9 thumbnail. Scale horizontally so it fills edge-to-edge */
+.video-card.is-portrait .video-thumb-img {
+  transform: scale(1.78);
+  object-position: center 25%;
+}
+
+.video-card.is-portrait:hover .video-thumb-img {
+  transform: scale(1.82);
+}
+
 .video-card.is-playing .video-thumb-img {
   opacity: 0.85;
 }
