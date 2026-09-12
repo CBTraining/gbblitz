@@ -1559,8 +1559,8 @@ class MagicPointerManager {
     this.wiggleStartTime = 0;
     this.reversals = 0;
     this.cooldownUntil = 0;
-    this.REQUIRED_DURATION = 1900; // ~2 seconds
-    this.MIN_REVERSALS = 7;
+    this.REQUIRED_DURATION = 950; // ~1 second
+    this.MIN_REVERSALS = 4;
 
     // Sparkle palette (Google Workspace gradients)
     this.sparkleColors = ['#1a73e8', '#A9A8FF', '#ea4335', '#FF63A0', '#f9ab00', '#34a853', '#78C9FF', '#a142f4', '#64AFFF'];
