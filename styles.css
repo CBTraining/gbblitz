@@ -205,25 +205,25 @@ body {
 }
 
 .brand-logo-img {
-  height: 52px;
+  height: 190px;
   width: auto;
-  max-width: 90vw;
+  max-width: 86vw;
   object-fit: contain;
   display: block;
   margin: 0 auto;
-  filter: drop-shadow(0 0 24px rgba(49, 134, 255, 0.35));
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 0 18px rgba(49, 134, 255, 0.4));
   animation: heroLogoFadeIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes heroLogoFadeIn {
   0% {
     opacity: 0;
-    filter: drop-shadow(0 0 0px rgba(49, 134, 255, 0));
-    transform: scale(0.92);
+    transform: scale(0.95);
   }
   100% {
     opacity: 1;
-    filter: drop-shadow(0 0 35px rgba(49, 134, 255, 0.5));
     transform: scale(1);
   }
 }
@@ -1452,8 +1452,8 @@ body {
     padding: 1rem 0;
   }
   .brand-logo-img {
-    height: 40px;
-    max-width: 180px;
+    height: 110px;
+    max-width: 80vw;
   }
   .main-content {
     padding: 1.5rem 0 4rem;

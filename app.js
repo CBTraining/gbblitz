@@ -1396,8 +1396,8 @@ class ScrollLogoManager {
     this.narrativeCol = document.querySelector('.hero-narrative-col');
     this.carouselCol = document.querySelector('.hero-carousel-col');
     
-    this.initialScale = 3.8;   // ~4x logo in initial hero state
-    this.finalScale = 1.0;     // standard docked size
+    this.initialScale = 1.0;   // crisp 1:1 pixel fidelity at 190px hero size
+    this.finalScale = 0.274;   // docked scale to ~52px height
     this.scrollDistance = 380; // scroll px to fully dock
     this.ticking = false;
 
@@ -1423,14 +1423,20 @@ class ScrollLogoManager {
     this.initialTranslateY = targetCenterY - dockedCenterY;
     
     // Responsive scale & scroll distance
+    // Base logo is rendered cleanly at 190px height.
+    // In hero state, scale is 1.0 (crisp 1:1 pixel fidelity).
+    // When scrolling down, it docks to 52px height (1.0 -> 0.274 scale).
     if (window.innerWidth < 640) {
-      this.initialScale = 2.3;
+      this.initialScale = 1.0;
+      this.finalScale = 0.36;   // ~40px docked
       this.scrollDistance = 260;
     } else if (window.innerWidth < 1024) {
-      this.initialScale = 3.0;
+      this.initialScale = 1.0;
+      this.finalScale = 0.30;   // ~48px docked
       this.scrollDistance = 320;
     } else {
-      this.initialScale = 3.8;
+      this.initialScale = 1.0;
+      this.finalScale = 0.274;  // 52px docked
       this.scrollDistance = 380;
     }
 
