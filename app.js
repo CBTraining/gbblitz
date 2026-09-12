@@ -1482,15 +1482,18 @@ class ScrollLogoManager {
     }
 
     // 4. Hero Text & Highlight Video Dynamic Exit Animation
-    // As the user scrolls past the hero section, the left narrative drifts left and fades,
-    // and the right carousel highlight drifts right and fades.
+    // Shifting to the next area happens later: the narrative text and highlighted video
+    // stay fully visible and readable throughout the initial scroll, only beginning to
+    // drift and fade once the user scrolls well past the hero section into the video gallery.
     if (this.albumSection && this.narrativeCol && this.carouselCol) {
       const albumTop = this.albumSection.offsetTop || 520;
       const albumHeight = this.albumSection.offsetHeight || 450;
-      // Start exit transition once user starts scrolling down into the album area
-      const exitStart = Math.max(0, albumTop - window.innerHeight * 0.55);
-      const exitEnd = albumTop + albumHeight * 0.65;
-      const exitDistance = Math.max(1, exitEnd - exitStart);
+      
+      // Delay start: content stays 100% visible and unshifted until album top is within 120px of top (or scrolled 480px+)
+      const exitStart = Math.max(380, albumTop - 120);
+      // Completes smoothly over an extended 360px scroll range
+      const exitDistance = Math.max(280, albumHeight * 0.75);
+      const exitEnd = exitStart + exitDistance;
 
       if (scrollY <= exitStart) {
         // Pristine, full visibility
@@ -1506,10 +1509,10 @@ class ScrollLogoManager {
         this.carouselCol.style.transform = 'translate3d(100px, 0, 0)';
       } else {
         const exitProgress = (scrollY - exitStart) / exitDistance;
-        // Smooth ease-in curve for natural drift feel
+        // Smooth ease curve: gradual start so disappearance doesn't feel abrupt
         const ease = exitProgress * exitProgress;
-        const opacity = Math.max(0, 1 - exitProgress * 1.08);
-        const shiftDistance = 100 * ease;
+        const opacity = Math.max(0, 1 - exitProgress * 1.05);
+        const shiftDistance = 90 * ease;
 
         this.narrativeCol.style.opacity = opacity.toFixed(3);
         this.narrativeCol.style.transform = `translate3d(${-shiftDistance.toFixed(1)}px, 0, 0)`;
