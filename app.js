@@ -1392,6 +1392,9 @@ class ScrollLogoManager {
     this.blurBackdrop = document.getElementById('header-blur-backdrop');
     this.latticeCanvas = document.getElementById('lattice-canvas');
     this.heroStage = document.getElementById('hero-intro-stage');
+    this.albumSection = document.querySelector('.album-section');
+    this.narrativeCol = document.querySelector('.hero-narrative-col');
+    this.carouselCol = document.querySelector('.hero-carousel-col');
     
     this.initialScale = 3.8;   // ~4x logo in initial hero state
     this.finalScale = 1.0;     // standard docked size
@@ -1470,6 +1473,44 @@ class ScrollLogoManager {
     if (this.blurBackdrop) {
       const backdropOpacity = Math.min(1, Math.max(0, (progress - 0.2) / 0.8));
       this.blurBackdrop.style.opacity = backdropOpacity.toFixed(3);
+    }
+
+    // 4. Hero Text & Highlight Video Dynamic Exit Animation
+    // As the user scrolls past the hero section, the left narrative drifts left and fades,
+    // and the right carousel highlight drifts right and fades.
+    if (this.albumSection && this.narrativeCol && this.carouselCol) {
+      const albumTop = this.albumSection.offsetTop || 520;
+      const albumHeight = this.albumSection.offsetHeight || 450;
+      // Start exit transition once user starts scrolling down into the album area
+      const exitStart = Math.max(0, albumTop - window.innerHeight * 0.55);
+      const exitEnd = albumTop + albumHeight * 0.65;
+      const exitDistance = Math.max(1, exitEnd - exitStart);
+
+      if (scrollY <= exitStart) {
+        // Pristine, full visibility
+        this.narrativeCol.style.opacity = '1';
+        this.narrativeCol.style.transform = 'translate3d(0, 0, 0)';
+        this.carouselCol.style.opacity = '1';
+        this.carouselCol.style.transform = 'translate3d(0, 0, 0)';
+      } else if (scrollY >= exitEnd) {
+        // Fully dispersed
+        this.narrativeCol.style.opacity = '0';
+        this.narrativeCol.style.transform = 'translate3d(-100px, 0, 0)';
+        this.carouselCol.style.opacity = '0';
+        this.carouselCol.style.transform = 'translate3d(100px, 0, 0)';
+      } else {
+        const exitProgress = (scrollY - exitStart) / exitDistance;
+        // Smooth ease-in curve for natural drift feel
+        const ease = exitProgress * exitProgress;
+        const opacity = Math.max(0, 1 - exitProgress * 1.08);
+        const shiftDistance = 100 * ease;
+
+        this.narrativeCol.style.opacity = opacity.toFixed(3);
+        this.narrativeCol.style.transform = `translate3d(${-shiftDistance.toFixed(1)}px, 0, 0)`;
+
+        this.carouselCol.style.opacity = opacity.toFixed(3);
+        this.carouselCol.style.transform = `translate3d(${shiftDistance.toFixed(1)}px, 0, 0)`;
+      }
     }
   }
 }
