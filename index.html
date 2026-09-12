@@ -10,7 +10,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="stylesheet" href="styles.css?v=3.0" />
+  <link rel="stylesheet" href="styles.css?v=3.1" />
 </head>
 <body>
   <div class="ambient-glow ambient-glow-top"></div>
@@ -26,38 +26,65 @@
   </header>
 
   <main class="main-content">
-    <!-- Top Highlighted Video Carousel Section -->
-    <section class="album-section" aria-label="Featured Highlighted Videos">
+    <!-- Top Hero Section: Narrative + Highlighted Video Carousel -->
+    <section class="album-section" aria-label="Field Highlights and Video Showcase">
       <div class="album-container">
-        <div class="section-header">
-          <div class="badge">Featured Selection</div>
-          <h2 class="section-title">Highlighted Videos</h2>
-          <p class="section-desc">Spotlighting standout missions and top certified presentations.</p>
-        </div>
-
-        <div class="carousel-wrapper" id="photo-carousel">
-          <div class="carousel-track-container">
-            <ul class="carousel-track" id="carousel-track">
-              <!-- Slides rendered by JavaScript -->
-            </ul>
+        <div class="hero-split-row">
+          <!-- Left: Narrative Text & Client Messaging -->
+          <div class="hero-narrative-col">
+            <div class="hero-badge">
+              <span class="hero-badge-spark">✨</span>
+              <span>Field Highlights • Best Buy Partnership</span>
+            </div>
+            <h1 class="hero-headline">
+              Our field team has collected videos from their stores, capturing the <span class="text-gradient-blue">excitement, teachbacks, and sentiments</span> of our Best Buy partners.
+            </h1>
+            <p class="hero-subtext">
+              Demonstrating our Best Buy teams mastering core product features through peer teachbacks, driving customer impact, and championing a standout Googlebook launch.
+            </p>
+            <div class="hero-chips-row">
+              <div class="hero-chip chip-blue">
+                <span class="chip-dot dot-blue"></span>
+                <span>Peer Teachbacks</span>
+              </div>
+              <div class="hero-chip chip-purple">
+                <span class="chip-dot dot-purple"></span>
+                <span>Partner Sentiment</span>
+              </div>
+              <div class="hero-chip chip-green">
+                <span class="chip-dot dot-green"></span>
+                <span>Launch Excitement</span>
+              </div>
+            </div>
           </div>
 
-          <!-- Carousel Navigation Controls -->
-          <button class="carousel-nav carousel-prev" id="carousel-prev-btn" aria-label="Previous Highlighted Video">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-          <button class="carousel-nav carousel-next" id="carousel-next-btn" aria-label="Next Highlighted Video">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
+          <!-- Right: Highlighted Video Showcase Carousel -->
+          <div class="hero-carousel-col">
+            <div class="carousel-wrapper" id="photo-carousel">
+              <div class="carousel-track-container">
+                <ul class="carousel-track" id="carousel-track">
+                  <!-- Slides rendered by JavaScript -->
+                </ul>
+              </div>
 
-          <!-- Carousel Progress & Indicators -->
-          <div class="carousel-indicators" id="carousel-indicators"></div>
-          <div class="carousel-progress-bar">
-            <div class="carousel-progress-fill" id="carousel-progress-fill"></div>
+              <!-- Carousel Navigation Controls -->
+              <button class="carousel-nav carousel-prev" id="carousel-prev-btn" aria-label="Previous Highlighted Video">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <button class="carousel-nav carousel-next" id="carousel-next-btn" aria-label="Next Highlighted Video">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+
+              <!-- Carousel Progress & Indicators -->
+              <div class="carousel-indicators" id="carousel-indicators"></div>
+              <div class="carousel-progress-bar">
+                <div class="carousel-progress-fill" id="carousel-progress-fill"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -190,6 +217,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=3.0"></script>
+  <script src="app.js?v=3.1"></script>
 </body>
 </html>
