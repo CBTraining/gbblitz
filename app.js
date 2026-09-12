@@ -980,65 +980,7 @@ class StarrySkyBackground {
     this.fov = 680;
     this.isRunning = true;
 
-    // --- Celestial Bodies Setup ---
-    // 1. Spinning Spiral Galaxy (Upper Left)
-    this.galaxy = {
-      relX: 0.16,
-      relY: 0.28,
-      radius: 125,
-      angle: 0.5,
-      spinSpeed: 0.0028,
-      stars: []
-    };
-    this.initGalaxyStars();
-
-    // 2. Ringed Gas Giant Planet (Lower Right)
-    this.planet = {
-      relX: 0.85,
-      relY: 0.68,
-      radius: 46,
-      ringRadiusX: 112,
-      ringRadiusY: 28,
-      tilt: -0.32,
-      moonAngle: 1.2
-    };
-
-    // 3. Majestic Deep-Space Comet
-    this.comet = null;
-    this.nextCometTime = performance.now() + 2500;
-
     this.init();
-  }
-
-  initGalaxyStars() {
-    this.galaxy.stars = [];
-    const arms = 2;
-    const count = 220;
-    for (let i = 0; i < count; i++) {
-      const arm = i % arms;
-      const distNorm = Math.pow(Math.random(), 1.5);
-      const r = distNorm * this.galaxy.radius;
-      const baseAngle = (arm * Math.PI) + (distNorm * 3.8);
-      const spread = (Math.random() - 0.5) * (0.35 + distNorm * 0.42);
-      const angle = baseAngle + spread;
-
-      let color;
-      if (distNorm < 0.22) {
-        color = { r: 255, g: 250, b: 240, a: 0.92 }; // Warm stellar core
-      } else {
-        // Google purple & blue hues in galactic arms
-        color = Math.random() < 0.55
-          ? { r: 161, g: 66, b: 244, a: 0.75 }
-          : { r: 66, g: 133, b: 244, a: 0.75 };
-      }
-
-      this.galaxy.stars.push({
-        r: r,
-        angle: angle,
-        size: Math.random() * 1.6 + 0.6,
-        color: color
-      });
-    }
   }
 
   init() {
@@ -1175,24 +1117,6 @@ class StarrySkyBackground {
     }
   }
 
-  spawnComet() {
-    const startX = -60;
-    const startY = Math.random() * (this.height * 0.35) + 30;
-    const angle = 0.28 + (Math.random() - 0.5) * 0.15;
-    const speed = Math.random() * 4.5 + 5.5;
-
-    this.comet = {
-      x: startX,
-      y: startY,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      radius: 4.2,
-      tailLength: 240,
-      opacity: 1.0,
-      dust: []
-    };
-  }
-
   spawnMeteor() {
     const startX = Math.random() * (this.width * 0.8) + this.width * 0.1;
     const startY = Math.random() * (this.height * 0.4);
@@ -1276,131 +1200,26 @@ class StarrySkyBackground {
   render(now) {
     this.ctx.clearRect(0, 0, this.width, this.height);
 
-    const parallaxX = this.rotY * 420;
-    const parallaxY = -this.rotX * 420;
-
-    // -------------------------------------------------------------
-    // 1. Spinning Spiral Galaxy (Upper Left Background)
-    // -------------------------------------------------------------
-    const gx = this.width * this.galaxy.relX + parallaxX * 0.35;
-    const gy = this.height * this.galaxy.relY + parallaxY * 0.35;
-    this.galaxy.angle += this.galaxy.spinSpeed;
-
-    this.ctx.save();
-    this.ctx.translate(gx, gy);
-    this.ctx.rotate(this.galaxy.angle);
-    this.ctx.scale(1, 0.58);
-
-    // Galaxy Core Glow
-    const coreGrad = this.ctx.createRadialGradient(0, 0, 0, 0, 0, this.galaxy.radius * 0.7);
-    coreGrad.addColorStop(0, 'rgba(255, 250, 245, 0.85)');
-    coreGrad.addColorStop(0.18, 'rgba(161, 66, 244, 0.45)');
-    coreGrad.addColorStop(0.5, 'rgba(66, 133, 244, 0.22)');
-    coreGrad.addColorStop(1, 'transparent');
-    this.ctx.fillStyle = coreGrad;
-    this.ctx.beginPath();
-    this.ctx.arc(0, 0, this.galaxy.radius * 0.7, 0, Math.PI * 2);
-    this.ctx.fill();
-
-    // Galaxy spiral stars
-    for (let i = 0; i < this.galaxy.stars.length; i++) {
-      const gs = this.galaxy.stars[i];
-      const px = Math.cos(gs.angle) * gs.r;
-      const py = Math.sin(gs.angle) * gs.r;
-
-      this.ctx.beginPath();
-      this.ctx.arc(px, py, gs.size, 0, Math.PI * 2);
-      this.ctx.fillStyle = `rgba(${gs.color.r}, ${gs.color.g}, ${gs.color.b}, ${gs.color.a})`;
-      this.ctx.fill();
-    }
-    this.ctx.restore();
-
-    // -------------------------------------------------------------
-    // 2. Stylized Ringed Planet (Lower Right Midground)
-    // -------------------------------------------------------------
-    const px = this.width * this.planet.relX + parallaxX * 0.75;
-    const py = this.height * this.planet.relY + parallaxY * 0.75;
-
-    this.ctx.save();
-    this.ctx.translate(px, py);
-    this.ctx.rotate(this.planet.tilt);
-
-    // Back half of rings
-    this.ctx.save();
-    this.ctx.beginPath();
-    this.ctx.ellipse(0, 0, this.planet.ringRadiusX, this.planet.ringRadiusY, 0, Math.PI, Math.PI * 2);
-    const ringGradBack = this.ctx.createLinearGradient(-this.planet.ringRadiusX, 0, this.planet.ringRadiusX, 0);
-    ringGradBack.addColorStop(0, 'rgba(120, 201, 255, 0)');
-    ringGradBack.addColorStop(0.3, 'rgba(120, 201, 255, 0.45)');
-    ringGradBack.addColorStop(0.7, 'rgba(255, 220, 110, 0.55)');
-    ringGradBack.addColorStop(1, 'rgba(120, 201, 255, 0)');
-    this.ctx.strokeStyle = ringGradBack;
-    this.ctx.lineWidth = 14;
-    this.ctx.stroke();
-
-    this.ctx.beginPath();
-    this.ctx.ellipse(0, 0, this.planet.ringRadiusX * 0.82, this.planet.ringRadiusY * 0.82, 0, Math.PI, Math.PI * 2);
-    this.ctx.strokeStyle = 'rgba(7, 9, 12, 0.9)';
-    this.ctx.lineWidth = 1.8;
-    this.ctx.stroke();
-    this.ctx.restore();
-
-    // Planet Body with 3D spherical shading
-    const planetGrad = this.ctx.createRadialGradient(
-      -this.planet.radius * 0.35, -this.planet.radius * 0.35, this.planet.radius * 0.1,
-      0, 0, this.planet.radius
+    // 1. Soft deep-space cosmic nebulae (Google Blue & Google Purple hints)
+    const bgGrad1 = this.ctx.createRadialGradient(
+      this.width * 0.32, this.height * 0.45, 0,
+      this.width * 0.32, this.height * 0.45, this.width * 0.45
     );
-    planetGrad.addColorStop(0, 'rgba(120, 201, 255, 0.95)');
-    planetGrad.addColorStop(0.35, 'rgba(66, 133, 244, 0.85)');
-    planetGrad.addColorStop(0.75, 'rgba(20, 45, 95, 0.9)');
-    planetGrad.addColorStop(1, 'rgba(7, 9, 12, 0.98)');
+    bgGrad1.addColorStop(0, 'rgba(66, 133, 244, 0.065)');
+    bgGrad1.addColorStop(1, 'transparent');
+    this.ctx.fillStyle = bgGrad1;
+    this.ctx.fillRect(0, 0, this.width, this.height);
 
-    this.ctx.beginPath();
-    this.ctx.arc(0, 0, this.planet.radius, 0, Math.PI * 2);
-    this.ctx.fillStyle = planetGrad;
-    this.ctx.fill();
+    const bgGrad2 = this.ctx.createRadialGradient(
+      this.width * 0.72, this.height * 0.55, 0,
+      this.width * 0.72, this.height * 0.55, this.width * 0.38
+    );
+    bgGrad2.addColorStop(0, 'rgba(161, 66, 244, 0.045)');
+    bgGrad2.addColorStop(1, 'transparent');
+    this.ctx.fillStyle = bgGrad2;
+    this.ctx.fillRect(0, 0, this.width, this.height);
 
-    // Atmospheric rim glow
-    this.ctx.beginPath();
-    this.ctx.arc(0, 0, this.planet.radius + 1.5, -Math.PI * 0.75, Math.PI * 0.25);
-    this.ctx.strokeStyle = 'rgba(120, 201, 255, 0.65)';
-    this.ctx.lineWidth = 2.5;
-    this.ctx.stroke();
-
-    // Front half of rings
-    this.ctx.save();
-    this.ctx.beginPath();
-    this.ctx.ellipse(0, 0, this.planet.ringRadiusX, this.planet.ringRadiusY, 0, 0, Math.PI);
-    const ringGradFront = this.ctx.createLinearGradient(-this.planet.ringRadiusX, 0, this.planet.ringRadiusX, 0);
-    ringGradFront.addColorStop(0, 'rgba(120, 201, 255, 0)');
-    ringGradFront.addColorStop(0.3, 'rgba(120, 201, 255, 0.55)');
-    ringGradFront.addColorStop(0.7, 'rgba(255, 220, 110, 0.65)');
-    ringGradFront.addColorStop(1, 'rgba(120, 201, 255, 0)');
-    this.ctx.strokeStyle = ringGradFront;
-    this.ctx.lineWidth = 14;
-    this.ctx.stroke();
-
-    this.ctx.beginPath();
-    this.ctx.ellipse(0, 0, this.planet.ringRadiusX * 0.82, this.planet.ringRadiusY * 0.82, 0, 0, Math.PI);
-    this.ctx.strokeStyle = 'rgba(7, 9, 12, 0.9)';
-    this.ctx.lineWidth = 1.8;
-    this.ctx.stroke();
-    this.ctx.restore();
-
-    // Orbiting tiny companion moon
-    this.planet.moonAngle += 0.006;
-    const mx = Math.cos(this.planet.moonAngle) * (this.planet.ringRadiusX + 22);
-    const my = Math.sin(this.planet.moonAngle) * (this.planet.ringRadiusY + 12);
-    this.ctx.beginPath();
-    this.ctx.arc(mx, my, 3.2, 0, Math.PI * 2);
-    this.ctx.fillStyle = 'rgba(220, 235, 255, 0.85)';
-    this.ctx.fill();
-
-    this.ctx.restore();
-
-    // -------------------------------------------------------------
-    // 3. Cosmic Dust Motes
-    // -------------------------------------------------------------
+    // 2. Cosmic Dust Motes
     for (let i = 0; i < this.dustParticles.length; i++) {
       const d = this.dustParticles[i];
       d.x += d.vx;
@@ -1502,79 +1321,7 @@ class StarrySkyBackground {
     }
 
     // -------------------------------------------------------------
-    // 7. Majestic Deep-Space Comet
-    // -------------------------------------------------------------
-    if (!this.comet && now > this.nextCometTime) {
-      this.spawnComet();
-      this.nextCometTime = now + (Math.random() * 8000 + 8000); // every 8-16s
-    }
-
-    if (this.comet) {
-      const c = this.comet;
-      c.x += c.vx;
-      c.y += c.vy;
-
-      c.dust.push({
-        x: c.x,
-        y: c.y,
-        vx: -c.vx * 0.08 + (Math.random() - 0.5) * 0.6,
-        vy: -c.vy * 0.08 + (Math.random() - 0.5) * 0.6,
-        size: Math.random() * 2.5 + 1.2,
-        alpha: 0.75
-      });
-
-      const speedMag = Math.hypot(c.vx, c.vy);
-      const dirX = c.vx / speedMag;
-      const dirY = c.vy / speedMag;
-      const tailEndX = c.x - dirX * c.tailLength;
-      const tailEndY = c.y - dirY * c.tailLength;
-
-      const cometGrad = this.ctx.createLinearGradient(tailEndX, tailEndY, c.x, c.y);
-      cometGrad.addColorStop(0, 'rgba(66, 133, 244, 0)');
-      cometGrad.addColorStop(0.6, 'rgba(120, 201, 255, 0.25)');
-      cometGrad.addColorStop(0.9, 'rgba(240, 248, 255, 0.7)');
-      cometGrad.addColorStop(1, 'rgba(255, 255, 255, 0.95)');
-
-      this.ctx.beginPath();
-      this.ctx.moveTo(tailEndX, tailEndY);
-      this.ctx.lineTo(c.x, c.y);
-      this.ctx.strokeStyle = cometGrad;
-      this.ctx.lineWidth = 3.8;
-      this.ctx.stroke();
-
-      // Coma nucleus glow
-      const comaGrad = this.ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, 16);
-      comaGrad.addColorStop(0, 'rgba(255, 255, 255, 1)');
-      comaGrad.addColorStop(0.3, 'rgba(120, 201, 255, 0.85)');
-      comaGrad.addColorStop(1, 'transparent');
-      this.ctx.beginPath();
-      this.ctx.arc(c.x, c.y, 16, 0, Math.PI * 2);
-      this.ctx.fillStyle = comaGrad;
-      this.ctx.fill();
-
-      // Dust wake
-      for (let d = c.dust.length - 1; d >= 0; d--) {
-        const p = c.dust[d];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.alpha -= 0.016;
-        if (p.alpha <= 0) {
-          c.dust.splice(d, 1);
-          continue;
-        }
-        this.ctx.beginPath();
-        this.ctx.arc(p.x, p.y, p.size * p.alpha, 0, Math.PI * 2);
-        this.ctx.fillStyle = `rgba(120, 201, 255, ${p.alpha * 0.6})`;
-        this.ctx.fill();
-      }
-
-      if (c.x > this.width + 250 || c.y > this.height + 250) {
-        this.comet = null;
-      }
-    }
-
-    // -------------------------------------------------------------
-    // 8. Shooting Stars / Meteors
+    // 6. Shooting Stars / Meteors
     // -------------------------------------------------------------
     for (let m = this.meteors.length - 1; m >= 0; m--) {
       const meteor = this.meteors[m];
