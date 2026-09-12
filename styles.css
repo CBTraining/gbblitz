@@ -146,18 +146,36 @@ body {
 }
 
 /* ==========================================================================
-   Header & Navigation
+   Header & Navigation (No Black Bar - Dynamic Frosted Vignette)
    ========================================================================== */
 
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  background-color: rgba(0, 0, 0, 0.82);
-  border-bottom: 1px solid var(--border-subtle);
-  transition: border-color var(--transition-fast);
+  pointer-events: none;
+  background: transparent;
+  border: none;
+}
+
+/* Blurred and Darkened Top Vignette that emerges smoothly as user scrolls */
+.header-blur-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 96px;
+  pointer-events: none;
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  background: linear-gradient(180deg, rgba(7, 9, 12, 0.94) 0%, rgba(7, 9, 12, 0.72) 65%, rgba(7, 9, 12, 0) 100%);
+  mask-image: linear-gradient(180deg, #000 65%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 65%, transparent 100%);
+  opacity: 0;
+  will-change: opacity;
+  transition: opacity 0.15s ease-out;
 }
 
 .header-container {
@@ -168,6 +186,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  z-index: 2;
 }
 
 .brand {
@@ -175,27 +195,64 @@ body {
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  transition: transform var(--transition-fast), opacity var(--transition-fast);
+  pointer-events: auto;
+  transform-origin: center center;
+  will-change: transform;
 }
 
 .brand:hover {
-  transform: scale(1.02);
-  opacity: 0.95;
+  filter: brightness(1.05);
 }
 
 .brand-logo-img {
   height: 52px;
   width: auto;
-  max-width: 260px;
+  max-width: 90vw;
   object-fit: contain;
   display: block;
   margin: 0 auto;
-  filter: drop-shadow(0 0 16px rgba(49, 134, 255, 0.25));
-  transition: filter var(--transition-normal);
+  filter: drop-shadow(0 0 24px rgba(49, 134, 255, 0.35));
+  animation: heroLogoFadeIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.brand:hover .brand-logo-img {
-  filter: drop-shadow(0 0 24px rgba(49, 134, 255, 0.45));
+@keyframes heroLogoFadeIn {
+  0% {
+    opacity: 0;
+    filter: drop-shadow(0 0 0px rgba(49, 134, 255, 0));
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 35px rgba(49, 134, 255, 0.5));
+    transform: scale(1);
+  }
+}
+
+/* ==========================================================================
+   Hero Intro Stage (3D Geometric Google Colors Lattice)
+   ========================================================================== */
+
+.hero-intro-stage {
+  position: relative;
+  width: 100%;
+  height: 68vh;
+  min-height: 500px;
+  max-height: 720px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+#lattice-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  z-index: 1;
+  will-change: opacity, transform;
 }
 
 /* ==========================================================================
@@ -1376,6 +1433,10 @@ body {
   .main-content {
     width: 92%;
   }
+  .hero-intro-stage {
+    height: 54vh;
+    min-height: 420px;
+  }
   .video-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
@@ -1421,6 +1482,10 @@ body {
 }
 
 @media (max-width: 480px) {
+  .hero-intro-stage {
+    height: 48vh;
+    min-height: 360px;
+  }
   .video-grid {
     grid-template-columns: 1fr;
   }

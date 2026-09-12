@@ -944,6 +944,358 @@ class VideoGalleryApp {
   }
 }
 
+/* =============================================================================
+ * 7. 3D Geometric Google Colors Lattice Engine
+ * ============================================================================= */
+class LatticeBackground {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    if (!this.canvas) return;
+    this.ctx = this.canvas.getContext('2d');
+    this.nodes = [];
+    this.edges = [];
+    
+    // Official Google Brand Color Palette & Gradients
+    this.palette = [
+      { r: 49,  g: 134, b: 255, hex: '#3186ff' }, // Google Blue
+      { r: 234, g: 67,  b: 53,  hex: '#ea4335' }, // Google Red
+      { r: 251, g: 188, b: 4,   hex: '#fbbc04' }, // Google Yellow
+      { r: 52,  g: 168, b: 83,  hex: '#34a853' }, // Google Green
+      { r: 161, g: 66,  b: 244, hex: '#a142f4' }, // Google Purple
+      { r: 120, g: 201, b: 255, hex: '#78c9ff' }, // Light Blue
+      { r: 255, g: 99,  b: 160, hex: '#ff63a0' }  // Coral Pink
+    ];
+
+    this.rotX = 0.08;
+    this.rotY = 0;
+    this.targetRotX = 0.08;
+    this.targetRotY = 0;
+    this.autoRotY = 0;
+    this.autoRotSpeed = 0.0018;
+    this.fov = 720;
+    this.isRunning = true;
+    this.mouse = { x: 0, y: 0, hover: false };
+
+    this.init();
+  }
+
+  init() {
+    this.resize();
+    window.addEventListener('resize', () => {
+      this.resize();
+      this.generateGeometry();
+    }, { passive: true });
+
+    // Interactive mouse rotation with damping
+    window.addEventListener('mousemove', (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      const relX = e.clientX - (rect.left + rect.width / 2);
+      const relY = e.clientY - (rect.top + rect.height / 2);
+      this.targetRotY = relX * 0.00065;
+      this.targetRotX = -relY * 0.00055;
+      this.mouse.x = e.clientX - rect.left;
+      this.mouse.y = e.clientY - rect.top;
+      this.mouse.hover = true;
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => {
+      this.targetRotX = 0.08;
+      this.targetRotY = 0;
+      this.mouse.hover = false;
+    });
+
+    this.generateGeometry();
+    this.animate();
+  }
+
+  resize() {
+    this.width = this.canvas.clientWidth;
+    this.height = this.canvas.clientHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.canvas.width = this.width * dpr;
+    this.canvas.height = this.height * dpr;
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this.ctx.scale(dpr, dpr);
+  }
+
+  generateGeometry() {
+    this.nodes = [];
+    this.edges = [];
+
+    // Dual-shell 3D geometric matrix: wide horizontal span around the 4x logo
+    const radiusX = Math.min(this.width * 0.46, 680);
+    const radiusY = Math.min(this.height * 0.44, 280);
+    const depthZ = 340;
+
+    // 1. Geodesic Polyhedral Torus / Rings
+    const ringConfigs = [
+      { yNorm: -0.82, rMult: 0.58, count: 12, zAmp: 0.35 },
+      { yNorm: -0.45, rMult: 0.88, count: 18, zAmp: 0.70 },
+      { yNorm:  0.00, rMult: 1.00, count: 24, zAmp: 1.00 },
+      { yNorm:  0.45, rMult: 0.88, count: 18, zAmp: 0.70 },
+      { yNorm:  0.82, rMult: 0.58, count: 12, zAmp: 0.35 }
+    ];
+
+    ringConfigs.forEach((cfg, rIdx) => {
+      const y = cfg.yNorm * radiusY;
+      for (let i = 0; i < cfg.count; i++) {
+        const angle = (i / cfg.count) * Math.PI * 2 + (rIdx % 2 ? Math.PI / cfg.count : 0);
+        const x = Math.cos(angle) * radiusX * cfg.rMult;
+        const z = Math.sin(angle) * depthZ * cfg.zAmp;
+
+        const color = this.palette[(rIdx * 3 + i) % this.palette.length];
+        this.nodes.push({
+          origX: x, origY: y, origZ: z,
+          x, y, z,
+          x2d: 0, y2d: 0, scale: 0,
+          color,
+          ring: rIdx,
+          baseSize: (rIdx === 2 ? 5.5 : 4.0)
+        });
+      }
+    });
+
+    // 2. Interspersed Floating 3D Geometric Nodes
+    const constellationCount = 28;
+    for (let j = 0; j < constellationCount; j++) {
+      const theta = Math.random() * Math.PI * 2;
+      const u = Math.random() * 2 - 1;
+      const r = Math.sqrt(1 - u * u) * radiusX * (0.45 + Math.random() * 0.45);
+      const x = Math.cos(theta) * r;
+      const y = u * radiusY * 0.75;
+      const z = Math.sin(theta) * depthZ * 0.65;
+      const color = this.palette[j % this.palette.length];
+
+      this.nodes.push({
+        origX: x, origY: y, origZ: z,
+        x, y, z,
+        x2d: 0, y2d: 0, scale: 0,
+        color,
+        ring: -1,
+        baseSize: 3.5
+      });
+    }
+
+    // 3. Connect geometric struts based on 3D distance
+    const maxDist = radiusX * 0.36;
+    for (let a = 0; a < this.nodes.length; a++) {
+      for (let b = a + 1; b < this.nodes.length; b++) {
+        const na = this.nodes[a];
+        const nb = this.nodes[b];
+        const dx = na.origX - nb.origX;
+        const dy = na.origY - nb.origY;
+        const dz = na.origZ - nb.origZ;
+        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        if (dist < maxDist) {
+          this.edges.push({ a, b, dist });
+        }
+      }
+    }
+  }
+
+  project() {
+    const cx = this.width / 2;
+    const cy = this.height / 2;
+
+    const cosX = Math.cos(this.rotX);
+    const sinX = Math.sin(this.rotX);
+    const currentRotY = this.rotY + this.autoRotY;
+    const cosY = Math.cos(currentRotY);
+    const sinY = Math.sin(currentRotY);
+
+    for (let i = 0; i < this.nodes.length; i++) {
+      const n = this.nodes[i];
+
+      // 3D rotation
+      const x1 = n.origX * cosY - n.origZ * sinY;
+      const z1 = n.origZ * cosY + n.origX * sinY;
+      const y2 = n.origY * cosX - z1 * sinX;
+      const z2 = z1 * cosX + n.origY * sinX;
+
+      n.x = x1;
+      n.y = y2;
+      n.z = z2;
+
+      // Perspective projection
+      const f = this.fov / (this.fov + z2);
+      n.x2d = cx + x1 * f;
+      n.y2d = cy + y2 * f;
+      n.scale = f;
+    }
+  }
+
+  render() {
+    this.ctx.clearRect(0, 0, this.width, this.height);
+
+    // Sort edges by depth (back to front)
+    this.edges.sort((e1, e2) => {
+      const z1 = (this.nodes[e1.a].z + this.nodes[e1.b].z) / 2;
+      const z2 = (this.nodes[e2.a].z + this.nodes[e2.b].z) / 2;
+      return z2 - z1;
+    });
+
+    // Draw geometric lattice struts
+    for (let i = 0; i < this.edges.length; i++) {
+      const edge = this.edges[i];
+      const na = this.nodes[edge.a];
+      const nb = this.nodes[edge.b];
+
+      const avgScale = (na.scale + nb.scale) / 2;
+      const depthAlpha = Math.max(0.08, Math.min(0.72, (avgScale - 0.45) * 1.4));
+
+      const grad = this.ctx.createLinearGradient(na.x2d, na.y2d, nb.x2d, nb.y2d);
+      grad.addColorStop(0, `rgba(${na.color.r}, ${na.color.g}, ${na.color.b}, ${depthAlpha})`);
+      grad.addColorStop(1, `rgba(${nb.color.r}, ${nb.color.g}, ${nb.color.b}, ${depthAlpha})`);
+
+      this.ctx.beginPath();
+      this.ctx.moveTo(na.x2d, na.y2d);
+      this.ctx.lineTo(nb.x2d, nb.y2d);
+      this.ctx.strokeStyle = grad;
+      this.ctx.lineWidth = Math.max(0.7, 1.7 * avgScale);
+      this.ctx.stroke();
+    }
+
+    // Draw luminous geometric nodes
+    for (let i = 0; i < this.nodes.length; i++) {
+      const n = this.nodes[i];
+      const radius = Math.max(1.5, n.baseSize * n.scale);
+      const alpha = Math.max(0.18, Math.min(1.0, (n.scale - 0.45) * 1.8));
+
+      // Soft vertex glow halo
+      const haloRad = radius * 3.0;
+      const halo = this.ctx.createRadialGradient(n.x2d, n.y2d, 0, n.x2d, n.y2d, haloRad);
+      halo.addColorStop(0, `rgba(${n.color.r}, ${n.color.g}, ${n.color.b}, ${alpha * 0.75})`);
+      halo.addColorStop(1, `rgba(${n.color.r}, ${n.color.g}, ${n.color.b}, 0)`);
+
+      this.ctx.beginPath();
+      this.ctx.arc(n.x2d, n.y2d, haloRad, 0, Math.PI * 2);
+      this.ctx.fillStyle = halo;
+      this.ctx.fill();
+
+      // Bright center core
+      this.ctx.beginPath();
+      this.ctx.arc(n.x2d, n.y2d, radius, 0, Math.PI * 2);
+      this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.95})`;
+      this.ctx.fill();
+    }
+  }
+
+  animate() {
+    if (!this.isRunning) return;
+
+    // Inertial damping towards mouse + subtle auto drift
+    this.rotX += (this.targetRotX - this.rotX) * 0.045;
+    this.rotY += (this.targetRotY - this.rotY) * 0.045;
+    this.autoRotY += this.autoRotSpeed;
+
+    this.project();
+    this.render();
+
+    requestAnimationFrame(() => this.animate());
+  }
+
+  setRunning(running) {
+    if (this.isRunning === running) return;
+    this.isRunning = running;
+    if (running) {
+      this.animate();
+    }
+  }
+}
+
+/* =============================================================================
+ * 8. Scroll-linked Logo Shrink, Dock, and Frosted Blur Controller
+ * ============================================================================= */
+class ScrollLogoManager {
+  constructor() {
+    this.brandLink = document.getElementById('brand-logo');
+    this.blurBackdrop = document.getElementById('header-blur-backdrop');
+    this.latticeCanvas = document.getElementById('lattice-canvas');
+    this.heroStage = document.getElementById('hero-intro-stage');
+    
+    this.initialScale = 3.8;   // ~4x logo in initial hero state
+    this.finalScale = 1.0;     // standard docked size
+    this.scrollDistance = 380; // scroll px to fully dock
+    this.ticking = false;
+
+    if (!this.brandLink || !this.heroStage) return;
+
+    this.updateDimensions();
+    window.addEventListener('resize', () => this.updateDimensions(), { passive: true });
+    window.addEventListener('scroll', () => this.requestScrollUpdate(), { passive: true });
+
+    // Smooth scroll to top on brand click
+    this.brandLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    this.onScroll();
+  }
+
+  updateDimensions() {
+    const heroHeight = this.heroStage.clientHeight || 500;
+    const targetCenterY = heroHeight * 0.48; // center of hero stage
+    const dockedCenterY = 38;                // docked header center
+    this.initialTranslateY = targetCenterY - dockedCenterY;
+    
+    // Responsive scale & scroll distance
+    if (window.innerWidth < 640) {
+      this.initialScale = 2.3;
+      this.scrollDistance = 260;
+    } else if (window.innerWidth < 1024) {
+      this.initialScale = 3.0;
+      this.scrollDistance = 320;
+    } else {
+      this.initialScale = 3.8;
+      this.scrollDistance = 380;
+    }
+
+    this.onScroll();
+  }
+
+  requestScrollUpdate() {
+    if (!this.ticking) {
+      requestAnimationFrame(() => {
+        this.onScroll();
+        this.ticking = false;
+      });
+      this.ticking = true;
+    }
+  }
+
+  onScroll() {
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const rawProgress = scrollY / this.scrollDistance;
+    const progress = Math.min(1, Math.max(0, rawProgress));
+
+    // 1. Logo Scale & Translation
+    const currentScale = this.initialScale - progress * (this.initialScale - this.finalScale);
+    const currentTranslateY = this.initialTranslateY * (1 - progress);
+
+    this.brandLink.style.transform = `translate3d(0, ${currentTranslateY.toFixed(2)}px, 0) scale(${currentScale.toFixed(3)})`;
+
+    // 2. Lattice Canvas Opacity & Parallax
+    if (this.latticeCanvas) {
+      const latticeOpacity = Math.max(0, 1 - progress * 1.15);
+      this.latticeCanvas.style.opacity = latticeOpacity.toFixed(3);
+      this.latticeCanvas.style.transform = `translate3d(0, ${-(scrollY * 0.25).toFixed(1)}px, 0)`;
+
+      if (window.latticeEngine) {
+        window.latticeEngine.setRunning(progress < 1.0);
+      }
+    }
+
+    // 3. Header Blur & Darken Backdrop Vignette
+    if (this.blurBackdrop) {
+      const backdropOpacity = Math.min(1, Math.max(0, (progress - 0.2) / 0.8));
+      this.blurBackdrop.style.opacity = backdropOpacity.toFixed(3);
+    }
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new VideoGalleryApp();
+  window.latticeEngine = new LatticeBackground('lattice-canvas');
+  window.scrollLogoManager = new ScrollLogoManager();
 });

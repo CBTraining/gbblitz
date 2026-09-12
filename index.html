@@ -10,20 +10,26 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="stylesheet" href="styles.css?v=3.1" />
+  <link rel="stylesheet" href="styles.css?v=3.2" />
 </head>
 <body>
   <div class="ambient-glow ambient-glow-top"></div>
   <div class="ambient-glow ambient-glow-bottom"></div>
 
-  <!-- Main Navigation Bar -->
-  <header class="site-header">
-    <div class="header-container">
-      <a href="#" class="brand" aria-label="GBblitz Home">
-        <img src="Graphic%20Assets/logo.svg" alt="GBblitz Logo" class="brand-logo-img" />
+  <!-- Fixed Header with Dynamic Blurred Vignette (No black bar) -->
+  <header class="site-header" id="site-header">
+    <div class="header-blur-backdrop" id="header-blur-backdrop"></div>
+    <div class="header-container" id="header-container">
+      <a href="#" class="brand" id="brand-logo" aria-label="GBblitz Home">
+        <img src="Graphic%20Assets/logo.svg" alt="GBblitz Logo" class="brand-logo-img" id="brand-logo-img" />
       </a>
     </div>
   </header>
+
+  <!-- Hero Intro Stage: 3D Geometric Google Colors Lattice -->
+  <section class="hero-intro-stage" id="hero-intro-stage" aria-label="Googlebook Launch Blitz 3D Experience">
+    <canvas id="lattice-canvas"></canvas>
+  </section>
 
   <main class="main-content">
     <!-- Top Hero Section: Narrative + Highlighted Video Carousel -->
@@ -217,6 +223,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=3.1"></script>
+  <script src="app.js?v=3.2"></script>
 </body>
 </html>
