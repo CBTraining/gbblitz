@@ -34,14 +34,21 @@ export class ScrollLogoManager {
 
   updateDimensions() {
     const heroHeight = this.heroStage.clientHeight || 500;
-    const targetCenterY = heroHeight * 0.48; // center of hero stage
-    const dockedCenterY = 38;                // docked header center
-    this.initialTranslateY = targetCenterY - dockedCenterY;
+    const targetCenterY = heroHeight * 0.48; // center of hero stage in un-scrolled page
+    
+    // Logo element dimensions
+    const logoImg = this.brandLink.querySelector('.brand-logo-img');
+    const baseLogoHeight = logoImg ? (logoImg.clientHeight || 190) : 190;
+    const headerContainer = document.getElementById('header-container');
+    const paddingTop = headerContainer ? parseFloat(getComputedStyle(headerContainer).paddingTop) || 10 : 10;
+
+    // Because .brand has transform-origin: center top,
+    // in unscaled hero state (scale=1.0), the logo's center is at: paddingTop + (baseLogoHeight / 2).
+    // In docked state (scale=finalScale), the logo's top is at paddingTop, and its height is baseLogoHeight * finalScale.
+    const unscaledCenterY = paddingTop + (baseLogoHeight / 2);
+    this.initialTranslateY = targetCenterY - unscaledCenterY;
     
     // Responsive scale & scroll distance
-    // Base logo is rendered cleanly at 190px height.
-    // In hero state, scale is 1.0 (crisp 1:1 pixel fidelity).
-    // When scrolling down, it docks to 52px height (1.0 -> 0.274 scale).
     if (window.innerWidth < 640) {
       this.initialScale = 1.0;
       this.finalScale = 0.36;   // ~40px docked
@@ -93,7 +100,7 @@ export class ScrollLogoManager {
 
     // 3. Header Blur & Darken Backdrop Vignette
     if (this.blurBackdrop) {
-      const backdropOpacity = Math.min(1, Math.max(0, (progress - 0.2) / 0.8));
+      const backdropOpacity = Math.min(1, Math.max(0, progress / 0.7));
       this.blurBackdrop.style.opacity = backdropOpacity.toFixed(3);
     }
 

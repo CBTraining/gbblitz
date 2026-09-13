@@ -19,13 +19,13 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 96px;
+  height: 105px;
   pointer-events: none;
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
-  background: linear-gradient(180deg, rgba(7, 9, 12, 0.94) 0%, rgba(7, 9, 12, 0.72) 65%, rgba(7, 9, 12, 0) 100%);
-  mask-image: linear-gradient(180deg, #000 65%, transparent 100%);
-  -webkit-mask-image: linear-gradient(180deg, #000 65%, transparent 100%);
+  background: linear-gradient(180deg, rgba(7, 9, 12, 0.94) 0%, rgba(7, 9, 12, 0.76) 70%, rgba(7, 9, 12, 0) 100%);
+  mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
   opacity: 0;
   will-change: opacity;
   transition: opacity 0.15s ease-out;
@@ -35,7 +35,7 @@
   width: 60%;
   max-width: 1600px;
   margin: 0 auto;
-  padding: 1.1rem 0;
+  padding: 0.65rem 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,7 +49,7 @@
   justify-content: center;
   text-decoration: none;
   pointer-events: auto;
-  transform-origin: center center;
+  transform-origin: center top;
   will-change: transform;
 }
 
