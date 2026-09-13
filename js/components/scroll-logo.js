@@ -21,7 +21,13 @@ export class ScrollLogoManager {
 
     this.updateDimensions();
     window.addEventListener('resize', () => this.updateDimensions(), { passive: true });
+    window.addEventListener('orientationchange', () => setTimeout(() => this.updateDimensions(), 150), { passive: true });
     window.addEventListener('scroll', () => this.requestScrollUpdate(), { passive: true });
+
+    const logoImg = this.brandLink.querySelector('.brand-logo-img');
+    if (logoImg && !logoImg.complete) {
+      logoImg.addEventListener('load', () => this.updateDimensions(), { once: true });
+    }
 
     // Smooth scroll to top on brand click
     this.brandLink.addEventListener('click', (e) => {
