@@ -1,7 +1,3 @@
-  background: var(--grad-yellow);
-  box-shadow: 0 0 10px rgba(249, 171, 0, 0.7);
-}
-
 /* Right Column: Compact Highlighted Carousel */
 .hero-carousel-col {
   width: 100%;

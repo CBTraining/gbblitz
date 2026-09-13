@@ -204,3 +204,6 @@
 }
 
 .dot-yellow {
+  background: var(--grad-yellow);
+  box-shadow: 0 0 10px rgba(249, 171, 0, 0.7);
+}
