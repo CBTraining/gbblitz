@@ -27,6 +27,8 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+  max-width: 100%;
+  box-sizing: border-box;
   transition: 
     padding var(--transition-fast), 
     background var(--transition-fast), 
@@ -79,6 +81,9 @@
   border: none;
   border-radius: 0;
   box-shadow: none;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 /* Active Sticky (Stuck) State while scrolling through video grid */
@@ -115,7 +120,9 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-pill);
   padding: 0.6rem 1.2rem;
-  min-width: 300px;
+  min-width: 260px;
+  max-width: 100%;
+  box-sizing: border-box;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 

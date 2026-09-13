@@ -65,3 +65,11 @@ body.magic-pointer-active .theater-video-shield {
   }
 }
 
+@media (pointer: coarse), (max-width: 768px) {
+  .magic-pointer,
+  .magic-sparkle {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+

@@ -70,8 +70,8 @@ export class StarrySkyBackground {
       this.mouse.y = canvasY;
       this.mouse.hover = true;
 
-      // Stardust particle emission on cursor motion
-      if (this.mouse.speed > 2.5 && Math.random() < 0.65) {
+      // Stardust particle emission on cursor motion (desktop only)
+      if (window.innerWidth >= 768 && this.mouse.speed > 2.5 && Math.random() < 0.65) {
         const color = Math.random() < 0.35 
           ? this.googleColors[Math.floor(Math.random() * this.googleColors.length)]
           : { r: 255, g: 255, b: 255 };
@@ -134,10 +134,11 @@ export class StarrySkyBackground {
 
   generateStars() {
     this.stars = [];
-    const count = 300;
-    const spreadX = Math.max(this.width * 1.35, 1700);
-    const spreadY = Math.max(this.height * 1.45, 1100);
-    const depth = 920;
+    const isMobile = window.innerWidth < 768;
+    const count = isMobile ? 120 : 300;
+    const spreadX = Math.max(this.width * (isMobile ? 1.15 : 1.35), isMobile ? 800 : 1700);
+    const spreadY = Math.max(this.height * (isMobile ? 1.25 : 1.45), isMobile ? 600 : 1100);
+    const depth = isMobile ? 600 : 920;
 
     for (let i = 0; i < count; i++) {
       // Mostly white stars (~82%), with Google brand colors speckled in (~18%)
@@ -181,7 +182,8 @@ export class StarrySkyBackground {
 
   generateDust() {
     this.dustParticles = [];
-    for (let i = 0; i < 50; i++) {
+    const count = window.innerWidth < 768 ? 18 : 50;
+    for (let i = 0; i < count; i++) {
       this.dustParticles.push({
         x: Math.random() * this.width,
         y: Math.random() * this.height,

@@ -167,6 +167,47 @@ export class HighlightCarousel {
     if (this.wrapper) {
       this.wrapper.addEventListener('mouseenter', () => this.stopAutoplay());
       this.wrapper.addEventListener('mouseleave', () => this.startAutoplay());
+
+      // Touch swipe gestures for mobile viewports
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchEndX = 0;
+      let touchEndY = 0;
+      let isSwiping = false;
+
+      this.wrapper.addEventListener('touchstart', (e) => {
+        if (!e.touches || e.touches.length === 0) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchEndX = touchStartX;
+        touchEndY = touchStartY;
+        isSwiping = true;
+        this.stopAutoplay();
+      }, { passive: true });
+
+      this.wrapper.addEventListener('touchmove', (e) => {
+        if (!isSwiping || !e.touches || e.touches.length === 0) return;
+        touchEndX = e.touches[0].clientX;
+        touchEndY = e.touches[0].clientY;
+      }, { passive: true });
+
+      this.wrapper.addEventListener('touchend', () => {
+        if (!isSwiping) return;
+        isSwiping = false;
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
+
+        // Trigger slide transition when horizontal swipe exceeds 35px and is dominant axis
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 35) {
+          if (diffX < 0) {
+            this.nextSlide();
+          } else {
+            this.prevSlide();
+          }
+        } else {
+          this.startAutoplay();
+        }
+      }, { passive: true });
     }
   }
 }

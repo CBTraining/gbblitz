@@ -118,6 +118,8 @@ export class ScrollLogoManager {
       const exitDistance = Math.max(280, albumHeight * 0.75);
       const exitEnd = exitStart + exitDistance;
 
+      const isStacked = window.innerWidth < 1050;
+
       if (scrollY <= exitStart) {
         // Pristine, full visibility
         this.narrativeCol.style.opacity = '1';
@@ -127,21 +129,29 @@ export class ScrollLogoManager {
       } else if (scrollY >= exitEnd) {
         // Fully dispersed
         this.narrativeCol.style.opacity = '0';
-        this.narrativeCol.style.transform = 'translate3d(-100px, 0, 0)';
+        this.narrativeCol.style.transform = isStacked ? 'translate3d(0, -25px, 0)' : 'translate3d(-100px, 0, 0)';
         this.carouselCol.style.opacity = '0';
-        this.carouselCol.style.transform = 'translate3d(100px, 0, 0)';
+        this.carouselCol.style.transform = isStacked ? 'translate3d(0, -25px, 0)' : 'translate3d(100px, 0, 0)';
       } else {
         const exitProgress = (scrollY - exitStart) / exitDistance;
         // Smooth ease curve: gradual start so disappearance doesn't feel abrupt
         const ease = exitProgress * exitProgress;
         const opacity = Math.max(0, 1 - exitProgress * 1.05);
-        const shiftDistance = 90 * ease;
-
+        
         this.narrativeCol.style.opacity = opacity.toFixed(3);
-        this.narrativeCol.style.transform = `translate3d(${-shiftDistance.toFixed(1)}px, 0, 0)`;
-
         this.carouselCol.style.opacity = opacity.toFixed(3);
-        this.carouselCol.style.transform = `translate3d(${shiftDistance.toFixed(1)}px, 0, 0)`;
+
+        if (isStacked) {
+          // On mobile & tablets: vertical fade only — strictly avoid horizontal shifts that cause mobile page scroll
+          const shiftY = (-25 * ease).toFixed(1);
+          this.narrativeCol.style.transform = `translate3d(0, ${shiftY}px, 0)`;
+          this.carouselCol.style.transform = `translate3d(0, ${shiftY}px, 0)`;
+        } else {
+          // Desktop wide screen: horizontal dispersal
+          const shiftDistance = 90 * ease;
+          this.narrativeCol.style.transform = `translate3d(${-shiftDistance.toFixed(1)}px, 0, 0)`;
+          this.carouselCol.style.transform = `translate3d(${shiftDistance.toFixed(1)}px, 0, 0)`;
+        }
       }
     }
   }

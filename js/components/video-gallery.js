@@ -3,10 +3,10 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.10.0';
-import { HighlightCarousel } from './carousel.js?v=5.10.0';
-import { TheaterModal } from './theater-modal.js?v=5.10.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.10.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.11.0';
+import { HighlightCarousel } from './carousel.js?v=5.11.0';
+import { TheaterModal } from './theater-modal.js?v=5.11.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.11.0';
 
 export class VideoGalleryApp {
   constructor() {
@@ -120,6 +120,8 @@ export class VideoGalleryApp {
     }
 
     this.videoGrid.innerHTML = '';
+    const fragment = document.createDocumentFragment();
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
 
     filtered.forEach((video, index) => {
       const badgeClass = this.getBadgeClass(video.designation);
@@ -194,9 +196,13 @@ export class VideoGalleryApp {
         }
       });
 
-      this.setupHoverPreview(card, video);
-      this.videoGrid.appendChild(card);
+      if (!isTouch) {
+        this.setupHoverPreview(card, video);
+      }
+      fragment.appendChild(card);
     });
+
+    this.videoGrid.appendChild(fragment);
   }
 
   setupHoverPreview(card, video) {

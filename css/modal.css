@@ -287,3 +287,72 @@
   width: 16px;
   height: 16px;
 }
+
+/* ==========================================================================
+   Mobile Responsive Theater Modal
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  .modal-backdrop {
+    padding: 0.5rem;
+  }
+
+  .modal-floating-close-btn {
+    display: none;
+  }
+
+  .theater-card {
+    max-width: 100% !important;
+    border-radius: var(--radius-inner);
+  }
+
+  .theater-header {
+    padding: 0.75rem 0.85rem;
+  }
+
+  .theater-title {
+    font-size: 0.98rem;
+  }
+
+  .theater-actions {
+    gap: 0.4rem;
+  }
+
+  .btn-icon-only {
+    width: 34px;
+    height: 34px;
+  }
+
+  .theater-footer {
+    padding: 0.75rem 0.85rem;
+    gap: 0.5rem;
+  }
+
+  .theater-footer-left {
+    width: 100%;
+    margin-bottom: 0.15rem;
+  }
+
+  .theater-description {
+    font-size: 0.82rem;
+  }
+
+  .theater-nav-controls {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-secondary {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.76rem;
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .btn-drive-action {
+    flex: 1 1 100%;
+  }
+}
+
