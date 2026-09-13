@@ -40,11 +40,12 @@ export class TheaterModal {
     const footerDriveBtn = document.getElementById('modal-footer-drive-btn');
     if (footerDriveBtn) footerDriveBtn.href = video.driveUrl || `https://drive.google.com/file/d/${video.driveFileId}/view`;
 
-    this.renderPlayer(video, aspect);
-
+    // Activate modal in viewport first so browser grants autoplay permission
     this.modal.classList.add('active');
     this.modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+
+    this.renderPlayer(video, aspect);
   }
 
   close() {
@@ -109,10 +110,12 @@ export class TheaterModal {
 
     mediaContainer.appendChild(iframe);
 
-    // Transparent interaction shield so custom cursor glides smoothly over video without boundary collisions
-    const shield = document.createElement('div');
-    shield.className = 'theater-video-shield';
-    mediaContainer.appendChild(shield);
+    // Transparent interaction shield: only on desktop with fine mouse cursor
+    if (!window.matchMedia('(pointer: coarse)').matches) {
+      const shield = document.createElement('div');
+      shield.className = 'theater-video-shield';
+      mediaContainer.appendChild(shield);
+    }
   }
 
   toggleFullscreen() {

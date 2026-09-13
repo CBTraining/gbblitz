@@ -847,6 +847,10 @@ class VideoGalleryApp {
       mediaContainer.style.aspectRatio = `${landAspect}`;
     }
 
+    this.theaterModal.classList.add('active');
+    this.theaterModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
     // Clear and render player frame with explicit autoplay
     this.theaterPlayerContainer.innerHTML = '';
 
@@ -865,10 +869,6 @@ class VideoGalleryApp {
     iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
     iframe.allowFullscreen = true;
     this.theaterPlayerContainer.appendChild(iframe);
-
-    this.theaterModal.classList.add('active');
-    this.theaterModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
   }
 
   closeTheaterModal() {
