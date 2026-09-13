@@ -31,8 +31,10 @@ export class TheaterModal {
     if (!this.modal || !video) return;
 
     if (this.title) this.title.textContent = video.title;
-    if (this.desc) this.desc.textContent = video.wave + ' • ' + video.designation;
-    if (this.categoryBadge) this.categoryBadge.textContent = (video.wave + ' • ' + video.designation).toUpperCase();
+    const isApproved = (video.designation || '').toLowerCase().includes('approved');
+    const badgeText = (!video.designation || isApproved) ? video.wave : `${video.wave} • ${video.designation}`;
+    if (this.desc) this.desc.textContent = badgeText;
+    if (this.categoryBadge) this.categoryBadge.textContent = badgeText.toUpperCase();
     if (this.driveLink) this.driveLink.href = video.driveUrl || `https://drive.google.com/file/d/${video.driveFileId}/view`;
 
     const footerDriveBtn = document.getElementById('modal-footer-drive-btn');

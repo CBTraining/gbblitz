@@ -287,6 +287,8 @@ class VideoGalleryApp {
 
     this.highlightedVideos.forEach((video, index) => {
       const li = document.createElement('li');
+      const isApproved = (video.designation || '').toLowerCase().includes('approved');
+      const desigPart = (!video.designation || isApproved) ? '' : ` • ${video.designation}`;
       li.className = 'carousel-slide ' + (index === 0 ? 'active' : '');
       li.innerHTML = `
         <img 
@@ -303,7 +305,7 @@ class VideoGalleryApp {
               <span class="carousel-wave-badge">${video.wave.toUpperCase()}</span>
             </div>
             <h3 class="carousel-slide-title">${video.title}</h3>
-            <p class="carousel-slide-desc">${video.wave} • ${video.designation} • Featured Presentation</p>
+            <p class="carousel-slide-desc">${video.wave}${desigPart} • Featured Presentation</p>
             
             <button class="btn btn-primary carousel-play-btn" data-video-id="${video.id}">
               <svg viewBox="0 0 24 24" fill="currentColor" class="btn-icon">
@@ -486,7 +488,7 @@ class VideoGalleryApp {
             videoUrl: 'https://drive.google.com/file/d/' + fileId + '/preview',
             streamUrl: 'https://drive.google.com/uc?export=download&id=' + fileId,
             driveUrl: 'https://drive.google.com/file/d/' + fileId + '/view',
-            description: wave + ' • ' + rawDesignation
+            description: wave + (rawDesignation && !rawDesignation.toLowerCase().includes('approved') ? ' • ' + rawDesignation : '')
           });
         }
       }
@@ -770,9 +772,9 @@ class VideoGalleryApp {
     this.currentModalIndex = index !== -1 ? index : 0;
 
     const isApprovedDesig = (video.designation || '').toLowerCase().includes('approved');
-    const displayDesig = isApprovedDesig ? 'Featured Video' : video.designation;
-    this.modalDesc.textContent = video.wave + (displayDesig ? ' • ' + displayDesig : '') + ' • Google Drive Full Playback';
-    this.modalCategoryBadge.textContent = (video.wave + (isApprovedDesig ? '' : ' • ' + video.designation)).toUpperCase();
+    const badgeText = (!video.designation || isApprovedDesig) ? video.wave : `${video.wave} • ${video.designation}`;
+    this.modalDesc.textContent = badgeText;
+    this.modalCategoryBadge.textContent = badgeText.toUpperCase();
     if (this.modalDriveLink) this.modalDriveLink.href = video.driveUrl;
 
     const footerDriveBtn = document.getElementById('modal-footer-drive-btn');

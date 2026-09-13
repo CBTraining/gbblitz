@@ -17,7 +17,7 @@ function createVideo([fileId, title, designation, wave]) {
     videoUrl: 'https://drive.google.com/file/d/' + fileId + '/preview',
     streamUrl: 'https://drive.google.com/uc?export=download&id=' + fileId,
     driveUrl: 'https://drive.google.com/file/d/' + fileId + '/view',
-    description: wave + (designation ? ' • ' + designation : '')
+    description: wave + (designation && !designation.toLowerCase().includes('approved') ? ' • ' + designation : '')
   };
 }
 

@@ -142,7 +142,7 @@ export class SheetSyncService {
             videoUrl: 'https://drive.google.com/file/d/' + fileId + '/preview',
             streamUrl: 'https://drive.google.com/uc?export=download&id=' + fileId,
             driveUrl: 'https://drive.google.com/file/d/' + fileId + '/view',
-            description: wave + ' • ' + rawDesignation
+            description: wave + (rawDesignation && !rawDesignation.toLowerCase().includes('approved') ? ' • ' + rawDesignation : '')
           });
         }
       }

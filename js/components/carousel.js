@@ -42,6 +42,8 @@ export class HighlightCarousel {
     if (this.wrapper) this.wrapper.style.display = '';
 
     this.videos.forEach((video, index) => {
+      const isApproved = (video.designation || '').toLowerCase().includes('approved');
+      const desigPart = (!video.designation || isApproved) ? '' : ` • ${video.designation}`;
       const li = document.createElement('li');
       li.className = 'carousel-slide ' + (index === 0 ? 'active' : '');
       li.innerHTML = `
@@ -59,7 +61,7 @@ export class HighlightCarousel {
               <span class="carousel-wave-badge">${video.wave.toUpperCase()}</span>
             </div>
             <h3 class="carousel-slide-title">${video.title}</h3>
-            <p class="carousel-slide-desc">${video.wave} • ${video.designation} • Featured Presentation</p>
+            <p class="carousel-slide-desc">${video.wave}${desigPart} • Featured Presentation</p>
             
             <button class="btn btn-primary carousel-play-btn" data-video-id="${video.id}">
               <svg viewBox="0 0 24 24" fill="currentColor" class="btn-icon">
