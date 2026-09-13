@@ -850,6 +850,14 @@ class VideoGalleryApp {
     // Clear and render player frame with explicit autoplay
     this.theaterPlayerContainer.innerHTML = '';
 
+    // Set poster as seamless backdrop while Google Drive player initializes
+    if (video.thumbnail) {
+      this.theaterPlayerContainer.style.backgroundImage = `url('${video.thumbnail}')`;
+      this.theaterPlayerContainer.style.backgroundSize = isPort ? 'contain' : 'cover';
+      this.theaterPlayerContainer.style.backgroundPosition = 'center center';
+      this.theaterPlayerContainer.style.backgroundRepeat = 'no-repeat';
+    }
+
     const iframe = document.createElement('iframe');
     iframe.className = 'theater-iframe-element';
     const sep = video.videoUrl.includes('?') ? '&' : '?';
@@ -857,49 +865,6 @@ class VideoGalleryApp {
     iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
     iframe.allowFullscreen = true;
     this.theaterPlayerContainer.appendChild(iframe);
-
-    // Seamless Poster Overlay with Frosted Glass Loader (Prevents Jarring Flash to Black)
-    const posterOverlay = document.createElement('div');
-    posterOverlay.className = 'theater-poster-overlay';
-
-    if (video.thumbnail) {
-      const posterImg = document.createElement('img');
-      posterImg.className = 'theater-poster-img';
-      posterImg.src = video.thumbnail;
-      posterImg.alt = video.title || '';
-      posterImg.onerror = () => {
-        posterImg.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(video.driveFileId)}&sz=w1200`;
-      };
-      posterOverlay.appendChild(posterImg);
-    }
-
-    const loaderWrap = document.createElement('div');
-    loaderWrap.className = 'theater-loader-wrap';
-    loaderWrap.innerHTML = `
-      <div class="theater-loader-spinner">
-        <div class="spinner-ring"></div>
-      </div>
-      <span class="theater-loader-text">Loading presentation...</span>
-    `;
-    posterOverlay.appendChild(loaderWrap);
-    this.theaterPlayerContainer.appendChild(posterOverlay);
-
-    let hasLoaded = false;
-    const triggerDissolve = () => {
-      if (hasLoaded) return;
-      hasLoaded = true;
-      setTimeout(() => {
-        posterOverlay.classList.add('is-hidden');
-        setTimeout(() => {
-          if (posterOverlay.parentNode) {
-            posterOverlay.remove();
-          }
-        }, 600);
-      }, 550);
-    };
-
-    iframe.addEventListener('load', triggerDissolve);
-    setTimeout(triggerDissolve, 3200);
 
     this.theaterModal.classList.add('active');
     this.theaterModal.setAttribute('aria-hidden', 'false');
