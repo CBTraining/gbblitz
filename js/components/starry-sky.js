@@ -34,6 +34,9 @@ export class StarrySkyBackground {
     this.targetRotY = 0;
     this.fov = 680;
     this.isRunning = true;
+    this.startTime = performance.now();
+    this.introDuration = 1500;
+    this.introMeteorSpawned = false;
 
     this.init();
   }
@@ -224,6 +227,11 @@ export class StarrySkyBackground {
     const cosY = Math.cos(this.rotY);
     const sinY = Math.sin(this.rotY);
 
+    const elapsed = now - this.startTime;
+    const rawIntro = Math.min(1, elapsed / this.introDuration);
+    const introEase = 1 - Math.pow(1 - rawIntro, 3);
+    const introScale = 0.65 + 0.35 * introEase;
+
     for (let i = 0; i < this.stars.length; i++) {
       const s = this.stars[i];
 
@@ -246,8 +254,8 @@ export class StarrySkyBackground {
       const f = this.fov / (this.fov + z2);
       s.scale = f;
 
-      s.x2d = cx + x1 * f + s.dispX;
-      s.y2d = cy + y2 * f + s.dispY;
+      s.x2d = cx + (x1 * f + s.dispX) * introScale;
+      s.y2d = cy + (y2 * f + s.dispY) * introScale;
 
       // Interactive mouse repulsion/gravitational wave
       if (this.mouse.hover) {
@@ -276,21 +284,35 @@ export class StarrySkyBackground {
   render(now) {
     this.ctx.clearRect(0, 0, this.width, this.height);
 
+    const elapsed = now - this.startTime;
+    const rawIntro = Math.min(1, elapsed / this.introDuration);
+    const introEase = 1 - Math.pow(1 - rawIntro, 3);
+    const introScale = 0.65 + 0.35 * introEase;
+
+    // Trigger introductory shooting star as title comes into focus
+    if (elapsed > 450 && !this.introMeteorSpawned) {
+      this.spawnMeteor();
+      this.introMeteorSpawned = true;
+    }
+
     // 1. Soft deep-space cosmic nebulae (Google Blue & Google Purple hints)
+    const nebulaAlpha1 = (0.075 * introEase).toFixed(4);
+    const nebulaAlpha2 = (0.055 * introEase).toFixed(4);
+
     const bgGrad1 = this.ctx.createRadialGradient(
       this.width * 0.32, this.height * 0.45, 0,
-      this.width * 0.32, this.height * 0.45, this.width * 0.45
+      this.width * 0.32, this.height * 0.45, this.width * 0.45 * introScale
     );
-    bgGrad1.addColorStop(0, 'rgba(66, 133, 244, 0.065)');
+    bgGrad1.addColorStop(0, `rgba(66, 133, 244, ${nebulaAlpha1})`);
     bgGrad1.addColorStop(1, 'transparent');
     this.ctx.fillStyle = bgGrad1;
     this.ctx.fillRect(0, 0, this.width, this.height);
 
     const bgGrad2 = this.ctx.createRadialGradient(
       this.width * 0.72, this.height * 0.55, 0,
-      this.width * 0.72, this.height * 0.55, this.width * 0.38
+      this.width * 0.72, this.height * 0.55, this.width * 0.38 * introScale
     );
-    bgGrad2.addColorStop(0, 'rgba(161, 66, 244, 0.045)');
+    bgGrad2.addColorStop(0, `rgba(161, 66, 244, ${nebulaAlpha2})`);
     bgGrad2.addColorStop(1, 'transparent');
     this.ctx.fillStyle = bgGrad2;
     this.ctx.fillRect(0, 0, this.width, this.height);
@@ -307,7 +329,7 @@ export class StarrySkyBackground {
 
       this.ctx.beginPath();
       this.ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
-      this.ctx.fillStyle = `rgba(${d.color.r}, ${d.color.g}, ${d.color.b}, ${d.alpha})`;
+      this.ctx.fillStyle = `rgba(${d.color.r}, ${d.color.g}, ${d.color.b}, ${(d.alpha * introEase).toFixed(3)})`;
       this.ctx.fill();
     }
 
@@ -360,7 +382,7 @@ export class StarrySkyBackground {
       const twinkle = 0.65 + 0.35 * Math.sin(now * s.twinkleSpeed + s.twinklePhase);
       const rad = Math.max(0.6, s.baseRadius * s.scale);
       const baseAlpha = Math.min(1.0, Math.max(0.2, (s.scale - 0.35) * 1.8));
-      const finalAlpha = baseAlpha * twinkle;
+      const finalAlpha = baseAlpha * twinkle * introEase;
 
       const c = s.color;
 
