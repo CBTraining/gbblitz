@@ -38,6 +38,8 @@ export class MagicPointerManager {
     this.sparkleColors = ['#1a73e8', '#A9A8FF', '#ea4335', '#FF63A0', '#f9ab00', '#34a853', '#78C9FF', '#a142f4', '#64AFFF'];
     this.lastSparkleX = 0;
     this.lastSparkleY = 0;
+    this.isClicking = false;
+    this.rafPending = false;
 
     this.initEvents();
   }
@@ -47,12 +49,13 @@ export class MagicPointerManager {
     this.mouseY = y;
     if (!this.isActive) return;
 
-    const posX = x - this.HOTSPOT_X;
-    const posY = y - this.HOTSPOT_Y;
-
-    this.pointer.style.setProperty('--mp-x', posX + 'px');
-    this.pointer.style.setProperty('--mp-y', posY + 'px');
-    this.pointer.style.transform = `translate3d(${posX.toFixed(1)}px, ${posY.toFixed(1)}px, 0)`;
+    if (!this.rafPending) {
+      this.rafPending = true;
+      requestAnimationFrame(() => {
+        this.rafPending = false;
+        this.renderPosition();
+      });
+    }
 
     // Sparkle trail on movement
     const dist = Math.hypot(x - this.lastSparkleX, y - this.lastSparkleY);
@@ -61,6 +64,17 @@ export class MagicPointerManager {
       this.lastSparkleY = y;
       this.spawnTrailSparkle(x, y);
     }
+  }
+
+  renderPosition() {
+    if (!this.isActive) return;
+    const posX = this.mouseX - this.HOTSPOT_X;
+    const posY = this.mouseY - this.HOTSPOT_Y;
+    const clickScale = this.isClicking ? ' scale(0.88) rotate(-4deg)' : '';
+
+    this.pointer.style.setProperty('--mp-x', posX + 'px');
+    this.pointer.style.setProperty('--mp-y', posY + 'px');
+    this.pointer.style.transform = `translate3d(${posX.toFixed(1)}px, ${posY.toFixed(1)}px, 0)${clickScale}`;
   }
 
   setMagicPointer(active) {
@@ -230,15 +244,30 @@ export class MagicPointerManager {
 
     // Mouse Down / Up tactile micro-press
     document.addEventListener('mousedown', () => {
-      if (this.isActive) this.pointer.classList.add('pointer-clicking');
+      if (this.isActive) {
+        this.isClicking = true;
+        this.pointer.classList.add('pointer-clicking');
+        this.renderPosition();
+      }
     });
 
     document.addEventListener('mouseup', () => {
-      if (this.isActive) this.pointer.classList.remove('pointer-clicking');
+      if (this.isActive) {
+        this.isClicking = false;
+        this.pointer.classList.remove('pointer-clicking');
+        this.renderPosition();
+      }
     });
 
-    // Hide pointer when leaving window
+    // Hide pointer when leaving window or focusing unshielded frames
     document.addEventListener('mouseleave', () => {
+      if (this.isActive) {
+        this.pointer.classList.remove('pointer-visible');
+        this.isVisible = false;
+      }
+    });
+
+    window.addEventListener('blur', () => {
       if (this.isActive) {
         this.pointer.classList.remove('pointer-visible');
         this.isVisible = false;

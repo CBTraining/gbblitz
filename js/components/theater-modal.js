@@ -106,6 +106,18 @@ export class TheaterModal {
     iframe.setAttribute('loading', 'eager');
 
     mediaContainer.appendChild(iframe);
+
+    // Transparent interaction shield so custom cursor glides smoothly over video without boundary collisions
+    const shield = document.createElement('div');
+    shield.className = 'theater-video-shield';
+    shield.addEventListener('click', () => {
+      // Temporarily pass clicks through to the Google Drive video player controls
+      shield.style.pointerEvents = 'none';
+    });
+    mediaContainer.addEventListener('mouseleave', () => {
+      shield.style.pointerEvents = '';
+    });
+    mediaContainer.appendChild(shield);
   }
 
   toggleFullscreen() {
