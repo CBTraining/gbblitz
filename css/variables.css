@@ -1,0 +1,57 @@
+/* ==========================================================================
+   GBblitz - Googlebook / Gemini Cinematic Dark Mode Theme
+   ========================================================================== */
+
+:root {
+  /* Core Dark Mode Canvas */
+  --bg-black: #000000;
+  --bg-glow-blue: #142743;
+  
+  /* Googlebook UI Windows */
+  --bg-surface: #161a1e;          /* Main Window Color */
+  --bg-surface-inner: #292c34;    /* Inner Window Color */
+  --bg-surface-secondary: #323d4e;/* Header and Secondary Color */
+  --bg-surface-elevated: #1e2329;
+  
+  /* Primary Accent Colors (used sparsely as tertiary accents) */
+  --accent-blue: #3186ff;
+  --accent-green: #0ebc5f;
+  --accent-yellow: #ffcc00;
+  --accent-red: #ff4641;
+  
+  /* Sparse Gradient Accents (Official Google Workspace Palette) */
+  --googlebook-gradient: linear-gradient(90deg, #3186ff 0%, #0ebc5f 33%, #ffcc00 66%, #ff4641 100%);
+  --googlebook-border-glow: linear-gradient(135deg, #3186ff 0%, #0ebc5f 38%, #ffcc00 70%, #ff4641 100%);
+  --googlebook-soft-glow: linear-gradient(135deg, rgba(49, 134, 255, 0.7) 0%, rgba(14, 188, 95, 0.5) 38%, rgba(255, 204, 0, 0.5) 70%, rgba(255, 70, 65, 0.7) 100%);
+  --grad-blue: linear-gradient(90deg, #1a73e8 0%, #A9A8FF 100%);
+  --grad-red: linear-gradient(90deg, #ea4335 0%, #FF63A0 100%);
+  --grad-yellow: linear-gradient(90deg, #f9ab00 0%, #FFB5E8 100%);
+  --grad-green: linear-gradient(90deg, #34a853 0%, #78C9FF 100%);
+  --grad-purple: linear-gradient(90deg, #a142f4 0%, #64AFFF 100%);
+  --grad-workspace: linear-gradient(135deg, #64AFFF 0%, #34a853 50%, #FFF549 100%);
+
+  /* Borders & Dividers */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.14);
+  --border-active: rgba(49, 134, 255, 0.5);
+
+  /* Typography Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #9aa0a6;
+  --text-muted: #5f6368;
+  
+  /* Googlebook Geometry */
+  --radius-card: 25px;            /* 25px Rounded Corners specified in design */
+  --radius-inner: 16px;
+  --radius-pill: 9999px;
+  --radius-sm: 8px;
+  
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Typography */
+  --font-main: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
+}

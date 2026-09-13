@@ -1,0 +1,206 @@
+/* ==========================================================================
+   Hero Intro Stage (3D Geometric Google Colors Lattice)
+   ========================================================================== */
+
+.hero-intro-stage {
+  position: relative;
+  width: 100%;
+  height: 68vh;
+  min-height: 500px;
+  max-height: 720px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+#lattice-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  z-index: 1;
+  will-change: opacity, transform;
+}
+
+/* ==========================================================================
+   Main Content Sections
+   ========================================================================== */
+
+.main-content {
+  position: relative;
+  z-index: 1;
+  width: 60%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2.5rem 0 6.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-size: 1.85rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin-top: 0.4rem;
+}
+
+.section-desc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 400;
+  margin-top: 0.25rem;
+}
+
+/* Section Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--grad-purple);
+  color: #ffffff;
+  border: none;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.38rem 1.05rem;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 4px 18px rgba(161, 66, 244, 0.4);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   Hero Split Row: Narrative Content + Compact Highlighted Video Carousel
+   ========================================================================== */
+
+.album-section {
+  width: 100%;
+}
+
+.hero-split-row {
+  display: grid;
+  grid-template-columns: 1.12fr 0.98fr;
+  gap: 3.25rem;
+  align-items: center;
+}
+
+/* Left Column: Narrative Headline & Partnership Context */
+.hero-narrative-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  will-change: transform, opacity;
+  transition: transform 0.05s linear, opacity 0.05s linear;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--grad-blue);
+  border: none;
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.42rem 1.15rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: 1.15rem;
+  box-shadow: 0 4px 18px rgba(26, 115, 232, 0.45);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.hero-badge-spark {
+  font-size: 0.85rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
+}
+
+.hero-headline {
+  font-family: var(--font-main);
+  font-size: clamp(1.65rem, 2.2vw, 2.25rem);
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.28;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+/* Color flair using official Google Blue 500 to #A9A8FF gradient */
+.text-gradient-blue {
+  background: var(--grad-blue);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  display: inline;
+}
+
+.hero-subtext {
+  font-size: 0.98rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 1.1rem;
+  max-width: 580px;
+}
+
+/* Sparse Google Workspace Gradient Themed Feature Chips */
+.hero-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.4rem;
+}
+
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+
+.hero-chip:hover {
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-blue {
+  background: var(--grad-blue);
+  box-shadow: 0 0 10px rgba(49, 134, 255, 0.7);
+}
+
+.dot-purple {
+  background: var(--grad-purple);
+  box-shadow: 0 0 10px rgba(161, 66, 244, 0.7);
+}
+
+.dot-green {
+  background: var(--grad-green);
+  box-shadow: 0 0 10px rgba(52, 168, 83, 0.7);
+}
+
+.dot-yellow {
