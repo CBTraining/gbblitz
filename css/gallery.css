@@ -218,6 +218,18 @@
   transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Transparent shield over preview video to maintain parent mouse tracking on top of playing video */
+.preview-iframe-slot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: auto;
+  background: transparent;
+}
+
 /* Landscape Video Preview - Scaled 160% down to fit width cleanly, cropping Drive top bar */
 .video-preview-iframe {
   position: absolute;

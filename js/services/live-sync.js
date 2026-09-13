@@ -6,8 +6,8 @@
 import { GOOGLE_SHEET_CSV_URL } from '../config.js';
 import { isUsableDesignation, parseCSV } from './sheet-service.js';
 
-const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v1';
-const CACHE_SIG_KEY = 'gbblitz_cached_sig_v1';
+const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v3';
+const CACHE_SIG_KEY = 'gbblitz_cached_sig_v3';
 const MIN_COOLDOWN_MS = 60000; // 60s cooldown between visibility/focus syncs
 
 export class SheetSyncService {

@@ -259,15 +259,8 @@ export class MagicPointerManager {
       }
     });
 
-    // Hide pointer when leaving window or focusing unshielded frames
+    // Hide pointer when leaving window
     document.addEventListener('mouseleave', () => {
-      if (this.isActive) {
-        this.pointer.classList.remove('pointer-visible');
-        this.isVisible = false;
-      }
-    });
-
-    window.addEventListener('blur', () => {
       if (this.isActive) {
         this.pointer.classList.remove('pointer-visible');
         this.isVisible = false;
