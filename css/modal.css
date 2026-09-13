@@ -172,6 +172,8 @@
   max-height: calc(84vh - 130px);
 }
 
+.theater-media-container iframe,
+.theater-player,
 .theater-iframe-element {
   position: absolute;
   top: 0;

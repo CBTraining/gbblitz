@@ -52,6 +52,13 @@ export class TheaterModal {
     document.body.style.overflow = '';
     if (this.playerContainer) {
       this.playerContainer.innerHTML = '';
+      this.playerContainer.style.backgroundImage = '';
+      this.playerContainer.style.aspectRatio = '';
+    }
+    const theaterCard = this.modal.querySelector('.theater-card');
+    if (theaterCard) {
+      theaterCard.style.maxWidth = '';
+      theaterCard.classList.remove('is-portrait', 'is-landscape');
     }
     this.onClose();
   }
@@ -60,20 +67,45 @@ export class TheaterModal {
     if (!this.playerContainer) return;
     this.playerContainer.innerHTML = '';
 
+    const theaterCard = this.modal.querySelector('.theater-card');
+    const mediaContainer = this.playerContainer;
+
+    const isPort = video.isPortrait || (aspect && aspect < 0.95);
+
+    if (theaterCard) {
+      if (isPort) {
+        const portAspect = aspect ? Math.max(aspect, 0.52) : 9 / 16;
+        theaterCard.classList.add('is-portrait');
+        theaterCard.classList.remove('is-landscape');
+        theaterCard.style.maxWidth = `min(440px, calc((84vh - 130px) * ${portAspect}))`;
+        mediaContainer.style.aspectRatio = `${portAspect}`;
+      } else {
+        const landAspect = aspect ? Math.min(aspect, 2.35) : 16 / 9;
+        theaterCard.classList.remove('is-portrait');
+        theaterCard.classList.add('is-landscape');
+        theaterCard.style.maxWidth = `min(92vw, calc((84vh - 130px) * ${landAspect}))`;
+        mediaContainer.style.aspectRatio = `${landAspect}`;
+      }
+    }
+
+    // Set poster as seamless backdrop while Google Drive player initializes
+    if (video.thumbnail) {
+      mediaContainer.style.backgroundImage = `url('${video.thumbnail}')`;
+      mediaContainer.style.backgroundSize = isPort ? 'contain' : 'cover';
+      mediaContainer.style.backgroundPosition = 'center center';
+      mediaContainer.style.backgroundRepeat = 'no-repeat';
+    }
+
     const iframe = document.createElement('iframe');
-    iframe.className = 'theater-player';
-    iframe.src = `https://drive.google.com/file/d/${video.driveFileId}/preview`;
-    iframe.allow = 'autoplay; fullscreen';
+    iframe.className = 'theater-iframe-element theater-player';
+    const baseUrl = video.videoUrl || `https://drive.google.com/file/d/${video.driveFileId}/preview`;
+    const sep = baseUrl.includes('?') ? '&' : '?';
+    iframe.src = baseUrl + sep + 'autoplay=1';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
     iframe.allowFullscreen = true;
     iframe.setAttribute('loading', 'eager');
 
-    if (aspect && aspect < 1.0) {
-      this.playerContainer.classList.add('is-portrait');
-    } else {
-      this.playerContainer.classList.remove('is-portrait');
-    }
-
-    this.playerContainer.appendChild(iframe);
+    mediaContainer.appendChild(iframe);
   }
 
   toggleFullscreen() {

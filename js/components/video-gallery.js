@@ -3,10 +3,10 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js';
-import { HighlightCarousel } from './carousel.js';
-import { TheaterModal } from './theater-modal.js';
-import { SheetSyncService } from '../services/live-sync.js';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.3';
+import { HighlightCarousel } from './carousel.js?v=5.3';
+import { TheaterModal } from './theater-modal.js?v=5.3';
+import { SheetSyncService } from '../services/live-sync.js?v=5.3';
 
 export class VideoGalleryApp {
   constructor() {
