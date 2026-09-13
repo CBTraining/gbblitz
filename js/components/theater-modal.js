@@ -90,14 +90,7 @@ export class TheaterModal {
       }
     }
 
-    // Set poster as seamless backdrop while Google Drive player initializes
-    if (video.thumbnail) {
-      mediaContainer.style.backgroundImage = `url('${video.thumbnail}')`;
-      mediaContainer.style.backgroundSize = isPort ? 'contain' : 'cover';
-      mediaContainer.style.backgroundPosition = 'center center';
-      mediaContainer.style.backgroundRepeat = 'no-repeat';
-    }
-
+    // 1. Google Drive Player Iframe (beneath overlay)
     const iframe = document.createElement('iframe');
     iframe.className = 'theater-iframe-element theater-player';
     const baseUrl = video.videoUrl || `https://drive.google.com/file/d/${video.driveFileId}/preview`;
@@ -106,13 +99,57 @@ export class TheaterModal {
     iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
     iframe.allowFullscreen = true;
     iframe.setAttribute('loading', 'eager');
-
     mediaContainer.appendChild(iframe);
 
-    // Transparent interaction shield so custom cursor glides smoothly over video without boundary collisions
+    // 2. Seamless Poster Overlay with Frosted Glass Loader (Prevents Jarring Flash to Black)
+    const posterOverlay = document.createElement('div');
+    posterOverlay.className = 'theater-poster-overlay';
+
+    if (video.thumbnail) {
+      const posterImg = document.createElement('img');
+      posterImg.className = 'theater-poster-img';
+      posterImg.src = video.thumbnail;
+      posterImg.alt = video.title || '';
+      posterImg.onerror = () => {
+        posterImg.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(video.driveFileId)}&sz=w1200`;
+      };
+      posterOverlay.appendChild(posterImg);
+    }
+
+    const loaderWrap = document.createElement('div');
+    loaderWrap.className = 'theater-loader-wrap';
+    loaderWrap.innerHTML = `
+      <div class="theater-loader-spinner">
+        <div class="spinner-ring"></div>
+      </div>
+      <span class="theater-loader-text">Loading presentation...</span>
+    `;
+    posterOverlay.appendChild(loaderWrap);
+    mediaContainer.appendChild(posterOverlay);
+
+    // 3. Transparent interaction shield for smooth custom cursor tracking
     const shield = document.createElement('div');
     shield.className = 'theater-video-shield';
     mediaContainer.appendChild(shield);
+
+    // 4. Smooth Crossfade Transition: Dissolve poster overlay once video player initializes
+    let hasLoaded = false;
+    const triggerDissolve = () => {
+      if (hasLoaded) return;
+      hasLoaded = true;
+      // Allow Google Drive player 550ms to buffer and render its initial video frame
+      setTimeout(() => {
+        posterOverlay.classList.add('is-hidden');
+        setTimeout(() => {
+          if (posterOverlay.parentNode) {
+            posterOverlay.remove();
+          }
+        }, 600);
+      }, 550);
+    };
+
+    iframe.addEventListener('load', triggerDissolve);
+    setTimeout(triggerDissolve, 3200); // Safety fallback timeout
   }
 
   toggleFullscreen() {
