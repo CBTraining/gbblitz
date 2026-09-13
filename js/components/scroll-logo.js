@@ -15,6 +15,7 @@ export class ScrollLogoManager {
     this.initialScale = 1.0;   // crisp 1:1 pixel fidelity at 190px hero size
     this.finalScale = 0.274;   // docked scale to ~52px height
     this.scrollDistance = 380; // scroll px to fully dock
+    this.dockedOffsetY = 10;   // push down 10px when small to center within top black bar
     this.ticking = false;
 
     if (!this.brandLink || !this.heroStage) return;
@@ -89,7 +90,7 @@ export class ScrollLogoManager {
 
     // 1. Logo Scale & Translation
     const currentScale = this.initialScale - progress * (this.initialScale - this.finalScale);
-    const currentTranslateY = this.initialTranslateY * (1 - progress);
+    const currentTranslateY = this.initialTranslateY * (1 - progress) + (this.dockedOffsetY * progress);
 
     this.brandLink.style.transform = `translate3d(0, ${currentTranslateY.toFixed(2)}px, 0) scale(${currentScale.toFixed(3)})`;
 

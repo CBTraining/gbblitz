@@ -3,10 +3,10 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.12.0';
-import { HighlightCarousel } from './carousel.js?v=5.12.0';
-import { TheaterModal } from './theater-modal.js?v=5.12.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.12.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.13.0';
+import { HighlightCarousel } from './carousel.js?v=5.13.0';
+import { TheaterModal } from './theater-modal.js?v=5.13.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.13.0';
 
 export class VideoGalleryApp {
   constructor() {
@@ -315,7 +315,7 @@ export class VideoGalleryApp {
 
     const updateStuck = () => {
       const rect = this.stickySentinel.getBoundingClientRect();
-      const threshold = window.innerWidth <= 600 ? 62 : 72;
+      const threshold = window.innerWidth <= 640 ? 66 : 74;
       const isStuck = rect.top <= threshold;
       this.stickyHeader.classList.toggle('is-stuck', isStuck);
     };
