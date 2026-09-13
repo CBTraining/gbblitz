@@ -3,10 +3,10 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.3';
-import { HighlightCarousel } from './carousel.js?v=5.3';
-import { TheaterModal } from './theater-modal.js?v=5.3';
-import { SheetSyncService } from '../services/live-sync.js?v=5.3';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.4';
+import { HighlightCarousel } from './carousel.js?v=5.4';
+import { TheaterModal } from './theater-modal.js?v=5.4';
+import { SheetSyncService } from '../services/live-sync.js?v=5.4';
 
 export class VideoGalleryApp {
   constructor() {
@@ -120,8 +120,6 @@ export class VideoGalleryApp {
 
     filtered.forEach((video, index) => {
       const badgeClass = this.getBadgeClass(video.designation);
-      const isApprovedDesig = (video.designation || '').trim().toLowerCase() === 'approved';
-      const desigBadgeHtml = isApprovedDesig ? '' : `<span class="video-designation-badge ${badgeClass}">${video.designation}</span>`;
 
       const isHighlight = (video.designation || '').toLowerCase().includes('highlight');
       const isWinner = (video.designation || '').toLowerCase().includes('winner');
@@ -178,13 +176,6 @@ export class VideoGalleryApp {
           <h3 class="video-title" title="${video.title}">${video.title}</h3>
           <div class="video-meta-row">
             <span class="video-wave-tag">${video.wave}</span>
-            ${desigBadgeHtml}
-            <span class="video-click-prompt">
-              <span>Watch</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </span>
           </div>
         </div>
       `;

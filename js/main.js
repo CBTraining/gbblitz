@@ -3,10 +3,10 @@
  * Orchestrates modular components cleanly on DOMContentLoaded.
  */
 
-import { VideoGalleryApp } from './components/video-gallery.js?v=5.3';
-import { StarrySkyBackground } from './components/starry-sky.js?v=5.3';
-import { ScrollLogoManager } from './components/scroll-logo.js?v=5.3';
-import { MagicPointerManager } from './components/magic-pointer.js?v=5.3';
+import { VideoGalleryApp } from './components/video-gallery.js?v=5.4';
+import { StarrySkyBackground } from './components/starry-sky.js?v=5.4';
+import { ScrollLogoManager } from './components/scroll-logo.js?v=5.4';
+import { MagicPointerManager } from './components/magic-pointer.js?v=5.4';
 
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new VideoGalleryApp();
