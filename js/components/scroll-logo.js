@@ -33,12 +33,12 @@ export class ScrollLogoManager {
   }
 
   updateDimensions() {
-    const heroHeight = this.heroStage.clientHeight || 500;
+    const heroHeight = this.heroStage.clientHeight || 400;
     const targetCenterY = heroHeight * 0.48; // center of hero stage in un-scrolled page
     
     // Logo element dimensions
     const logoImg = this.brandLink.querySelector('.brand-logo-img');
-    const baseLogoHeight = logoImg ? (logoImg.clientHeight || 190) : 190;
+    const baseLogoHeight = logoImg ? (logoImg.clientHeight || 152) : 152;
     const headerContainer = document.getElementById('header-container');
     const paddingTop = headerContainer ? parseFloat(getComputedStyle(headerContainer).paddingTop) || 10 : 10;
 
@@ -51,16 +51,16 @@ export class ScrollLogoManager {
     // Responsive scale & scroll distance
     if (window.innerWidth < 640) {
       this.initialScale = 1.0;
-      this.finalScale = 0.36;   // ~40px docked
-      this.scrollDistance = 260;
+      this.finalScale = 0.42;   // ~37px docked
+      this.scrollDistance = 200;
     } else if (window.innerWidth < 1024) {
       this.initialScale = 1.0;
-      this.finalScale = 0.30;   // ~48px docked
-      this.scrollDistance = 320;
+      this.finalScale = 0.35;   // ~45px docked
+      this.scrollDistance = 250;
     } else {
       this.initialScale = 1.0;
-      this.finalScale = 0.274;  // 52px docked
-      this.scrollDistance = 380;
+      this.finalScale = 0.335;  // ~51px docked
+      this.scrollDistance = 300;
     }
 
     this.onScroll();

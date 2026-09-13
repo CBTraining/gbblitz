@@ -45,8 +45,8 @@
     width: 92%;
   }
   .hero-intro-stage {
-    height: 54vh;
-    min-height: 420px;
+    height: 44vh;
+    min-height: 335px;
   }
   .video-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -59,11 +59,11 @@
     padding: 1rem 0;
   }
   .brand-logo-img {
-    height: 110px;
+    height: 88px;
     max-width: 80vw;
   }
   .main-content {
-    padding: 1.5rem 0 4rem;
+    padding: 1.25rem 0 3.5rem;
     gap: 2.5rem;
   }
   .hero-headline {
@@ -94,8 +94,8 @@
 
 @media (max-width: 480px) {
   .hero-intro-stage {
-    height: 48vh;
-    min-height: 360px;
+    height: 38vh;
+    min-height: 290px;
   }
   .video-grid {
     grid-template-columns: 1fr;
