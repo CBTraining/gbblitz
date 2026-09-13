@@ -3,10 +3,10 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.14.0';
-import { HighlightCarousel } from './carousel.js?v=5.14.0';
-import { TheaterModal } from './theater-modal.js?v=5.14.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.14.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.15.0';
+import { HighlightCarousel } from './carousel.js?v=5.15.0';
+import { TheaterModal } from './theater-modal.js?v=5.15.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.15.0';
 
 export class VideoGalleryApp {
   constructor() {
@@ -18,8 +18,21 @@ export class VideoGalleryApp {
     this.activePreviewCleaner = null;
 
     this.aspectRatioCache = {
-      '1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF': 0.5625,
+      // Known portrait videos (aspect < 0.95)
       '1un9shx6qb1r5hejoMlrJdF-fjmsEvFem': 0.5625,
+      '1VGgwbRnIq05t8kejbpBGUGg5K4iWeeHi': 0.5625,
+      '1RFugCmwfpIYwOr7zut4uz5i_QmO7ixyT': 0.5625,
+      '1318HU8kWkJanx3u-VvkixXaOB2I94dx0': 0.5625,
+      '1Gy0wZN-n4KpzdA_zgR4pOtDx_WxoVXSj': 0.5625,
+      '132HVaunVpeKuyq1O86lVNFy2KGSSKeNb': 0.5625,
+      '1qBNHic1OQ2ozPt8qCgbpXUXnR1Fn_Z9w': 0.5625,
+      '1YQmw0x-fKhxncdlY9Mt-aHzYu5MrJGXX': 0.5625,
+      '1FVaMjMwiF6l6L6BfotpkaRERlJF2Y4NO': 0.5625,
+      '1FGp-A1TP9uun1E-HwWBuhi6rkVliEvC_': 0.5625,
+      '1yex_GRwom3D4h12tU4YhMUpcFgdgiTS9': 0.8388,
+      '1yl6q0Nxmiv57Pky72NWEaT6JsoLG0o-a': 0.5675,
+      // Prominent landscapes (1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF is 16:9 widescreen)
+      '1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF': 1.7778,
       '1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf': 1.6,
       '1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8': 1.7817,
       '1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp': 1.7778,
@@ -196,6 +209,27 @@ export class VideoGalleryApp {
         }
       });
 
+      // Dynamic aspect ratio detection from loaded thumbnail
+      const thumbImg = card.querySelector('.video-thumb-img');
+      if (thumbImg) {
+        const detect = () => {
+          if (thumbImg.naturalWidth && thumbImg.naturalHeight) {
+            const ratio = thumbImg.naturalWidth / thumbImg.naturalHeight;
+            const isPort = ratio < 0.95;
+            this.aspectRatioCache[video.driveFileId] = ratio;
+            video.isPortrait = isPort;
+            video.aspectRatio = ratio;
+            card.classList.toggle('is-portrait', isPort);
+            card.classList.toggle('is-landscape', !isPort);
+          }
+        };
+        if (thumbImg.complete && thumbImg.naturalWidth) {
+          detect();
+        } else {
+          thumbImg.addEventListener('load', detect, { once: true });
+        }
+      }
+
       if (!isTouch) {
         this.setupHoverPreview(card, video);
       }
@@ -258,8 +292,16 @@ export class VideoGalleryApp {
 
     this.currentModalIndex = index;
     const video = filtered[index];
-    const aspect = this.aspectRatioCache[video.driveFileId] || 1.7778;
-    this.modal.open(video, aspect);
+    let aspect = this.aspectRatioCache[video.driveFileId];
+    if (!aspect) {
+      const card = this.videoGrid.querySelector(`[data-video-id="${video.id}"]`);
+      const thumb = card ? card.querySelector('.video-thumb-img') : null;
+      if (thumb && thumb.naturalWidth && thumb.naturalHeight) {
+        aspect = thumb.naturalWidth / thumb.naturalHeight;
+        this.aspectRatioCache[video.driveFileId] = aspect;
+      }
+    }
+    this.modal.open(video, aspect || 1.7778);
   }
 
   closeTheaterModal() {
