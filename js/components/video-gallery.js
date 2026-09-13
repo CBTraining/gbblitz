@@ -119,11 +119,6 @@ export class VideoGalleryApp {
     this.videoGrid.innerHTML = '';
 
     filtered.forEach((video, index) => {
-      const card = document.createElement('article');
-      card.className = 'video-card';
-      card.dataset.videoId = video.id;
-      card.dataset.index = index;
-
       const badgeClass = this.getBadgeClass(video.designation);
       const isApprovedDesig = (video.designation || '').trim().toLowerCase() === 'approved';
       const desigBadgeHtml = isApprovedDesig ? '' : `<span class="video-designation-badge ${badgeClass}">${video.designation}</span>`;
@@ -139,15 +134,31 @@ export class VideoGalleryApp {
             </span>
           </div>` : '';
 
+      const isPortrait = this.aspectRatioCache[video.driveFileId] && this.aspectRatioCache[video.driveFileId] < 0.95;
+
+      const card = document.createElement('article');
+      card.className = 'video-card ' + 
+        (isHighlight ? 'card-highlight ' : (isWinner ? 'card-winner ' : (isRunner ? 'card-runner ' : ''))) +
+        (isPortrait ? 'is-portrait' : 'is-landscape');
+      card.dataset.videoId = video.id;
+      card.dataset.index = index;
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+
       card.innerHTML = `
-        <div class="video-thumb-container" id="thumb-container-${video.id}">
+        <div class="video-thumb-wrap" id="thumb-wrap-${video.id}">
           <img 
-            class="video-thumb" 
+            class="video-thumb-img" 
             src="${video.thumbnail}" 
             alt="${video.title}" 
             loading="lazy" 
             onerror="if (!this.dataset.retried) { this.dataset.retried = '1'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w800'; } else { this.onerror=null; this.src='https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80'; }"
           />
+
+          <!-- Hover Preview Slot -->
+          <div class="preview-iframe-slot" id="preview-slot-${video.id}"></div>
+
+          <!-- Centered Play Button Overlay -->
           <div class="video-play-overlay">
             <div class="video-play-btn-circle">
               <svg viewBox="0 0 24 24" fill="currentColor">
@@ -155,16 +166,21 @@ export class VideoGalleryApp {
               </svg>
             </div>
           </div>
+
           ${thumbBadgeHtml}
-          <div class="video-preview-iframe-wrapper" id="preview-wrapper-${video.id}"></div>
+
+          <div class="hover-scrub-bar">
+            <div class="hover-scrub-progress"></div>
+          </div>
         </div>
-        <div class="video-info">
-          <h3 class="video-card-title" title="${video.title}">${video.title}</h3>
-          <div class="video-meta">
+
+        <div class="video-card-body">
+          <h3 class="video-title" title="${video.title}">${video.title}</h3>
+          <div class="video-meta-row">
             <span class="video-wave-tag">${video.wave}</span>
             ${desigBadgeHtml}
             <span class="video-click-prompt">
-              Watch
+              <span>Watch</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
@@ -177,6 +193,13 @@ export class VideoGalleryApp {
         this.openTheaterModal(video.id);
       });
 
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.openTheaterModal(video.id);
+        }
+      });
+
       this.setupHoverPreview(card, video);
       this.videoGrid.appendChild(card);
     });
@@ -184,13 +207,17 @@ export class VideoGalleryApp {
 
   setupHoverPreview(card, video) {
     let hoverTimeout = null;
-    const thumbContainer = card.querySelector('.video-thumb-container');
-    const previewWrapper = card.querySelector('.video-preview-iframe-wrapper');
+    const slot = card.querySelector('.preview-iframe-slot');
+    const scrubBar = card.querySelector('.hover-scrub-progress');
 
     const stopPreview = () => {
       if (hoverTimeout) clearTimeout(hoverTimeout);
-      if (previewWrapper) previewWrapper.innerHTML = '';
-      if (thumbContainer) thumbContainer.classList.remove('is-previewing');
+      card.classList.remove('is-playing');
+      if (slot) slot.innerHTML = '';
+      if (scrubBar) {
+        scrubBar.style.transition = 'none';
+        scrubBar.style.width = '0%';
+      }
       if (this.activePreviewCleaner === stopPreview) {
         this.activePreviewCleaner = null;
       }
@@ -198,7 +225,7 @@ export class VideoGalleryApp {
 
     const startPreview = () => {
       hoverTimeout = setTimeout(() => {
-        if (!previewWrapper || previewWrapper.querySelector('iframe')) return;
+        if (!slot || slot.querySelector('iframe')) return;
         
         // Clean up any other active preview first (singleton pattern)
         if (this.activePreviewCleaner && this.activePreviewCleaner !== stopPreview) {
@@ -206,12 +233,17 @@ export class VideoGalleryApp {
         }
         this.activePreviewCleaner = stopPreview;
 
+        card.classList.add('is-playing');
         const iframe = document.createElement('iframe');
         iframe.className = 'video-preview-iframe';
         iframe.src = `https://drive.google.com/file/d/${video.driveFileId}/preview`;
         iframe.allow = 'autoplay';
-        previewWrapper.appendChild(iframe);
-        thumbContainer.classList.add('is-previewing');
+        slot.appendChild(iframe);
+
+        if (scrubBar) {
+          scrubBar.style.transition = 'width 8s linear';
+          scrubBar.style.width = '100%';
+        }
       }, 550);
     };
 

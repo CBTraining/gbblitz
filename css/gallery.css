@@ -251,6 +251,52 @@
   opacity: 0.15;
 }
 
+/* Centered Play Button Overlay on Thumbnail */
+.video-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 3;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.video-play-btn-circle {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.65);
+  transition: all var(--transition-fast);
+}
+
+.video-card:hover .video-play-btn-circle {
+  transform: scale(1.12);
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 22px rgba(49, 134, 255, 0.65);
+}
+
+.video-play-btn-circle svg {
+  width: 20px;
+  height: 20px;
+  margin-left: 2px;
+}
+
+.video-card.is-playing .video-play-overlay {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
 /* Thumbnail Badges */
 .thumb-badges {
   position: absolute;
