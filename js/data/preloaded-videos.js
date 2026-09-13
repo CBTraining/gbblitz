@@ -1,111 +1,26 @@
 /**
- * GBblitz - Preloaded Initial Usable Videos Dataset
- * Provides instant render fallback before live Google Sheet sync completes.
+ * GBblitz - Preloaded Usable Videos Dataset
+ * Compact representation expanding to full video objects on load (saving >80% bandwidth).
+ * Contains all 138 validated Wave 1-5 videos for instant offline render.
  */
-export const PRELOADED_VIDEOS = [
-  {
-    id: 'drive-1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF',
-    driveFileId: '1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF',
-    title: 'Gemini Magic: From Smart Home Hacks to Creative Canvas Art',
-    designation: 'Approved',
-    type: 'Approved',
-    wave: 'Wave 1',
-    category: 'Wave 1',
+function createVideo([fileId, title, designation, wave]) {
+  return {
+    id: 'drive-' + fileId,
+    driveFileId: fileId,
+    title: title,
+    designation: designation,
+    type: designation,
+    wave: wave,
+    category: wave,
     duration: 'HD',
-    thumbnail: 'https://lh3.googleusercontent.com/d/1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF=s800',
-    videoUrl: 'https://drive.google.com/file/d/1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF/preview',
-    streamUrl: 'https://drive.google.com/uc?export=download&id=1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF',
-    driveUrl: 'https://drive.google.com/file/d/1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF/view',
-    description: 'Wave 1'
-  },
-  {
-    id: 'drive-1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8',
-    driveFileId: '1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8',
-    title: 'Unlocking Creative Brilliance with Gemini: From Smart Living to Masterpieces',
-    designation: 'Approved',
-    type: 'Approved',
-    wave: 'Wave 1',
-    category: 'Wave 1',
-    duration: 'HD',
-    thumbnail: 'https://lh3.googleusercontent.com/d/1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8=s800',
-    videoUrl: 'https://drive.google.com/file/d/1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8/preview',
-    streamUrl: 'https://drive.google.com/uc?export=download&id=1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8',
-    driveUrl: 'https://drive.google.com/file/d/1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8/view',
-    description: 'Wave 1'
-  },
-  {
-    id: 'drive-1un9shx6qb1r5hejoMlrJdF-fjmsEvFem',
-    driveFileId: '1un9shx6qb1r5hejoMlrJdF-fjmsEvFem',
-    title: 'Unlocking Creativity: Exploring Google Gemini in Action',
-    designation: 'Approved',
-    type: 'Approved',
-    wave: 'Wave 1',
-    category: 'Wave 1',
-    duration: 'HD',
-    thumbnail: 'https://lh3.googleusercontent.com/d/1un9shx6qb1r5hejoMlrJdF-fjmsEvFem=s800',
-    videoUrl: 'https://drive.google.com/file/d/1un9shx6qb1r5hejoMlrJdF-fjmsEvFem/preview',
-    streamUrl: 'https://drive.google.com/uc?export=download&id=1un9shx6qb1r5hejoMlrJdF-fjmsEvFem',
-    driveUrl: 'https://drive.google.com/file/d/1un9shx6qb1r5hejoMlrJdF-fjmsEvFem/view',
-    description: 'Wave 1'
-  },
-  {
-    id: 'drive-1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp',
-    driveFileId: '1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp',
-    title: 'Unleashing the Magic: How Google Gemini Transforms Daily Tasks into Works of Art',
-    designation: 'Approved',
-    type: 'Approved',
-    wave: 'Wave 1',
-    category: 'Wave 1',
-    duration: 'HD',
-    thumbnail: 'https://lh3.googleusercontent.com/d/1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp=s800',
-    videoUrl: 'https://drive.google.com/file/d/1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp/preview',
-    streamUrl: 'https://drive.google.com/uc?export=download&id=1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp',
-    driveUrl: 'https://drive.google.com/file/d/1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp/view',
-    description: 'Wave 1'
-  },
-  {
-    id: 'drive-1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY',
-    driveFileId: '1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY',
-    title: 'Unleashing Gemini: From Backyard Barbecues to Creative Masterpieces',
-    designation: 'Highlighted',
-    type: 'Highlighted',
-    wave: 'Wave 1',
-    category: 'Wave 1',
-    duration: 'HD',
-    thumbnail: 'https://lh3.googleusercontent.com/d/1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY=s800',
-    videoUrl: 'https://drive.google.com/file/d/1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY/preview',
-    streamUrl: 'https://drive.google.com/uc?export=download&id=1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY',
-    driveUrl: 'https://drive.google.com/file/d/1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY/view',
-    description: 'Wave 1 • Highlighted'
-  },
-  {
-    id: 'drive-1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf',
-    driveFileId: '1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf',
-    title: 'Unlocking Tomorrow: How Google Gemini Redefines Everyday Magic',
-    designation: 'Highlighted',
-    type: 'Highlighted',
-    wave: 'Wave 1',
-    category: 'Wave 1',
-    duration: 'HD',
-    thumbnail: 'https://lh3.googleusercontent.com/d/1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf=s800',
-    videoUrl: 'https://drive.google.com/file/d/1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf/preview',
-    streamUrl: 'https://drive.google.com/uc?export=download&id=1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf',
-    driveUrl: 'https://drive.google.com/file/d/1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf/view',
-    description: 'Wave 1 • Highlighted'
-  },
-  {
-    id: 'drive-19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0',
-    driveFileId: '19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0',
-    title: 'Gemini in Action: From Canvas Masterpieces to Smart Life Hacks',
-    designation: 'Highlighted',
-    type: 'Highlighted',
-    wave: 'Wave 1',
-    category: 'Wave 1',
-    duration: 'HD',
-    thumbnail: 'https://lh3.googleusercontent.com/d/19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0=s800',
-    videoUrl: 'https://drive.google.com/file/d/19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0/preview',
-    streamUrl: 'https://drive.google.com/uc?export=download&id=19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0',
-    driveUrl: 'https://drive.google.com/file/d/19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0/view',
-    description: 'Wave 1 • Highlighted'
-  }
-];
+    thumbnail: 'https://lh3.googleusercontent.com/d/' + fileId + '=s800',
+    videoUrl: 'https://drive.google.com/file/d/' + fileId + '/preview',
+    streamUrl: 'https://drive.google.com/uc?export=download&id=' + fileId,
+    driveUrl: 'https://drive.google.com/file/d/' + fileId + '/view',
+    description: wave + (designation ? ' • ' + designation : '')
+  };
+}
+
+const RAW_VIDEOS = [["1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF","Gemini Magic: From Smart Home Hacks to Creative Canvas Masterpieces","Winner!","Wave 1"],["1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8","Unlocking Creative Brilliance with Gemini Canvas and the Nano Banana Hunt","Winner!","Wave 1"],["1un9shx6qb1r5hejoMlrJdF-fjmsEvFem","Unlocking Creativity: Exploring Google Gemini\u0027s Game-Changing Canvas Feature","Winner!","Wave 1"],["1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp","Unleashing the Magic: How Google Gemini Rewrote My Smart Home Routine","Winner!","Wave 1"],["1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY","Unleashing Gemini: From Backyard Barbecues to Smart Kitchen Hacks","Winner!","Wave 1"],["1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf","Unlocking Tomorrow: How Google Gemini Rewrites the Rules of Everyday Magic","Winner!","Wave 1"],["19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0","Gemini in Action: From Canvas Masterpieces to Nano Bananas and Beyond","Winner!","Wave 1"],["173OXqcnS8nbALF-ohaTa1817LR-BlMZ0","Gemini Unchained: From Cocktail Napkin Sketches to Fully Functional Apps","Winner!","Wave 1"],["1rDd4Z1M_fxTS9tvH1B6hD8SG0lMxg5ml","Gemini\u0027s Corkboard Wonders: Vibe Coding Your Next Great Idea!","Runner Up","Wave 2"],["1jllIYpiA1Ly-VQ0ovVMMbK9wPcWJKhpK","Unlocking Creativity with Gemini Canvas: Tech Hacks and Home Decor Magic","Runner Up","Wave 2"],["1YLz5ht7MSqkNokaCpySUe545dIOF9_Bb","Unlocking Creativity: Gemini Canvas Magic from Home Decor to AI Masterpieces","Runner Up","Wave 2"],["1JCxEh2ywdqaNoazZp4JdzJuCHAcY9dmA","Gemini Spark: From Smart Kitchen Creations to Instant Travel Itineraries","Runner Up","Wave 2"],["1x07g7PlzyCGk_eu_AFodw1gdzQuTQduD","Gemini Canvas Unleashed: From Doodles to Working Apps with Nano Banana!","Runner Up","Wave 2"],["1eaRtcSOYaFvLWpjhWAXNDggI0HoUSBkX","Unlocking Creativity: Nano Bananas, Home Decor, and the Magic of Gemini Canvas","Runner Up","Wave 2"],["1RFugCmwfpIYwOr7zut4uz5i_QmO7ixyT","Unlocking AI Magic: Gemini Canvas, Smart Home Hacks, and Everything in Between","Runner Up","Wave 2"],["1XZhJFVsPDuHBRbc25ivk8kDWVrbroidQ","Unleashing the Magic: How Google Gemini Rewrites the Rules of Everyday Creativity","Runner Up","Wave 2"],["1VGgwbRnIq05t8kejbpBGUGg5K4iWeeHi","Gemini Unleashed: From Nano Bananas to Mastering the Creative Canvas","Runner Up","Wave 2"],["1by86alefJ6yr0JpJveAq1ttubPVt2fy4","Gemini Unlocked: Creative Canvas, Code Magic, and Home Hacks","Runner Up","Wave 2"],["1Wo3XbRJaGEHKLkMUAN8Fjka3fqQJ60BG","Gemini Magic: From Smart Home Hacks to Creative Canvas Masterpieces","Runner Up","Wave 2"],["1JuiYTwJ6aKaAHkYEqh-ZQx1slP889BPp","Gemini Unleashed: Coding, Cooking, and Creative Chaos!","Runner Up","Wave 2"],["1Gy0wZN-n4KpzdA_zgR4pOtDx_WxoVXSj","Vibe Coding Extravaganza: Crafting Interactive Apps with Gemini Canvas!","Runner Up","Wave 2"],["1VX6LSmMbtPMtV1jr_PKP29VpxQU1d0ha","Unleashing Gemini: How I Turned My Messy Kitchen into a Smart Oasis","Runner Up","Wave 2"],["1SFBlJMA8WcF_o1wSrRZBAqmlBeE7JCRX","Gemini Canvas: Transforming Home Decor with AI Brilliance","Runner Up","Wave 2"],["1WlKOor50Pa8eEMq2JdUSsilRQgJYYO8P","Gemini AI: Turning Rough Sketches into Digital Reality with Canvas","Runner Up","Wave 2"],["1Z0kr0pzXlJAOzW-ty8kJdlMFY8FVA61B","From Sketch to App: How Gemini Canvas Brings Your Creative Ideas to Life","Runner Up","Wave 2"],["1_7Z0rurzH7uuJMlZ4BU3PbVLaZln8ySZ","Unlocking the Future: Smart Living and Creative Magic with Google Gemini","Microphone Off","Wave 2"],["1318HU8kWkJanx3u-VvkixXaOB2I94dx0","Gemini Canvas Unlocked: Smart Home Secrets and Creative Masterpieces","Flagged","Wave 2"],["132HVaunVpeKuyq1O86lVNFy2KGSSKeNb","Unlocking Creativity: Gemini Canvas and the Art of Everyday Innovation","Flagged","Wave 2"],["15CFuBhpIzoT6ShZMLAAnN4EvQ1CS3FlH","From Napkins to Apps: Unleashing the Magic of Gemini Canvas","Approved","Wave 2"],["1j2-pYiaDMsBpK0VQTAH31DzZEet8wrS5","Unleashing Gemini: From Coding Assistance to Gourmet Recipe Hacks","Approved","Wave 2"],["1UMa6U3kRXE6yuvaPtiDkkXh8ndKjZr3I","Unleashing Gemini: From Smart Kitchen Recipes to Next-Level Coding Mastery","Approved","Wave 2"],["1eY9D17-RSyHfNCMFVlN9IP3Ig8XzzVKU","Unlocking the Power of Gemini: Smart Alarms, Nano Bananas, and Instant Math Help!","Approved","Wave 2"],["1xz-GGde31lE0Uhjmk4h87PsDTQq8XdZX","Gemini Chronicles: Unleashing AI Creativity from Canvas to Code","Approved","Wave 2"],["1CyhkL4cHepKXH6eF0weqywXNYs9ofbn3","Gemini Spark: Reimagining Home Decor and Unleashing Your Creative Canvas","Approved","Wave 2"],["1nW83t0xlR4adYtOJCF3I7Jxe36jHbqWD","Unleashing Google Gemini: From Coding Magic to Backyard Astro-Photography!","Approved","Wave 2"],["15cVsEutiLFMRM-v9k2G4zfAKSw7nZa-7","Unlocking Creativity: How Gemini Transformed My Daily Routine from Chaos to Canvas","Approved","Wave 2"],["1ck6vvwNxiQ7MbDZYdL3erVx1XyCU97Th","Unleashing Gemini: How AI Transformed My Daily Routine and Home Decor","Approved","Wave 3"],["1U8xMkFOguuPvk7L2b000TFzLaLAYbfwx","Mastering the Mind: How Google Gemini Rewrote My Daily Routine","Approved","Wave 3"],["1tb6BlHeHU0pRxdQnzTv7HpZxtWT2ftry","Gemini Unleashed: Nano Bananas, Smart Closets, and My Daily Grind","Approved","Wave 3"],["1QIbu06lPE_7XWt3y1BQ1dma5OTHv60C5","Gemini Unleashed: Code, Cooking, and Everything in Between","Approved","Wave 3"],["1YQmw0x-fKhxncdlY9Mt-aHzYu5MrJGXX","Gemini Unleashed: Nano Bananas, Smart Homes, and Creative Canvas Magic","Approved","Wave 3"],["1CgUep1ZC1jv14eK_NIoYsuhQ85cprglJ","Unlocking Creative Frontiers: How Google Gemini Transforms Everyday Coding into Art","Approved","Wave 3"],["1FVaMjMwiF6l6L6BfotpkaRERlJF2Y4NO","Unleashing the Magic: How Google Gemini Rewrote My Daily Routine","Approved","Wave 3"],["1qBNHic1OQ2ozPt8qCgbpXUXnR1Fn_Z9w","Unleashing Gemini Canvas: From Blank Slate to Interactive Web App Magic","Approved","Wave 3"],["1ng5vxePClDHP23jDLpJKonJ35C9t_qhz","Gemini Canvas Chronicles: Nano Bananas, Smart Homes, and Creative Magic","Approved","Wave 3"],["1C4c5xilDEYP264JZdmwGYLNYoS8C7Ap9","Gemini Canvas Chronicles: Turning Sketches into Real-Life Masterpieces!","Approved","Wave 3"],["17kTq1tYTraDcbPf8-koHVxwoUy1wfDR6","Gemini Canvas Chronicles: Nano Banana Artistry and Beyond","Approved","Wave 3"],["12ExuAk_gAvTs4kt3UzPwCgJnT3xTxFnR","Unlocking Tomorrow: From Coding in Bed to Gemini\u0027s AI Art Revolution","Approved","Wave 3"],["1BbuwH0VYB1icIb9jRLG9fB3CD1uxXUzm","Gemini Unleashed: From Nano Bananas to Smart Home Domination","Approved","Wave 3"],["14Bnz6gzpktpCxWNUd_W6aJMfgfJrqVcl","Gemini Magic: Unleashing the Power of AI from Home Decor to Creative Canvas Creations","Approved","Wave 3"],["10WHGDkNnBXhTR_at9YY8qgYOkL7Ii7hw","Gemini Unleashed: Smart Home Sorcery and Canvas Creations","Approved","Wave 3"],["1ZU2N02o3Waxz0YIBYK_K0IgxA8YSlZox","Unleashing Gemini: From Coding Assistant to Culinary Co-Pilot","Approved","Wave 3"],["1nf_6DOU9_0X00mn3jxDneT-ZPhF4Yr0p","Gemini Genius: Elevating Everyday Ideas into Creative AI Masterpieces","Approved","Wave 3"],["1ru5dhWK2hlZe4iTtyFZXTwmgzu3Vt6Y2","Gemini Unleashed: From Smart Home Magic to Creative Canvas Masterpieces","Approved","Wave 3"],["1Dz3ZN3sJyMlJYc1abflN6C1-aNSgsPfC","Unlocking Creativity: Gemini Canvas and the Art of the Everyday Magic","Approved","Wave 3"],["1idsxLbSntj-XoZja08_D21bs7DUu5-p6","Unlocking the Future: Google Gemini Redefines Everyday Magic from Code to Canvas","Approved","Wave 3"],["1geU8qxqCPwYUUSxqonxwGzyWh34r16xK","Gemini Spark: Unlocking Next-Gen Coding and Culinary Masterpieces","Approved","Wave 3"],["1HK67ujK9m3VzTx-YxJgwaRuHLdeAzXIB","Gemini Wonders: From Kitchen Hacks to Digital Art Masterpieces","Approved","Wave 3"],["1a15-KaIYaWXFCYdiCjgkaqF5v7SGU1yT","Unleashing Gemini Canvas: From Smart Home Hacks to AI Masterpieces","Approved","Wave 3"],["14vi0gWv3oxWUYIcayowMBiZtOQZ5f7lg","Gemini Unleashed: Elevating Everyday Creativity with Canvas and Smart Tech","Approved","Wave 3"],["1retz-2jjgVMpWTgwu4BIpT6HGDkTSfpu","Unleashing Gemini: From Coding Assistant to Culinary Creative Mastermind","Approved","Wave 3"],["1V-f5nCNwHDMWGavNWuZWOLzAE0bFXn9c","Gemini Canvas Chronicles: Nano Bananas \u0026 Cozy Corners","Approved","Wave 3"],["1x1ETVQW37Jr_uUYC_QlESWOjojcKXRNZ","Gemini Canvas Chronicles: Nano Bananas to Dream Decor!","Approved","Wave 3"],["1CRYi0zOhcTeejlKFpz6QN71rrOcA6azq","Gemini Nano Banana: Turn Simple Doodles into Masterpiece AI Art in Seconds!","Approved","Wave 3"],["1FGp-A1TP9uun1E-HwWBuhi6rkVliEvC_","Unleashing Gemini: From Canvas Doodles to Ultimate Coding Shortcuts","Approved","Wave 3"],["1hbR82eGBl_8v5rb8-BqM432n7TilfGHQ","Unleash the Magic: How Gemini Transformed My Daily Routine from Chaos to Creative Masterpiece!","Approved","Wave 3"],["1wLpJukpSbd28QEZjZJ3x5KPGkoI4N3c0","Gemini Unleashed: Nano Banana Beats and Creative Canvas Vibes","Approved","Wave 4"],["1P860TAR9K0VDso2hXlVzxPZtTbmr2vTl","Gemini Canvas Unlocked: Smart AI Meets Creative Design Artistry","Approved","Wave 4"],["1du_zq2XR_9cPjSb_rPAeSFvN8Ou4IbXy","Gemini Canvas and Smart Spaces: Reimagining Home Decor with Personal Intelligence","Approved","Wave 4"],["1VN-0xqh1nWRnA0W4xmUZS4VMdCqDBIjP","Unlocking Innovation: From Gemini Canvas Sketches to Smart Home Wonders","Approved","Wave 4"],["1dnUpoNu2RgW4mPZUavE78GxPiQ-orVJa","Gemini Unleashed: Crafting Tomorrow\u0027s Masterpieces from Home Hacks to Canvas Art","Approved","Wave 4"],["180v_EaFknV79NJK60XeFJwaNrFJtK3B3","Unleashing Gemini: How I Transformed My Daily Routine with AI Magic","Approved","Wave 4"],["1X_yvpYNwK56vUBWyRNplcO_TNOMdiovL","Gemini Unlocked: Creative Masterpieces and Smart Hacks At Your Fingertips","Approved","Wave 4"],["155kClB63qmSbuDqqws-OST3KQmWkAIW4","Unlocking the Future: Google Gemini Redefines Everyday Creativity","Approved","Wave 4"],["1-Z1j69toJPsCNZgqYfMhEhzBngBZlEQb","Unleashing Gemini: From Grocery Lists to Galactic Blueprints","Approved","Wave 4"],["1LYCGnRSEBik3KaDjlOW4nBIt7cjjzztg","Gemini Unleashed: From Nano Banana Art to Smart Home Revolution","Approved","Wave 4"],["17mJgMMvq4RDUNg0R3l_hUpYhfAIUSpM5","Gemini Genius: Unlocking AI Canvas Magic and Next-Gen Smart Home Hacks","Approved","Wave 4"],["1-vQEOQ6bdHNSC1mziwWd7qIq3v13XWKc","Gemini Genius: Unlocking AI Innovation from Daily Doodles to Masterful Designs","Approved","Wave 4"],["1V48eryPODtyp1LfkvyW6oakVXUw8DKdD","Unleashing Gemini: From Smart Home Hacks to AI Masterpieces","Approved","Wave 4"],["1pxGS-wF3crKq7qInJSaxrx1sawkXlOlm","Gemini Galaxy: Coding with Space Bananas and Smart Kitchen Wizards","Approved","Wave 4"],["1dQ7EloWJ6m_6bNkTX03safSIXX9iOxDR","Gemini Genius: Unlocking Creative Canvas and Smart Home Mastery","Approved","Wave 4"],["1R1jd6ROHuXgrd1uL_wLPzgjBw4Jq4Y-L","Gemini Canvas Chronicles: Nano Banana\u0027s Guide to Smart Living","Approved","Wave 4"],["1qQods8rKkX-uAv1yHDy5Kt13j9S9mzy7","Gemini Unleashed: From Nano Bananas to Epic Living Room Makeovers","Approved","Wave 4"],["1xt0pEoSHZGAtZMPcNhLxO1ES001CZ_q6","Gemini Groceries \u0026 Canvas Creators: From Nano Bananas to Living Room Revamps!","Approved","Wave 4"],["1VWai2P1S2ueURvd3m-yxnUyax7eLgN9J","Gemini Canvas and Beyond: Cooking Up Codes and Crafting Masterpieces","Approved","Wave 4"],["14oBCg8Tcy-CRbN9Kp4SFPr19aVDHPiwd","Gemini Spark: Unlocking Creative Magic in Everyday Routines","Approved","Wave 4"],["1YSQAr2BCPXBSB9Er5KFXfx_rUMsWpWAJ","Unlocking Gemini: From Vibe Coding to Mind-Blowing Audio Overviews","Approved","Wave 4"],["1yex_GRwom3D4h12tU4YhMUpcFgdgiTS9","Unlocking the Future: How Google Gemini Remade My Workspace and Reimagined Creativity!","Approved","Wave 4"],["1wIXWLOobWuspV_Y5xjQN83QwwUhz9eL0","Unleashing Gemini Nano: The Pocket AI Revolutionizing My Home Decor!","Approved","Wave 4"],["1GoiJ-0CgHlfHV-d2q0-Tz-QAAP2-T6WT","Unlocking the Future: Google Gemini Redefines Everyday Magic!","Approved","Wave 4"],["1oggyUZmfkY0Ly3zfoFtDXMYIAgCxpZR7","Gemini Unlocked: From Nano Banana to Smart Home Superpowers","Approved","Wave 4"],["1rYdJMn0bhwEfLRRNAfCYvZxwSD3RbTjq","Unleashing Gemini: From Smart Home Magic to Creative Canvas Masterpieces","Approved","Wave 4"],["1ARpN2Er8cQtIsKUKarowxrc8Ldo8H3TJ","Gemini Unleashed: Crafting Tomorrow\u0027s Masterpieces from Code to Canvas","Approved","Wave 4"],["1e-w1Bvwtxk8G24iboFbDmuSazWahzvaV","Gemini Canvas: From Rough Sketches to Real Life Masterpieces","Approved","Wave 4"],["1efZBrv4WEYBlD7LgoM2rTTskvezCADGs","Unlocking Creativity: Exploring Google Gemini\u0027s Canvas Magic","Approved","Wave 4"],["14wj_TeRhym6xHcnAWls9nGHUolRvNib5","Gemini Unleashed: Crafting Smart Kitchen Hacks and Pixel Masterpieces","Approved","Wave 4"],["1SQf6jZZmXO4cVrBzveflAuNQQNcD6ekP","Unlocking Creativity: Gemini Canvas Transforms Home Decor with Nano Banana!","Approved","Wave 5"],["1GzzxPxkeK8zmaNR6QwZKg-FIdYNCmgEW","Unleash the Spark: Rewriting the Rules of Creation with Google Gemini","Approved","Wave 5"],["1JD9JlujrfK2XSmTLBbSkXMZ-7YQn1Ljz","Unleashing Gemini: How AI Reimagined My Workspace and Beyond","Approved","Wave 5"],["1tnEvVLsOHFL2R8BwyN5gpItasq6rPAc7","Gemini Unleashed: Mastering the Creative Canvas from Home Decor to Tech Hacks","Approved","Wave 5"],["1WJh4vrmkgWLnqtsYemxED6S40S_E-1Pf","Unleashing Gemini: From Smart Home Hacks to AI-Powered Masterpieces","Approved","Wave 5"],["1qBSX8RJgLAWhcst5bULlxeT06UN8wVSa","Unlocking Tomorrow: Coding, Cooking, and Creating with Google Gemini","Approved","Wave 5"],["1fgeNj9gYhp97gw2CDeFp816EIroOauW8","Gemini Unleashed: From Nano Bananas to Mastering the Creative Canvas","Approved","Wave 5"],["1N5xRbaXO1o3zWxTybkUXDgTXQeQ35egc","Gemini Unlocked: From Coding Shortcuts to Pantry Organization Masterpieces","Approved","Wave 5"],["1j1fM11J0X19HyuwII9Z5-cMiLlY44kaQ","Gemini Genius: From Code Cracking to Creative Canvas Wonders","Approved","Wave 5"],["1Jaj2P022uZoDnKxiNKCnxV8CAoHJXoQR","Gemini Genius: Upgrading My Workspace and Coding a Mini-Game!","Approved","Wave 5"],["1YxhMqXLQf6ozxtNUdWwBS-Sb4B8uiqcs","Gemini Unlocked: Cooking Up Masterpieces and Smart Home Magic in Seconds","Approved","Wave 5"],["1tKW_SwhCX7E0TlbffPTH-vmtMwZCY-v7","Gemini Unleashed: Smart Canvas Hacks and AI Masterpieces","Approved","Wave 5"],["1WKb4tEDcoReYmDtb-Atycwft2i0IMmjn","Gemini Unleashed: From Nano Banana Art to Smart Home Mastery","Approved","Wave 5"],["1xiuCmfzg-vOSN89prr8SYQ3kvWI2qdWg","Unlocking Creativity with Gemini Canvas: Nano Banana Experiments and Tech-Infused Home Decor!","Approved","Wave 5"],["1Q0lHqQefVcyUWLfYuSeJXnTBC8IrCHoP","Gemini in the Garden: From Nano Banana to Smart Home Paradise","Approved","Wave 5"],["1AH0TbyzWDmUmrHk14CJ0hXMERXcxMghZ","Gemini Blueprint: Transforming Daily Workflows From Terminal to Superpower","Approved","Wave 5"],["15Txp2YcF3C6uQX7omypjNr5xpCfFeX9K","Gemini Genius: Unlocking Ultimate Workflows and Hidden Hacks!","Approved","Wave 5"],["1rWhQ-mjXjx7QxdRsvVHgR6_24jl6wcmJ","Gemini Unleashed: Nano Bananas, Canvas Art, and Smart Home Magic","Approved","Wave 5"],["1HdQGCECO_uCGaEljAlYML3ebVm-dm8XV","Gemini Genius: From Closet Organization to Cosmic Art Masterpieces","Approved","Wave 5"],["1nuK4ltK9Q2mzT2jEpTc_OnLLmQUPNlod","Gemini Wonders: From Pixel Painting to Backyard Astronomy Made Simple","Approved","Wave 5"],["1_Oc6rKR3r6_9VMGunkni3z2BkKFlUr4j","Unleashing Gemini: From Nano Banana to Ultimate Home Decor Hacks","Approved","Wave 5"],["1ujOVtyhEUsDW-QnNBNgC7GGR4BER5XN7","Gemini Genius: Crafting Smart Kitchen Hacks and Pixel Perfect Masterpieces","Approved","Wave 5"],["1277EJewcvwbKEr9FYI9SOvItOLAWmO3b","Unlocking Gemini: From Smart Kitchen Hacks to AI Canvas Masterpieces","Approved","Wave 5"],["1YMRDzXcA_DV0cmP5PnetR608Hd6SpoE0","Unleashing Gemini: How AI Transformed My Daily Routine from Chaos to Creative Masterpiece","Approved","Wave 5"],["1yl6q0Nxmiv57Pky72NWEaT6JsoLG0o-a","Gemini Chronicles: From Cooking Crises to Coding Triumphs","Approved","Wave 5"],["1JBsky3DSRLQ2B_lWNhZkJ7qqgxv37TwS","Gemini Unlocked: From Nano Bananas to Smart Home Mastery","Approved","Wave 5"],["1IhjELIm2151uMXQa-m5TxypgeBmxbRXS","Unleashing Gemini: From Backyard Barbecues to Quantum Coding Masterpieces","Approved","Wave 5"],["1-N9lm11uXZ--sAVDfPD_h_ApT-ARDd69","Gemini Unleashed: From Nano Bananas to Smart Home Masterpieces","Approved","Wave 5"],["13BD8AF0eRf5i-GVztvWiYUZ3gvWKPd7z","Unlocking Creativity: From Meal Prep to Masterpieces with Gemini Canvas","Approved","Wave 5"],["18wb8kDRign15YQej_oyd9CUcuam45h-y","Unlocking Gemini Magic: From Nano Banana to Ultimate Home Decor Hacks","Approved","Wave 5"],["1l4U2ZytMBSqWEj1qm4MDQROGnqDaFB_C","Unleashing Gemini: How It Redefined My Creative Side","Approved","Wave 5"],["15k-BbOwEd_DjxbKtfawVUCwyCOYGyfMp","Unleashing the Magic: Testing Gemini\u0027s Wildest Creative and Smart Home Hacks!","Approved","Wave 5"],["1aqAP2gjya99ozj6ofAzFal7zjoH1Nc1U","Unleashing Gemini: How I Transformed My Daily Routine with Google\u0027s AI Assistant","Approved","Wave 5"],["1UGo5Px18gFtJN8v6g1ZZlOxEpYT23Skd","Gemini Genius: From Chaos to Creativity with Your New AI Assistant","Approved","Wave 5"],["1s7C3foWr3Pyz9NSs36Td7hlG2w-RbeGI","Gemini Marvels: Interactive App Coding and Creative Canvas Masterpieces","Approved","Wave 5"],["10i1Lvvi5FLkGSBa1jEA3SzI-morsSL7_","Unlocking the Future: How Google Gemini Transforms Daily Tech and Creative Artistry","Approved","Wave 5"],["11tf10hvR-Md2Nf0ubpA0foBe8XbR1ZP5","Gemini Canvas Chronicles: Unleashing AI Magic from Smart Homes to Creative Masterpieces","Approved","Wave 5"],["1VOppAUChSPV4_qYH3SmLSV-tN6V62oVe","Gemini Unlocked: From Smart Home Hacks to Creative Canvas Masterpieces","Approved","Wave 5"],["1e2oNCWK4RJztaURLEGHqt7u9pvOMqbhw","Mastering the Everyday with Google Gemini: Smart Home Hacks and Beyond","Approved","Wave 5"],["1UyBlDicU7VVsUMUxgLWIauPeS6VuYK9O","Gemini Canvas: From Napkin Doodles to Live Working Apps","Approved","Wave 5"],["18fwCTyPO3bX33uPv4Zk6bg-gRqptEAlK","Unlocking the Future: Creating Viral Masterpieces with Gemini Canvas and Beyond!","Approved","Wave 5"],["16r4r_3JVBfKuc75tTslsLEsqDGgHdGZ7","Gemini Unleashed: From Nano Bananas to Smart Home Magic","Approved","Wave 5"]];
+
+export const PRELOADED_VIDEOS = RAW_VIDEOS.map(createVideo);

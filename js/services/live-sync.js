@@ -6,44 +6,109 @@
 import { GOOGLE_SHEET_CSV_URL } from '../config.js';
 import { isUsableDesignation, parseCSV } from './sheet-service.js';
 
+const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v1';
+const CACHE_SIG_KEY = 'gbblitz_cached_sig_v1';
+const MIN_COOLDOWN_MS = 60000; // 60s cooldown between visibility/focus syncs
+
 export class SheetSyncService {
   constructor(options = {}) {
     this.csvUrl = options.csvUrl || GOOGLE_SHEET_CSV_URL;
-    this.pollInterval = options.pollInterval || 15000;
+    this.pollInterval = options.pollInterval || 120000; // 2 minutes default
     this.onUpdate = options.onUpdate || (() => {});
     this.lastSignature = null;
+    this.lastSyncTime = 0;
     this.isSyncing = false;
     this.timer = null;
+    this.consecutiveFailures = 0;
+
+    // Hydrate last signature from cache if available
+    try {
+      this.lastSignature = localStorage.getItem(CACHE_SIG_KEY) || null;
+    } catch (_) {}
+  }
+
+  /**
+   * Retrieves any cached video array from localStorage for zero-latency initial render
+   */
+  static getCachedVideos() {
+    try {
+      const raw = localStorage.getItem(CACHE_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (_) {}
+    return null;
   }
 
   start() {
+    // Initial sync
     this.syncNow();
-    this.timer = setInterval(() => this.syncNow(), this.pollInterval);
+    this.startTimer();
 
+    // Respect tab visibility: pause polling when tab is in background
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) this.syncNow();
+      if (document.hidden) {
+        this.stopTimer();
+      } else {
+        this.startTimer();
+        // Only trigger sync on return if minimum cooldown elapsed
+        if (Date.now() - this.lastSyncTime > MIN_COOLDOWN_MS) {
+          this.syncNow();
+        }
+      }
     });
-    window.addEventListener('focus', () => this.syncNow());
+
+    // Window focus: only sync if cooldown elapsed and tab is active
+    window.addEventListener('focus', () => {
+      if (!document.hidden && Date.now() - this.lastSyncTime > MIN_COOLDOWN_MS) {
+        this.syncNow();
+      }
+    });
+  }
+
+  startTimer() {
+    this.stopTimer();
+    const delay = Math.min(this.pollInterval * Math.pow(1.5, this.consecutiveFailures), 300000);
+    this.timer = setTimeout(() => {
+      this.syncNow().finally(() => {
+        if (!document.hidden) {
+          this.startTimer();
+        }
+      });
+    }, delay);
+  }
+
+  stopTimer() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
   }
 
   stop() {
-    if (this.timer) {
-      clearInterval(this.timer);
-      this.timer = null;
-    }
+    this.stopTimer();
   }
 
   async syncNow() {
     if (this.isSyncing) return;
     this.isSyncing = true;
+    this.lastSyncTime = Date.now();
 
     try {
       const url = this.csvUrl + (this.csvUrl.includes('?') ? '&' : '?') + '_t=' + Date.now();
       const res = await fetch(url, {
-        cache: 'no-store',
-        headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache' }
+        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
       });
-      if (!res.ok) return;
+
+      if (!res.ok) {
+        this.consecutiveFailures++;
+        console.warn(`SheetSync: HTTP ${res.status}. Backing off...`);
+        return;
+      }
+
       const csvText = await res.text();
       const rows = parseCSV(csvText);
       if (rows.length < 2) return;
@@ -82,12 +147,20 @@ export class SheetSyncService {
         }
       }
 
+      this.consecutiveFailures = 0;
       const signature = liveVideos.map(v => `${v.driveFileId}_${v.title}_${v.designation}_${v.wave}`).join('||');
       if (this.lastSignature === signature) return;
       this.lastSignature = signature;
 
+      // Persist in localStorage for instant cold start
+      try {
+        localStorage.setItem(CACHE_STORAGE_KEY, JSON.stringify(liveVideos));
+        localStorage.setItem(CACHE_SIG_KEY, signature);
+      } catch (_) {}
+
       this.onUpdate(liveVideos);
     } catch (err) {
+      this.consecutiveFailures++;
       console.warn('SheetSync note:', err.message);
     } finally {
       this.isSyncing = false;

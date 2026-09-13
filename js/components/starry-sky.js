@@ -95,6 +95,27 @@ export class StarrySkyBackground {
 
     this.generateStars();
     this.generateDust();
+
+    // Hardware & battery efficiency: Pause canvas loop when offscreen or tab hidden
+    if ('IntersectionObserver' in window) {
+      this.observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          this.setRunning(entry.isIntersecting && !document.hidden);
+        });
+      }, { rootMargin: '120px' });
+      this.observer.observe(this.canvas);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        this.setRunning(false);
+      } else {
+        const rect = this.canvas.getBoundingClientRect();
+        const inView = rect.bottom > 0 && rect.top < window.innerHeight;
+        this.setRunning(inView);
+      }
+    });
+
     this.animate();
   }
 

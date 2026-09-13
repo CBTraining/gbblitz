@@ -10,10 +10,12 @@ import { SheetSyncService } from '../services/live-sync.js';
 
 export class VideoGalleryApp {
   constructor() {
-    this.videos = PRELOADED_VIDEOS;
+    const cached = SheetSyncService.getCachedVideos();
+    this.videos = (cached && cached.length > 0) ? cached : PRELOADED_VIDEOS;
     this.activeWave = 'all';
     this.searchQuery = '';
     this.currentModalIndex = -1;
+    this.activePreviewCleaner = null;
 
     this.aspectRatioCache = {
       '1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF': 0.5625,
@@ -185,9 +187,25 @@ export class VideoGalleryApp {
     const thumbContainer = card.querySelector('.video-thumb-container');
     const previewWrapper = card.querySelector('.video-preview-iframe-wrapper');
 
+    const stopPreview = () => {
+      if (hoverTimeout) clearTimeout(hoverTimeout);
+      if (previewWrapper) previewWrapper.innerHTML = '';
+      if (thumbContainer) thumbContainer.classList.remove('is-previewing');
+      if (this.activePreviewCleaner === stopPreview) {
+        this.activePreviewCleaner = null;
+      }
+    };
+
     const startPreview = () => {
       hoverTimeout = setTimeout(() => {
         if (!previewWrapper || previewWrapper.querySelector('iframe')) return;
+        
+        // Clean up any other active preview first (singleton pattern)
+        if (this.activePreviewCleaner && this.activePreviewCleaner !== stopPreview) {
+          this.activePreviewCleaner();
+        }
+        this.activePreviewCleaner = stopPreview;
+
         const iframe = document.createElement('iframe');
         iframe.className = 'video-preview-iframe';
         iframe.src = `https://drive.google.com/file/d/${video.driveFileId}/preview`;
@@ -195,12 +213,6 @@ export class VideoGalleryApp {
         previewWrapper.appendChild(iframe);
         thumbContainer.classList.add('is-previewing');
       }, 550);
-    };
-
-    const stopPreview = () => {
-      if (hoverTimeout) clearTimeout(hoverTimeout);
-      if (previewWrapper) previewWrapper.innerHTML = '';
-      if (thumbContainer) thumbContainer.classList.remove('is-previewing');
     };
 
     card.addEventListener('mouseenter', startPreview);
