@@ -78,9 +78,27 @@
   .carousel-nav {
     display: none;
   }
+  :root {
+    --docked-header-height: 58px;
+  }
+  .gallery-sticky-header {
+    padding: 0.85rem 0.9rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--radius-inner);
+  }
+  .gallery-sticky-header.is-stuck {
+    padding: 0.6rem 0.8rem;
+  }
+  .gallery-title-lockup .section-title {
+    font-size: 1.25rem;
+  }
+  .gallery-sticky-header.is-stuck .gallery-title-lockup .section-title {
+    font-size: 1.15rem;
+  }
   .gallery-filter-bar {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.75rem;
   }
   .search-box {
     min-width: 100%;

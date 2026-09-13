@@ -3,10 +3,10 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.9.0';
-import { HighlightCarousel } from './carousel.js?v=5.9.0';
-import { TheaterModal } from './theater-modal.js?v=5.9.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.9.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.10.0';
+import { HighlightCarousel } from './carousel.js?v=5.10.0';
+import { TheaterModal } from './theater-modal.js?v=5.10.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.10.0';
 
 export class VideoGalleryApp {
   constructor() {
@@ -56,6 +56,8 @@ export class VideoGalleryApp {
     this.waveFilters = document.getElementById('wave-filters');
     this.videoCountBadge = document.getElementById('video-count-badge');
     this.emptyState = document.getElementById('empty-state');
+    this.stickyHeader = document.getElementById('gallery-sticky-header');
+    this.stickySentinel = document.getElementById('gallery-sticky-sentinel');
   }
 
   extractHighlightedVideos(videoList) {
@@ -76,6 +78,7 @@ export class VideoGalleryApp {
 
   initGallery() {
     this.renderVideoGrid();
+    this.initStickyHeader();
   }
 
   getFilteredVideos() {
@@ -299,5 +302,29 @@ export class VideoGalleryApp {
         this.renderVideoGrid();
       });
     }
+  }
+
+  initStickyHeader() {
+    if (!this.stickyHeader || !this.stickySentinel) return;
+
+    const updateStuck = () => {
+      const rect = this.stickySentinel.getBoundingClientRect();
+      const threshold = window.innerWidth <= 600 ? 62 : 72;
+      const isStuck = rect.top <= threshold;
+      this.stickyHeader.classList.toggle('is-stuck', isStuck);
+    };
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(() => {
+        updateStuck();
+      }, {
+        threshold: [0, 1]
+      });
+      observer.observe(this.stickySentinel);
+    }
+
+    window.addEventListener('scroll', updateStuck, { passive: true });
+    window.addEventListener('resize', updateStuck, { passive: true });
+    updateStuck();
   }
 }

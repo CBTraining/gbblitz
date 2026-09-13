@@ -54,4 +54,7 @@
   /* Typography */
   --font-main: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'Space Grotesk', monospace;
+
+  /* Layout Geometry */
+  --docked-header-height: 68px;
 }

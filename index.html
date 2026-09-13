@@ -12,7 +12,7 @@
   <script>
     (function() {
       // Silent automatic cache reset: ensures viewers immediately get the latest deployment without manual cache resets
-      var BUILD_VERSION = '5.9.0';
+      var BUILD_VERSION = '5.10.0';
       var lastBuild = localStorage.getItem('gbblitz_client_build');
       if (lastBuild && lastBuild !== BUILD_VERSION) {
         localStorage.clear();
@@ -28,24 +28,24 @@
     })();
   </script>
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=5.9.0" />
-  <link rel="alternate icon" type="image/svg+xml" href="Graphic%20Assets/favicon.svg?v=5.9.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=5.10.0" />
+  <link rel="alternate icon" type="image/svg+xml" href="Graphic%20Assets/favicon.svg?v=5.10.0" />
   <!-- Preconnections & Resource Hints -->
   <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin />
   <link rel="preconnect" href="https://drive.google.com" />
   <link rel="preload" href="Fonts/GoogleSans-Regular.ttf" as="font" type="font/ttf" crossorigin />
-  <link rel="preload" href="Graphic%20Assets/logo.svg?v=5.9.0" as="image" type="image/svg+xml" />
+  <link rel="preload" href="Graphic%20Assets/logo.svg?v=5.10.0" as="image" type="image/svg+xml" />
 
   <!-- Modular Component Stylesheets (Parallel Fetch, Zero @import Waterfall) -->
-  <link rel="stylesheet" href="css/variables.css?v=5.9.0" />
-  <link rel="stylesheet" href="css/base.css?v=5.9.0" />
-  <link rel="stylesheet" href="css/header.css?v=5.9.0" />
-  <link rel="stylesheet" href="css/hero.css?v=5.9.0" />
-  <link rel="stylesheet" href="css/carousel.css?v=5.9.0" />
-  <link rel="stylesheet" href="css/gallery.css?v=5.9.0" />
-  <link rel="stylesheet" href="css/modal.css?v=5.9.0" />
-  <link rel="stylesheet" href="css/magic-pointer.css?v=5.9.0" />
-  <link rel="stylesheet" href="css/responsive.css?v=5.9.0" />
+  <link rel="stylesheet" href="css/variables.css?v=5.10.0" />
+  <link rel="stylesheet" href="css/base.css?v=5.10.0" />
+  <link rel="stylesheet" href="css/header.css?v=5.10.0" />
+  <link rel="stylesheet" href="css/hero.css?v=5.10.0" />
+  <link rel="stylesheet" href="css/carousel.css?v=5.10.0" />
+  <link rel="stylesheet" href="css/gallery.css?v=5.10.0" />
+  <link rel="stylesheet" href="css/modal.css?v=5.10.0" />
+  <link rel="stylesheet" href="css/magic-pointer.css?v=5.10.0" />
+  <link rel="stylesheet" href="css/responsive.css?v=5.10.0" />
 </head>
 <body>
   <div class="ambient-glow ambient-glow-top"></div>
@@ -134,34 +134,40 @@
     <!-- Video Gallery Section with Wave Filtering -->
     <section class="gallery-section" id="video-gallery-section" aria-label="Video Gallery">
       <div class="gallery-container">
-        <div class="gallery-header-row">
-          <div>
-            <div class="badge">Community Collection</div>
-            <h2 class="section-title">Launch Blitz Video Gallery</h2>
+        <!-- Sticky Sentinel for Dynamic Stuck State Tracking -->
+        <div class="gallery-sticky-sentinel" id="gallery-sticky-sentinel" aria-hidden="true"></div>
+
+        <!-- Sticky Gallery Header & Filter Command Center -->
+        <div class="gallery-sticky-header" id="gallery-sticky-header">
+          <div class="gallery-header-row">
+            <div class="gallery-title-lockup">
+              <span class="badge">Community Collection</span>
+              <h2 class="section-title">Launch Blitz Video Gallery</h2>
+            </div>
             <p class="section-desc">Hover over any thumbnail to preview. Click to open full auto-playing theater player.</p>
           </div>
-        </div>
 
-        <!-- Filter & Search Controls -->
-        <div class="gallery-filter-bar">
-          <div class="search-box">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" id="video-search-input" placeholder="Search by video title, wave, or designation..." />
+          <!-- Filter & Search Controls -->
+          <div class="gallery-filter-bar">
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="video-search-input" placeholder="Search by video title, wave, or designation..." />
+            </div>
+
+            <div class="filter-pills" id="wave-filters">
+              <button class="filter-pill active" data-wave="all">All Videos</button>
+              <button class="filter-pill" data-wave="Wave 1">Wave 1</button>
+              <button class="filter-pill" data-wave="Wave 2">Wave 2</button>
+              <button class="filter-pill" data-wave="Wave 3">Wave 3</button>
+              <button class="filter-pill" data-wave="Wave 4">Wave 4</button>
+              <button class="filter-pill" data-wave="Wave 5">Wave 5</button>
+            </div>
+
+            <div class="video-counter" id="video-count-badge">Loading videos...</div>
           </div>
-
-          <div class="filter-pills" id="wave-filters">
-            <button class="filter-pill active" data-wave="all">All Videos</button>
-            <button class="filter-pill" data-wave="Wave 1">Wave 1</button>
-            <button class="filter-pill" data-wave="Wave 2">Wave 2</button>
-            <button class="filter-pill" data-wave="Wave 3">Wave 3</button>
-            <button class="filter-pill" data-wave="Wave 4">Wave 4</button>
-            <button class="filter-pill" data-wave="Wave 5">Wave 5</button>
-          </div>
-
-          <div class="video-counter" id="video-count-badge">Loading videos...</div>
         </div>
 
         <!-- Videos Grid -->
@@ -261,6 +267,6 @@
   <!-- Magic Pointer Easter Egg Element -->
   <img id="magic-pointer" class="magic-pointer" src="Graphic%20Assets/magicpointer.png" alt="" aria-hidden="true" />
 
-  <script type="module" src="js/main.js?v=5.9.0"></script>
+  <script type="module" src="js/main.js?v=5.10.0"></script>
 </body>
 </html>
