@@ -3,8 +3,8 @@
  * Polls Google Sheet CSV with cache-busting, validates designations, and notifies on change.
  */
 
-import { GOOGLE_SHEET_CSV_URL } from '../config.js';
-import { isUsableDesignation, parseCSV } from './sheet-service.js';
+import { GOOGLE_SHEET_CSV_URL } from '../config.js?v=5.17.0';
+import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.17.0';
 
 const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v3';
 const CACHE_SIG_KEY = 'gbblitz_cached_sig_v3';
