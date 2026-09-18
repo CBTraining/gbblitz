@@ -3,8 +3,8 @@
  * Polls Google Sheet CSV with cache-busting, validates designations, and notifies on change.
  */
 
-import { GOOGLE_SHEET_CSV_URL } from '../config.js?v=5.19.0';
-import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.19.0';
+import { GOOGLE_SHEET_CSV_URL } from '../config.js?v=5.20.0';
+import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.20.0';
 
 const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v5';
 const CACHE_SIG_KEY = 'gbblitz_cached_sig_v5';
@@ -20,6 +20,7 @@ export class SheetSyncService {
     this.isSyncing = false;
     this.timer = null;
     this.consecutiveFailures = 0;
+    this.hasDeliveredInitial = false;
 
     // Hydrate last signature from cache if available
     try {
@@ -151,8 +152,9 @@ export class SheetSyncService {
 
       this.consecutiveFailures = 0;
       const signature = liveVideos.map(v => `${v.driveFileId}_${v.title}_${v.designation}_${v.wave}`).join('||');
-      if (this.lastSignature === signature) return;
+      if (this.lastSignature === signature && this.hasDeliveredInitial) return;
       this.lastSignature = signature;
+      this.hasDeliveredInitial = true;
 
       // Persist in localStorage for instant cold start
       try {

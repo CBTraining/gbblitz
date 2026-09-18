@@ -4,7 +4,7 @@
  * Contains all validated Wave 1-5 videos for instant offline render.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.19.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.20.0';
 
 function createVideo([fileId, title, designation, wave]) {
   return {

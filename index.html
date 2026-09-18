@@ -11,41 +11,86 @@
 
   <script>
     (function() {
-      // Silent automatic cache reset: ensures viewers immediately get the latest deployment without manual cache resets
-      var BUILD_VERSION = '5.19.0';
+      var BUILD_VERSION = '5.20.0';
+
+      // 1. Silent automatic cache reset if local storage differs from HTML build version
       var lastBuild = localStorage.getItem('gbblitz_client_build');
       if (lastBuild && lastBuild !== BUILD_VERSION) {
-        localStorage.clear();
-        sessionStorage.clear();
-        localStorage.setItem('gbblitz_client_build', BUILD_VERSION);
-        window.location.replace(window.location.pathname + '?build=' + BUILD_VERSION);
+        try {
+          localStorage.clear();
+          sessionStorage.clear();
+          localStorage.setItem('gbblitz_client_build', BUILD_VERSION);
+        } catch (_) {}
+        window.location.replace(window.location.pathname + '?v=' + BUILD_VERSION);
         return;
       }
-      localStorage.setItem('gbblitz_client_build', BUILD_VERSION);
+      try {
+        localStorage.setItem('gbblitz_client_build', BUILD_VERSION);
+      } catch (_) {}
+
+      // 2. Active Live Server Version Sentinel:
+      // Polls version.json with cache-busting timestamp to detect and apply new deployments immediately
+      function checkLiveDeployment() {
+        if (!navigator.onLine && navigator.onLine !== undefined) return;
+        fetch('version.json?_t=' + Date.now(), { cache: 'no-store' })
+          .then(function(res) {
+            if (!res.ok) throw new Error('status ' + res.status);
+            return res.json();
+          })
+          .then(function(meta) {
+            if (meta && meta.version && meta.version !== BUILD_VERSION) {
+              console.log('[GBblitz] New version detected:', meta.version, '(current:', BUILD_VERSION + ')');
+              try {
+                localStorage.clear();
+                sessionStorage.clear();
+                localStorage.setItem('gbblitz_client_build', meta.version);
+              } catch (_) {}
+              window.location.replace(window.location.pathname + '?v=' + encodeURIComponent(meta.version));
+            }
+          })
+          .catch(function() {});
+      }
+
+      // Check immediately on load
+      checkLiveDeployment();
+
+      // Check on back/forward navigation or bfcache restoration
       window.addEventListener('pageshow', function(e) {
-        if (e.persisted) window.location.reload();
+        if (e.persisted) {
+          checkLiveDeployment();
+        }
       });
+
+      // Check when user switches back to this tab
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+          checkLiveDeployment();
+        }
+      });
+
+      // Background poll every 2 minutes for long-running tabs
+      setInterval(checkLiveDeployment, 120000);
     })();
   </script>
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=5.19.0" />
-  <link rel="alternate icon" type="image/svg+xml" href="Graphic%20Assets/favicon.svg?v=5.19.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=5.20.0" />
+  <link rel="alternate icon" type="image/svg+xml" href="Graphic%20Assets/favicon.svg?v=5.20.0" />
   <!-- Preconnections & Resource Hints -->
   <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin />
   <link rel="preconnect" href="https://drive.google.com" />
   <link rel="preload" href="Fonts/GoogleSans-Regular.ttf" as="font" type="font/ttf" crossorigin />
-  <link rel="preload" href="Graphic%20Assets/logo.svg?v=5.19.0" as="image" type="image/svg+xml" />
+  <link rel="preload" href="Graphic%20Assets/logo.svg?v=5.20.0" as="image" type="image/svg+xml" />
 
   <!-- Modular Component Stylesheets (Parallel Fetch, Zero @import Waterfall) -->
-  <link rel="stylesheet" href="css/variables.css?v=5.19.0" />
-  <link rel="stylesheet" href="css/base.css?v=5.19.0" />
-  <link rel="stylesheet" href="css/header.css?v=5.19.0" />
-  <link rel="stylesheet" href="css/hero.css?v=5.19.0" />
-  <link rel="stylesheet" href="css/carousel.css?v=5.19.0" />
-  <link rel="stylesheet" href="css/gallery.css?v=5.19.0" />
-  <link rel="stylesheet" href="css/modal.css?v=5.19.0" />
-  <link rel="stylesheet" href="css/magic-pointer.css?v=5.19.0" />
-  <link rel="stylesheet" href="css/responsive.css?v=5.19.0" />
+  <link rel="stylesheet" href="css/variables.css?v=5.20.0" />
+  <link rel="stylesheet" href="css/base.css?v=5.20.0" />
+  <link rel="stylesheet" href="css/header.css?v=5.20.0" />
+  <link rel="stylesheet" href="css/hero.css?v=5.20.0" />
+  <link rel="stylesheet" href="css/carousel.css?v=5.20.0" />
+  <link rel="stylesheet" href="css/gallery.css?v=5.20.0" />
+  <link rel="stylesheet" href="css/modal.css?v=5.20.0" />
+  <link rel="stylesheet" href="css/magic-pointer.css?v=5.20.0" />
+  <link rel="stylesheet" href="css/responsive.css?v=5.20.0" />
 </head>
 <body>
   <div class="ambient-glow ambient-glow-top"></div>
@@ -267,6 +312,6 @@
   <!-- Magic Pointer Easter Egg Element -->
   <img id="magic-pointer" class="magic-pointer" src="Graphic%20Assets/magicpointer.png" alt="" aria-hidden="true" />
 
-  <script type="module" src="js/main.js?v=5.19.0"></script>
+  <script type="module" src="js/main.js?v=5.20.0"></script>
 </body>
 </html>
