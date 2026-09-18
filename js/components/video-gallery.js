@@ -3,13 +3,13 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.20.0';
-import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.20.0';
-import { HighlightCarousel } from './carousel.js?v=5.20.0';
-import { TheaterModal } from './theater-modal.js?v=5.20.0';
-import { HoverPreviewManager } from './hover-preview.js?v=5.20.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.20.0';
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.20.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.21.0';
+import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.21.0';
+import { HighlightCarousel } from './carousel.js?v=5.21.0';
+import { TheaterModal } from './theater-modal.js?v=5.21.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.21.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.21.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.21.0';
 
 export class VideoGalleryApp {
   constructor() {
@@ -59,11 +59,12 @@ export class VideoGalleryApp {
 
   extractHighlightedVideos(videoList) {
     if (!videoList || videoList.length === 0) return [];
-    const directHighlighted = videoList.filter(v => v.designation && v.designation.toLowerCase().includes('highlight'));
+    const directHighlighted = videoList.filter(v => {
+      const d = (v.designation || '').trim().toLowerCase().replace(/[!.,]/g, '');
+      return d === 'highlighted' || d === 'highlight';
+    });
     if (directHighlighted.length > 0) return directHighlighted;
-    const winners = videoList.filter(v => v.designation && v.designation.toLowerCase().includes('winner'));
-    if (winners.length > 0) return winners;
-    return videoList.slice(0, 5);
+    return videoList.filter(v => isUsableDesignation(v.designation)).slice(0, 5);
   }
 
   handleLiveUpdate(liveVideos) {
@@ -92,11 +93,9 @@ export class VideoGalleryApp {
   }
 
   getBadgeClass(designation) {
-    const t = (designation || '').toLowerCase();
-    if (t.includes('highlight')) return 'badge-highlight';
-    if (t.includes('winner')) return 'badge-winner';
-    if (t.includes('runner')) return 'badge-runner-up';
-    if (t.includes('approved')) return 'badge-approved';
+    const t = (designation || '').trim().toLowerCase().replace(/[!.,]/g, '');
+    if (t === 'highlighted' || t === 'highlight') return 'badge-highlight';
+    if (t === 'approved') return 'badge-approved';
     return 'badge-general';
   }
 
@@ -123,16 +122,11 @@ export class VideoGalleryApp {
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
 
     filtered.forEach((video, index) => {
-      const badgeClass = this.getBadgeClass(video.designation);
-
-      const isHighlight = (video.designation || '').toLowerCase().includes('highlight');
-      const isWinner = (video.designation || '').toLowerCase().includes('winner');
-      const isRunner = (video.designation || '').toLowerCase().includes('runner');
-      const showThumbBadge = isHighlight || isWinner || isRunner;
-      const thumbBadgeHtml = showThumbBadge ? `
+      const isHighlight = (video.designation || '').trim().toLowerCase().includes('highlight');
+      const thumbBadgeHtml = isHighlight ? `
           <div class="thumb-badges">
-            <span class="type-pill ${badgeClass}">
-              ${isHighlight ? '✨ HIGHLIGHTED' : isWinner ? '🏆 WINNER' : '🥈 RUNNER UP'}
+            <span class="type-pill badge-highlight">
+              ✨ HIGHLIGHTED
             </span>
           </div>` : '';
 
@@ -140,7 +134,7 @@ export class VideoGalleryApp {
 
       const card = document.createElement('article');
       card.className = 'video-card ' + 
-        (isHighlight ? 'card-highlight ' : (isWinner ? 'card-winner ' : (isRunner ? 'card-runner ' : ''))) +
+        (isHighlight ? 'card-highlight ' : '') +
         (isPortrait ? 'is-portrait' : 'is-landscape');
       card.dataset.videoId = video.id;
       card.dataset.index = index;

@@ -3,6 +3,8 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.21.0';
+
 export class HighlightCarousel {
   constructor(options = {}) {
     this.wrapper = document.getElementById(options.wrapperId || 'photo-carousel');
@@ -24,7 +26,7 @@ export class HighlightCarousel {
   }
 
   setVideos(videos) {
-    this.videos = videos || [];
+    this.videos = (videos || []).filter(v => isUsableDesignation(v.designation));
     this.render();
   }
 

@@ -3,14 +3,13 @@
  */
 /**
  * Strict Column C designation validation rule:
- * ONLY videos that say "Approved" or "Highlighted" are usable.
- * Blank or anything else MUST NOT be shown under any circumstances.
+ * ONLY videos that explicitly say "Approved" or "Highlighted" are usable.
+ * Blank, "Runner Up", "Winner!", "Flagged", "Microphone Off", "Not Approved", or anything else MUST NOT be shown under any circumstances.
  */
 export function isUsableDesignation(designation) {
   if (!designation) return false;
-  const str = String(designation).trim().toLowerCase();
-  if (!str) return false;
-  return str.includes('approved') || str.includes('highlight');
+  const clean = String(designation).trim().toLowerCase().replace(/[!.,]/g, '');
+  return clean === 'approved' || clean === 'highlighted' || clean === 'highlight';
 }
 
 // RFC-compliant CSV Parsing Helper Function

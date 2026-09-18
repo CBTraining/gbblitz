@@ -3,6 +3,8 @@
  * Handles auto-playing Google Drive video modal playback, controls, fullscreen, and keyboard navigation.
  */
 
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.21.0';
+
 export class TheaterModal {
   constructor(options = {}) {
     this.modal = document.getElementById(options.modalId || 'theater-modal');
@@ -28,11 +30,12 @@ export class TheaterModal {
   }
 
   open(video, aspect = 1.7778) {
-    if (!this.modal || !video) return;
+    if (!this.modal || !video || !isUsableDesignation(video.designation)) return;
 
     if (this.title) this.title.textContent = video.title;
-    const isApproved = (video.designation || '').toLowerCase().includes('approved');
-    const badgeText = (!video.designation || isApproved) ? video.wave : `${video.wave} • ${video.designation}`;
+    const cleanDesig = (video.designation || '').trim().toLowerCase().replace(/[!.,]/g, '');
+    const isApproved = cleanDesig === 'approved';
+    const badgeText = isApproved ? video.wave : `${video.wave} • ${video.designation}`;
     if (this.desc) this.desc.textContent = badgeText;
     if (this.categoryBadge) this.categoryBadge.textContent = badgeText.toUpperCase();
     if (this.driveLink) this.driveLink.href = video.driveUrl || `https://drive.google.com/file/d/${video.driveFileId}/view`;
