@@ -1,6 +1,10 @@
 /**
- * GBblitz - Master Stylesheet Manifest
- * Modular architecture broken down into focused component stylesheets in css/
+ * GBblitz - Master Stylesheet Manifest & Bundling Reference
+ * 
+ * NOTE FOR DEVELOPERS:
+ * For maximum loading performance and to eliminate @import waterfalls, index.html
+ * loads each modular component stylesheet directly via parallel <link rel="stylesheet"> tags.
+ * This file serves as the consolidated architecture manifest.
  * 
  * - css/variables.css      Official Google Workspace palette, shadows, radii, transitions
  * - css/base.css           Typography, resets, background and ambient backdrops
@@ -13,12 +17,12 @@
  * - css/responsive.css     Tablet and mobile viewport media queries
  */
 
-@import url('css/variables.css?v=5.16.0');
-@import url('css/base.css?v=5.16.0');
-@import url('css/header.css?v=5.16.0');
-@import url('css/hero.css?v=5.16.0');
-@import url('css/carousel.css?v=5.16.0');
-@import url('css/gallery.css?v=5.16.0');
-@import url('css/modal.css?v=5.16.0');
-@import url('css/magic-pointer.css?v=5.16.0');
-@import url('css/responsive.css?v=5.16.0');
+@import url('css/variables.css?v=5.17.0');
+@import url('css/base.css?v=5.17.0');
+@import url('css/header.css?v=5.17.0');
+@import url('css/hero.css?v=5.17.0');
+@import url('css/carousel.css?v=5.17.0');
+@import url('css/gallery.css?v=5.17.0');
+@import url('css/modal.css?v=5.17.0');
+@import url('css/magic-pointer.css?v=5.17.0');
+@import url('css/responsive.css?v=5.17.0');

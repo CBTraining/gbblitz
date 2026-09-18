@@ -3,10 +3,12 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.16.0';
-import { HighlightCarousel } from './carousel.js?v=5.16.0';
-import { TheaterModal } from './theater-modal.js?v=5.16.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.16.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.17.0';
+import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.17.0';
+import { HighlightCarousel } from './carousel.js?v=5.17.0';
+import { TheaterModal } from './theater-modal.js?v=5.17.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.17.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.17.0';
 
 export class VideoGalleryApp {
   constructor() {
@@ -15,30 +17,10 @@ export class VideoGalleryApp {
     this.activeWave = 'all';
     this.searchQuery = '';
     this.currentModalIndex = -1;
-    this.activePreviewCleaner = null;
 
-    this.aspectRatioCache = {
-      // Known portrait videos (aspect < 0.95)
-      '1un9shx6qb1r5hejoMlrJdF-fjmsEvFem': 0.5625,
-      '1VGgwbRnIq05t8kejbpBGUGg5K4iWeeHi': 0.5625,
-      '1RFugCmwfpIYwOr7zut4uz5i_QmO7ixyT': 0.5625,
-      '1318HU8kWkJanx3u-VvkixXaOB2I94dx0': 0.5625,
-      '1Gy0wZN-n4KpzdA_zgR4pOtDx_WxoVXSj': 0.5625,
-      '132HVaunVpeKuyq1O86lVNFy2KGSSKeNb': 0.5625,
-      '1qBNHic1OQ2ozPt8qCgbpXUXnR1Fn_Z9w': 0.5625,
-      '1YQmw0x-fKhxncdlY9Mt-aHzYu5MrJGXX': 0.5625,
-      '1FVaMjMwiF6l6L6BfotpkaRERlJF2Y4NO': 0.5625,
-      '1FGp-A1TP9uun1E-HwWBuhi6rkVliEvC_': 0.5625,
-      '1yex_GRwom3D4h12tU4YhMUpcFgdgiTS9': 0.8388,
-      '1yl6q0Nxmiv57Pky72NWEaT6JsoLG0o-a': 0.5675,
-      // Prominent landscapes (1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF is 16:9 widescreen)
-      '1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF': 1.7778,
-      '1V8w6gGmiFNtd_4ZN0NkQrvdEaKD89dcf': 1.6,
-      '1u0_v1FjOAynwS0cH_vTN-kff2nz-VeX8': 1.7817,
-      '1PSD2PvYXoH2tUxoV1K9kdmTpXN1jpQKp': 1.7778,
-      '1dD7PDjqshOh_4-w2cLbuiRUyzt3Pn7nY': 1.7778,
-      '19hvACWVY5b_ysk50aTTZf5pHGp7xvXT0': 1.7778
-    };
+    // Calibrated aspect ratios dictionary & desktop hover preview manager
+    this.aspectRatioCache = { ...KNOWN_ASPECT_RATIOS };
+    this.hoverPreviewManager = new HoverPreviewManager({ delayMs: 550 });
 
     this.initElements();
 
@@ -117,6 +99,7 @@ export class VideoGalleryApp {
 
   renderVideoGrid() {
     if (!this.videoGrid) return;
+    if (this.hoverPreviewManager) this.hoverPreviewManager.stopActive();
     const filtered = this.getFilteredVideos();
     const currentLabel = this.activeWave === 'all' ? 'All Waves' : this.activeWave;
 
@@ -230,8 +213,8 @@ export class VideoGalleryApp {
         }
       }
 
-      if (!isTouch) {
-        this.setupHoverPreview(card, video);
+      if (!isTouch && this.hoverPreviewManager) {
+        this.hoverPreviewManager.attach(card, video);
       }
       fragment.appendChild(card);
     });
@@ -239,53 +222,8 @@ export class VideoGalleryApp {
     this.videoGrid.appendChild(fragment);
   }
 
-  setupHoverPreview(card, video) {
-    let hoverTimeout = null;
-    const slot = card.querySelector('.preview-iframe-slot');
-    const scrubBar = card.querySelector('.hover-scrub-progress');
-
-    const stopPreview = () => {
-      if (hoverTimeout) clearTimeout(hoverTimeout);
-      card.classList.remove('is-playing');
-      if (slot) slot.innerHTML = '';
-      if (scrubBar) {
-        scrubBar.style.transition = 'none';
-        scrubBar.style.width = '0%';
-      }
-      if (this.activePreviewCleaner === stopPreview) {
-        this.activePreviewCleaner = null;
-      }
-    };
-
-    const startPreview = () => {
-      hoverTimeout = setTimeout(() => {
-        if (!slot || slot.querySelector('iframe')) return;
-        
-        // Clean up any other active preview first (singleton pattern)
-        if (this.activePreviewCleaner && this.activePreviewCleaner !== stopPreview) {
-          this.activePreviewCleaner();
-        }
-        this.activePreviewCleaner = stopPreview;
-
-        card.classList.add('is-playing');
-        const iframe = document.createElement('iframe');
-        iframe.className = 'video-preview-iframe';
-        iframe.src = `https://drive.google.com/file/d/${video.driveFileId}/preview`;
-        iframe.allow = 'autoplay';
-        slot.appendChild(iframe);
-
-        if (scrubBar) {
-          scrubBar.style.transition = 'width 8s linear';
-          scrubBar.style.width = '100%';
-        }
-      }, 550);
-    };
-
-    card.addEventListener('mouseenter', startPreview);
-    card.addEventListener('mouseleave', stopPreview);
-  }
-
   openTheaterModal(videoId) {
+    if (this.hoverPreviewManager) this.hoverPreviewManager.stopActive();
     const filtered = this.getFilteredVideos();
     const index = filtered.findIndex(v => v.id === videoId);
     if (index === -1) return;
