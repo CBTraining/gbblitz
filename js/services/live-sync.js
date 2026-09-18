@@ -3,11 +3,11 @@
  * Polls Google Sheet CSV with cache-busting, validates designations, and notifies on change.
  */
 
-import { GOOGLE_SHEET_CSV_URL } from '../config.js?v=5.17.0';
-import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.17.0';
+import { GOOGLE_SHEET_CSV_URL } from '../config.js?v=5.18.0';
+import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.18.0';
 
-const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v3';
-const CACHE_SIG_KEY = 'gbblitz_cached_sig_v3';
+const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v4';
+const CACHE_SIG_KEY = 'gbblitz_cached_sig_v4';
 const MIN_COOLDOWN_MS = 60000; // 60s cooldown between visibility/focus syncs
 
 export class SheetSyncService {
@@ -28,7 +28,8 @@ export class SheetSyncService {
   }
 
   /**
-   * Retrieves any cached video array from localStorage for zero-latency initial render
+   * Retrieves any cached video array from localStorage for zero-latency initial render,
+   * strictly verifying that only Approved or Highlighted videos are returned.
    */
   static getCachedVideos() {
     try {
@@ -36,7 +37,8 @@ export class SheetSyncService {
       if (raw) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          const validated = parsed.filter(v => isUsableDesignation(v.designation));
+          if (validated.length > 0) return validated;
         }
       }
     } catch (_) {}

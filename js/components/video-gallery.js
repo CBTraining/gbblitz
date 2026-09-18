@@ -3,17 +3,19 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.17.0';
-import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.17.0';
-import { HighlightCarousel } from './carousel.js?v=5.17.0';
-import { TheaterModal } from './theater-modal.js?v=5.17.0';
-import { HoverPreviewManager } from './hover-preview.js?v=5.17.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.17.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.18.0';
+import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.18.0';
+import { HighlightCarousel } from './carousel.js?v=5.18.0';
+import { TheaterModal } from './theater-modal.js?v=5.18.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.18.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.18.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.18.0';
 
 export class VideoGalleryApp {
   constructor() {
     const cached = SheetSyncService.getCachedVideos();
-    this.videos = (cached && cached.length > 0) ? cached : PRELOADED_VIDEOS;
+    const rawVideos = (cached && cached.length > 0) ? cached : PRELOADED_VIDEOS;
+    this.videos = rawVideos.filter(v => isUsableDesignation(v.designation));
     this.activeWave = 'all';
     this.searchQuery = '';
     this.currentModalIndex = -1;
@@ -65,8 +67,8 @@ export class VideoGalleryApp {
   }
 
   handleLiveUpdate(liveVideos) {
-    this.videos = liveVideos;
-    this.carousel.setVideos(this.extractHighlightedVideos(liveVideos));
+    this.videos = (liveVideos || []).filter(v => isUsableDesignation(v.designation));
+    this.carousel.setVideos(this.extractHighlightedVideos(this.videos));
     this.updateWaveCounts();
     this.renderVideoGrid();
   }
@@ -78,6 +80,7 @@ export class VideoGalleryApp {
 
   getFilteredVideos() {
     return this.videos.filter(video => {
+      if (!isUsableDesignation(video.designation)) return false;
       const matchesWave = this.activeWave === 'all' || video.wave.toLowerCase() === this.activeWave.toLowerCase();
       const q = this.searchQuery.toLowerCase().trim();
       const matchesSearch = !q || 

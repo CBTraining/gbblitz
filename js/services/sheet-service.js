@@ -1,20 +1,16 @@
 /**
  * GBblitz - Google Sheet & CSV Data Service
  */
+/**
+ * Strict Column C designation validation rule:
+ * ONLY videos that say "Approved" or "Highlighted" are usable.
+ * Blank or anything else MUST NOT be shown under any circumstances.
+ */
 export function isUsableDesignation(designation) {
   if (!designation) return false;
-  const str = String(designation).trim();
+  const str = String(designation).trim().toLowerCase();
   if (!str) return false;
-  const norm = str.toLowerCase().replace(/[^a-z0-9]/g, '');
-  if (
-    norm.includes('unuseable') ||
-    norm.includes('unusable') ||
-    norm.includes('notusable') ||
-    norm.includes('notuseable')
-  ) {
-    return false;
-  }
-  return true;
+  return str.includes('approved') || str.includes('highlight');
 }
 
 // RFC-compliant CSV Parsing Helper Function
