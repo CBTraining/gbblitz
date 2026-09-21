@@ -3,13 +3,13 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.27.0';
-import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.27.0';
-import { HighlightCarousel } from './carousel.js?v=5.27.0';
-import { TheaterModal } from './theater-modal.js?v=5.27.0';
-import { HoverPreviewManager } from './hover-preview.js?v=5.27.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.27.0';
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.27.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.28.0';
+import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.28.0';
+import { HighlightCarousel } from './carousel.js?v=5.28.0';
+import { TheaterModal } from './theater-modal.js?v=5.28.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.28.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.28.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.28.0';
 
 export class VideoGalleryApp {
   constructor() {
@@ -23,6 +23,7 @@ export class VideoGalleryApp {
     // Calibrated aspect ratios dictionary & desktop hover preview manager
     this.aspectRatioCache = { ...KNOWN_ASPECT_RATIOS };
     this.hoverPreviewManager = new HoverPreviewManager({ delayMs: 550 });
+    this.cardRevealObserver = null;
 
     this.initElements();
 
@@ -131,6 +132,25 @@ export class VideoGalleryApp {
     const fragment = document.createDocumentFragment();
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
 
+    if (this.cardRevealObserver) {
+      this.cardRevealObserver.disconnect();
+    }
+
+    if ('IntersectionObserver' in window) {
+      this.cardRevealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            this.cardRevealObserver.unobserve(entry.target);
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: '0px 0px -25px 0px',
+        threshold: 0.04
+      });
+    }
+
     filtered.forEach((video, index) => {
       const isHighlight = (video.designation || '').trim().toLowerCase().includes('highlight');
       const thumbBadgeHtml = isHighlight ? `
@@ -223,6 +243,13 @@ export class VideoGalleryApp {
       if (!isTouch && this.hoverPreviewManager) {
         this.hoverPreviewManager.attach(card, video);
       }
+
+      if (this.cardRevealObserver) {
+        this.cardRevealObserver.observe(card);
+      } else {
+        card.classList.add('is-revealed');
+      }
+
       fragment.appendChild(card);
     });
 
