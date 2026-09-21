@@ -3,17 +3,33 @@
  * Polls Google Sheet CSV with cache-busting, validates designations, and notifies on change.
  */
 
-import { GOOGLE_SHEET_CSV_URL } from '../config.js?v=5.21.0';
-import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.21.0';
+import { GOOGLE_SHEET_ID, GOOGLE_SHEET_TABS, getTabCsvUrl } from '../config.js?v=5.22.0';
+import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.22.0';
 
-const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v6';
-const CACHE_SIG_KEY = 'gbblitz_cached_sig_v6';
-const MIN_COOLDOWN_MS = 60000; // 60s cooldown between visibility/focus syncs
+const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v7';
+const CACHE_SIG_KEY = 'gbblitz_cached_sig_v7';
+const MIN_COOLDOWN_MS = 30000; // 30s cooldown between visibility/focus syncs
+
+function detectHeaders(headerRow) {
+  const map = { title: 0, link: 1, designation: 2, wave: 3 };
+  if (!headerRow || headerRow.length === 0) return map;
+
+  headerRow.forEach((col, idx) => {
+    const c = String(col).toLowerCase().trim();
+    if (c.includes('title')) map.title = idx;
+    else if (c.includes('teach-back') || c.includes('video') || c.includes('submit') || c.includes('link') || c.includes('url')) map.link = idx;
+    else if (c.includes('wave') || c.includes('blitz')) map.wave = idx;
+    else if (c.includes('designation') || c.includes('status')) map.designation = idx;
+  });
+
+  return map;
+}
 
 export class SheetSyncService {
   constructor(options = {}) {
-    this.csvUrl = options.csvUrl || GOOGLE_SHEET_CSV_URL;
-    this.pollInterval = options.pollInterval || 120000; // 2 minutes default
+    this.sheetId = options.sheetId || GOOGLE_SHEET_ID;
+    this.tabs = options.tabs || GOOGLE_SHEET_TABS;
+    this.pollInterval = options.pollInterval || 60000; // 60s background polling
     this.onUpdate = options.onUpdate || (() => {});
     this.lastSignature = null;
     this.lastSyncTime = 0;
@@ -101,51 +117,70 @@ export class SheetSyncService {
     this.lastSyncTime = Date.now();
 
     try {
-      const url = this.csvUrl + (this.csvUrl.includes('?') ? '&' : '?') + '_t=' + Date.now();
-      const res = await fetch(url, {
-        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
-      });
-
-      if (!res.ok) {
-        this.consecutiveFailures++;
-        console.warn(`SheetSync: HTTP ${res.status}. Backing off...`);
-        return;
-      }
-
-      const csvText = await res.text();
-      const rows = parseCSV(csvText);
-      if (rows.length < 2) return;
-
+      const seenFileIds = new Set();
       const liveVideos = [];
-      for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        const title = (row[0] || '').trim();
-        const link = (row[1] || '').trim();
-        const rawDesignation = (row[2] || '').trim();
-        const wave = (row[3] || '').trim() || 'Wave 1';
 
-        if (i === 0 && !link.toLowerCase().includes('http')) continue;
-        if (!link) continue;
-        if (!isUsableDesignation(rawDesignation)) continue;
+      const tabResults = await Promise.all(this.tabs.map(async (tabName) => {
+        try {
+          const url = getTabCsvUrl(this.sheetId, tabName) + '&_t=' + Date.now();
+          const res = await fetch(url, {
+            headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+          });
+          if (!res.ok) return [];
+          const csvText = await res.text();
+          const rows = parseCSV(csvText);
+          if (rows.length < 1) return [];
 
-        const idMatch = link.match(/id=([a-zA-Z0-9_-]+)/) || link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-        const fileId = idMatch ? idMatch[1] : null;
+          const headerMap = detectHeaders(rows[0]);
+          const tabVideos = [];
 
-        if (fileId) {
+          for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            const link = (row[headerMap.link] || '').trim();
+            const rawDesignation = (row[headerMap.designation] || '').trim();
+            const title = (row[headerMap.title] || '').trim();
+            const wave = (row[headerMap.wave] || '').trim() || 'Wave 1';
+
+            if (!link || !isUsableDesignation(rawDesignation)) continue;
+
+            const idMatch = link.match(/id=([a-zA-Z0-9_-]+)/) || link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+            const fileId = idMatch ? idMatch[1] : null;
+            if (!fileId) continue;
+
+            tabVideos.push({
+              fileId,
+              title,
+              rawDesignation,
+              wave
+            });
+          }
+          return tabVideos;
+        } catch (tabErr) {
+          console.warn(`SheetSync: Error reading tab "${tabName}":`, tabErr.message);
+          return [];
+        }
+      }));
+
+      // Flatten and deduplicate in order (earlier tabs take precedence)
+      for (const list of tabResults) {
+        for (const item of list) {
+          if (seenFileIds.has(item.fileId)) continue;
+          seenFileIds.add(item.fileId);
+
           liveVideos.push({
-            id: 'drive-' + fileId,
-            driveFileId: fileId,
-            title: title || ('Video #' + (liveVideos.length + 1)),
-            designation: rawDesignation,
-            type: rawDesignation,
-            wave: wave,
-            category: wave,
+            id: 'drive-' + item.fileId,
+            driveFileId: item.fileId,
+            title: item.title || ('Video #' + (liveVideos.length + 1)),
+            designation: item.rawDesignation,
+            type: item.rawDesignation,
+            wave: item.wave,
+            category: item.wave,
             duration: 'HD',
-            thumbnail: 'https://lh3.googleusercontent.com/d/' + fileId + '=s800',
-            videoUrl: 'https://drive.google.com/file/d/' + fileId + '/preview',
-            streamUrl: 'https://drive.google.com/uc?export=download&id=' + fileId,
-            driveUrl: 'https://drive.google.com/file/d/' + fileId + '/view',
-            description: wave + (rawDesignation && !rawDesignation.toLowerCase().includes('approved') ? ' • ' + rawDesignation : '')
+            thumbnail: 'https://lh3.googleusercontent.com/d/' + item.fileId + '=s800',
+            videoUrl: 'https://drive.google.com/file/d/' + item.fileId + '/preview',
+            streamUrl: 'https://drive.google.com/uc?export=download&id=' + item.fileId,
+            driveUrl: 'https://drive.google.com/file/d/' + item.fileId + '/view',
+            description: item.wave + (item.rawDesignation && !item.rawDesignation.toLowerCase().includes('approved') ? ' • ' + item.rawDesignation : '')
           });
         }
       }
