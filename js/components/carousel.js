@@ -3,7 +3,7 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.33.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.34.0';
 
 export class HighlightCarousel {
   constructor(options = {}) {
@@ -70,7 +70,7 @@ export class HighlightCarousel {
         <div class="carousel-overlay">
           <div class="carousel-caption">
             <div class="carousel-badge-row">
-              <span class="carousel-wave-badge">${video.wave.toUpperCase()}</span>
+              <span class="carousel-wave-badge" data-wave="${video.wave}" style="background: linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%) !important; color: #ffffff !important; border: none !important; font-weight: 700 !important; box-shadow: 0 2px 10px rgba(51, 135, 255, 0.4) !important;">${video.wave.toUpperCase()}</span>
             </div>
             <h3 class="carousel-slide-title">${video.title}</h3>
             <p class="carousel-slide-desc">${video.wave}${desigPart} • Featured Presentation</p>

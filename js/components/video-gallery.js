@@ -3,13 +3,13 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.33.0';
-import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.33.0';
-import { HighlightCarousel } from './carousel.js?v=5.33.0';
-import { TheaterModal } from './theater-modal.js?v=5.33.0';
-import { HoverPreviewManager } from './hover-preview.js?v=5.33.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.33.0';
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.33.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.34.0';
+import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.34.0';
+import { HighlightCarousel } from './carousel.js?v=5.34.0';
+import { TheaterModal } from './theater-modal.js?v=5.34.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.34.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.34.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.34.0';
 
 export class VideoGalleryApp {
   constructor() {
@@ -203,7 +203,7 @@ export class VideoGalleryApp {
         <div class="video-card-body">
           <h3 class="video-title" title="${video.title}">${video.title}</h3>
           <div class="video-meta-row">
-            <span class="video-wave-tag">${video.wave}</span>
+            <span class="video-wave-tag" data-wave="${video.wave}" style="background: linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%) !important; color: #ffffff !important; border: none !important; font-weight: 700 !important; box-shadow: 0 2px 10px rgba(51, 135, 255, 0.4) !important;">${(video.wave || '').toUpperCase()}</span>
           </div>
         </div>
       `;
