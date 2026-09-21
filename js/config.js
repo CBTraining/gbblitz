@@ -9,7 +9,7 @@
  * - Column D (row[3]): Blitz Wave filter designation ("Wave 1", "Wave 2", etc.)
  */
 export const GOOGLE_SHEET_ID = '1-tUxNTmDerBRmzS7xbG6fiHMn1Ix5e2G4cI_dGFY3RA';
-export const GOOGLE_SHEET_TABS = ['Video Submissions', 'Test'];
+export const GOOGLE_SHEET_TABS = ['Test'];
 export const GOOGLE_SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(GOOGLE_SHEET_TABS[0])}`;
 
 export function getTabCsvUrl(sheetId, tabName) {

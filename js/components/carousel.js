@@ -3,7 +3,7 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.25.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.26.0';
 
 export class HighlightCarousel {
   constructor(options = {}) {

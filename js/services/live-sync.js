@@ -3,11 +3,11 @@
  * Polls Google Sheet CSV with cache-busting, validates designations, and notifies on change.
  */
 
-import { GOOGLE_SHEET_ID, GOOGLE_SHEET_TABS, getTabCsvUrl } from '../config.js?v=5.25.0';
-import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.25.0';
+import { GOOGLE_SHEET_ID, GOOGLE_SHEET_TABS, getTabCsvUrl } from '../config.js?v=5.26.0';
+import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.26.0';
 
-const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v10';
-const CACHE_SIG_KEY = 'gbblitz_cached_sig_v10';
+const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v11';
+const CACHE_SIG_KEY = 'gbblitz_cached_sig_v11';
 const MIN_COOLDOWN_MS = 30000; // 30s cooldown between visibility/focus syncs
 
 function detectHeaders(headerRow) {
@@ -137,9 +137,36 @@ export class SheetSyncService {
           for (let i = 1; i < rows.length; i++) {
             const row = rows[i];
             const link = (row[headerMap.link] || '').trim();
-            const rawDesignation = (row[headerMap.designation] || '').trim();
+            let rawDesignation = (row[headerMap.designation] || '').trim();
             const title = (row[headerMap.title] || '').trim();
-            const wave = (row[headerMap.wave] || '').trim() || 'Wave 1';
+            let wave = (row[headerMap.wave] || '').trim() || 'Wave 1';
+
+            // Smart designation resolution: if headerMap.designation does not yield an approved/highlighted status,
+            // check wave or candidate columns C/D (supporting both standard and swapped layouts)
+            if (!isUsableDesignation(rawDesignation)) {
+              if (isUsableDesignation(wave)) {
+                const temp = rawDesignation;
+                rawDesignation = wave;
+                wave = temp;
+              } else if (row[2] && isUsableDesignation(row[2].trim())) {
+                rawDesignation = row[2].trim();
+                if (!wave || wave === rawDesignation) wave = (row[3] || '').trim();
+              } else if (row[3] && isUsableDesignation(row[3].trim())) {
+                rawDesignation = row[3].trim();
+                if (!wave || wave === rawDesignation) wave = (row[2] || '').trim();
+              }
+            }
+
+            // Ensure wave is sensible and not holding the designation text
+            if (!wave || isUsableDesignation(wave)) {
+              if (row[2] && !isUsableDesignation(row[2].trim()) && row[2].trim().length > 0) {
+                wave = row[2].trim();
+              } else if (row[3] && !isUsableDesignation(row[3].trim()) && row[3].trim().length > 0) {
+                wave = row[3].trim();
+              } else {
+                wave = 'Wave 1';
+              }
+            }
 
             if (!link || !isUsableDesignation(rawDesignation)) continue;
 
