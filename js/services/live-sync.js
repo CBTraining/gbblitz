@@ -3,11 +3,11 @@
  * Polls Google Sheet CSV with cache-busting, validates designations, and notifies on change.
  */
 
-import { GOOGLE_SHEET_ID, GOOGLE_SHEET_TABS, getTabCsvUrl } from '../config.js?v=5.32.0';
-import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.32.0';
+import { GOOGLE_SHEET_ID, GOOGLE_SHEET_TABS, getTabCsvUrl } from '../config.js?v=5.33.0';
+import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.33.0';
 
-const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v17';
-const CACHE_SIG_KEY = 'gbblitz_cached_sig_v17';
+const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v18';
+const CACHE_SIG_KEY = 'gbblitz_cached_sig_v18';
 const MIN_COOLDOWN_MS = 30000; // 30s cooldown between visibility/focus syncs
 
 function detectHeaders(headerRow) {
