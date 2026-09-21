@@ -35,7 +35,7 @@
 
 @media (max-width: 900px) {
   .carousel-track-container {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 3 / 2;
   }
 }
 

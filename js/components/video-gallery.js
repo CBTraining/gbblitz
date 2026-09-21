@@ -3,13 +3,13 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.29.0';
-import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.29.0';
-import { HighlightCarousel } from './carousel.js?v=5.29.0';
-import { TheaterModal } from './theater-modal.js?v=5.29.0';
-import { HoverPreviewManager } from './hover-preview.js?v=5.29.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.29.0';
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.29.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.30.0';
+import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.30.0';
+import { HighlightCarousel } from './carousel.js?v=5.30.0';
+import { TheaterModal } from './theater-modal.js?v=5.30.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.30.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.30.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.30.0';
 
 export class VideoGalleryApp {
   constructor() {

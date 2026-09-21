@@ -3,7 +3,7 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.29.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.30.0';
 
 export class HighlightCarousel {
   constructor(options = {}) {
@@ -39,18 +39,26 @@ export class HighlightCarousel {
     this.track.innerHTML = '';
     this.indicators.innerHTML = '';
 
+    const headerTitle = document.getElementById('carousel-header-title');
     if (this.videos.length === 0) {
       if (this.wrapper) this.wrapper.style.display = 'none';
+      if (headerTitle) headerTitle.style.display = 'none';
       return;
     }
 
     if (this.wrapper) this.wrapper.style.display = '';
+    if (headerTitle) headerTitle.style.display = '';
 
     this.videos.forEach((video, index) => {
       const isApproved = (video.designation || '').toLowerCase().includes('approved');
       const desigPart = (!video.designation || isApproved) ? '' : ` • ${video.designation}`;
       const li = document.createElement('li');
       li.className = 'carousel-slide ' + (index === 0 ? 'active' : '');
+      li.style.cursor = 'pointer';
+      li.setAttribute('role', 'button');
+      li.setAttribute('tabindex', '0');
+      li.setAttribute('aria-label', `Play highlighted video: ${video.title}`);
+
       li.innerHTML = `
         <img 
           class="carousel-img" 
@@ -62,7 +70,6 @@ export class HighlightCarousel {
         <div class="carousel-overlay">
           <div class="carousel-caption">
             <div class="carousel-badge-row">
-              <span class="carousel-slide-tag">✨ HIGHLIGHTED VIDEO</span>
               <span class="carousel-wave-badge">${video.wave.toUpperCase()}</span>
             </div>
             <h3 class="carousel-slide-title">${video.title}</h3>
@@ -77,6 +84,19 @@ export class HighlightCarousel {
           </div>
         </div>
       `;
+
+      // Click on entire slide / thumbnail opens video player
+      li.addEventListener('click', (e) => {
+        if (e.target.closest('.carousel-nav') || e.target.closest('.carousel-indicators')) return;
+        this.onPlayVideo(video.id);
+      });
+
+      li.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.onPlayVideo(video.id);
+        }
+      });
 
       const playBtn = li.querySelector('.carousel-play-btn');
       if (playBtn) {
