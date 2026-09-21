@@ -3,7 +3,7 @@
  * Handles auto-playing Google Drive video modal playback, controls, fullscreen, and keyboard navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.35.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.36.0';
 
 export class TheaterModal {
   constructor(options = {}) {
@@ -33,11 +33,16 @@ export class TheaterModal {
     if (!this.modal || !video || !isUsableDesignation(video.designation)) return;
 
     if (this.title) this.title.textContent = video.title;
-    const cleanDesig = (video.designation || '').trim().toLowerCase().replace(/[!.,]/g, '');
-    const isApproved = cleanDesig === 'approved';
-    const badgeText = isApproved ? video.wave : `${video.wave} • ${video.designation}`;
-    if (this.desc) this.desc.textContent = badgeText;
-    if (this.categoryBadge) this.categoryBadge.textContent = badgeText.toUpperCase();
+    const waveText = (video.wave || 'WAVE 1').toUpperCase();
+    if (this.categoryBadge) {
+      this.categoryBadge.textContent = waveText;
+      this.categoryBadge.setAttribute('data-wave', video.wave || 'Wave 1');
+      this.categoryBadge.style.cssText = 'background: linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%) !important; color: #ffffff !important; border: none !important; font-weight: 700 !important; box-shadow: 0 2px 10px rgba(51, 135, 255, 0.4) !important;';
+    }
+    if (this.desc) {
+      this.desc.textContent = '';
+      this.desc.style.display = 'none';
+    }
     if (this.driveLink) this.driveLink.href = video.driveUrl || `https://drive.google.com/file/d/${video.driveFileId}/view`;
 
     const footerDriveBtn = document.getElementById('modal-footer-drive-btn');
