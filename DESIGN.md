@@ -66,8 +66,8 @@ All windows and cards adhere strictly to the established design geometry:
 - **Small Controls**: `8px` (`--radius-sm`) — Micro buttons, volume sliders, control icons.
 
 ### 3.1 Media Aspect Ratios
-- **Gallery Video Cards**: Uniform **3:2** (`aspect-ratio: 3 / 2;`), matching the Highlighted Video carousel showcase for balanced proportions across landscape and portrait media (`object-fit: cover; object-position: center 25%;`).
-- **Highlighted Carousel Showcase**: Uniform **3:2** (`aspect-ratio: 3 / 2;`), content fills by width and height (`object-fit: cover; object-position: center 25%;`) to naturally host both landscape and portrait submissions.
+- **Gallery Video Cards**: Uniform **3:2** (`aspect-ratio: 3 / 2;`), matching the Highlighted Videos carousel showcase for balanced proportions across landscape and portrait media (`object-fit: cover; object-position: center 25%;`).
+- **Highlighted Videos Carousel Showcase**: Uniform **3:2** (`aspect-ratio: 3 / 2;`), content fills by width and height (`object-fit: cover; object-position: center 25%;`) to naturally host both landscape and portrait submissions.
 - **Theater Modal Player**: 16:9 desktop container with adaptive dynamic ratio expansion for portrait vertical videos.
 
 ---
