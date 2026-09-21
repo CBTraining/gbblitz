@@ -433,21 +433,20 @@
   z-index: 4;
 }
 
-/* Wave Pill (Inner Window color) */
+/* Wave Pill (Solid Gradient #3387ff to #a9a8ff) */
 .wave-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  background: rgba(41, 44, 52, 0.88);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 0.22rem 0.55rem;
+  background: var(--grad-wave-1, linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%));
+  padding: 0.22rem 0.65rem;
   border-radius: var(--radius-pill);
   font-size: 0.65rem;
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: 0.04em;
-  color: var(--accent-blue);
-  border: 1px solid rgba(49, 134, 255, 0.3);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 2px 8px rgba(51, 135, 255, 0.35);
 }
 
 /* Designation Badges with Sparse Tertiary Accents */
@@ -563,14 +562,16 @@
 
 .video-wave-tag {
   font-size: 0.68rem;
-  font-weight: 400;
-  color: var(--accent-blue);
-  background: var(--bg-surface-inner);
-  border: 1px solid rgba(49, 134, 255, 0.25);
-  padding: 0.18rem 0.55rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--grad-wave-1, linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%));
+  border: none;
+  padding: 0.22rem 0.65rem;
   border-radius: var(--radius-pill);
   white-space: nowrap;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(51, 135, 255, 0.35);
+  letter-spacing: 0.02em;
 }
 
 .video-designation-badge {
