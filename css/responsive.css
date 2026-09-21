@@ -191,7 +191,11 @@
   }
 
   :root {
-    --docked-header-height: 64px;
+    --docked-header-height: 76px;
+  }
+
+  .header-blur-backdrop {
+    height: 66px;
   }
 
   /* Sticky Gallery Header: Compact & Clean on Mobile */

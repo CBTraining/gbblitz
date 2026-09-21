@@ -17,7 +17,7 @@
 /* Sticky Gallery Command Center (Title + Search + Filter Controls) */
 .gallery-sticky-header {
   position: sticky;
-  top: var(--docked-header-height, 68px);
+  top: var(--docked-header-height, 94px);
   z-index: 40;
   margin-bottom: 2rem;
   padding: 1.15rem 1.35rem 1.05rem;
