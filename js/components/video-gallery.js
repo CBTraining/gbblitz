@@ -3,13 +3,13 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.36.0';
-import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.36.0';
-import { HighlightCarousel } from './carousel.js?v=5.36.0';
-import { TheaterModal } from './theater-modal.js?v=5.36.0';
-import { HoverPreviewManager } from './hover-preview.js?v=5.36.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.36.0';
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.36.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.37.0';
+import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.37.0';
+import { HighlightCarousel } from './carousel.js?v=5.37.0';
+import { TheaterModal } from './theater-modal.js?v=5.37.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.37.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.37.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.37.0';
 
 export class VideoGalleryApp {
   constructor() {
@@ -288,14 +288,15 @@ export class VideoGalleryApp {
   }
 
   updateWaveCounts() {
+    if (!this.waveFilters) return;
     const getCount = (waveName) => {
       if (waveName === 'all') return this.videos.length;
-      return this.videos.filter(v => v.wave.toLowerCase() === waveName.toLowerCase()).length;
+      return this.videos.filter(v => v.wave && v.wave.toLowerCase() === waveName.toLowerCase()).length;
     };
 
     const waves = ['all', 'Wave 1', 'Wave 2', 'Wave 3', 'Wave 4', 'Wave 5'];
     waves.forEach(w => {
-      const btn = document.querySelector('[data-wave="' + w + '"]');
+      const btn = this.waveFilters.querySelector('.filter-pill[data-wave="' + w + '"]');
       if (btn) {
         const count = getCount(w);
         const label = w === 'all' ? 'All Videos' : w;
