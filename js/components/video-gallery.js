@@ -3,13 +3,13 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.22.0';
-import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.22.0';
-import { HighlightCarousel } from './carousel.js?v=5.22.0';
-import { TheaterModal } from './theater-modal.js?v=5.22.0';
-import { HoverPreviewManager } from './hover-preview.js?v=5.22.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.22.0';
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.22.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.23.0';
+import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.23.0';
+import { HighlightCarousel } from './carousel.js?v=5.23.0';
+import { TheaterModal } from './theater-modal.js?v=5.23.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.23.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.23.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.23.0';
 
 export class VideoGalleryApp {
   constructor() {
@@ -107,8 +107,20 @@ export class VideoGalleryApp {
 
     if (filtered.length === 0) {
       this.videoGrid.innerHTML = '';
-      if (this.emptyState) this.emptyState.style.display = 'block';
-      if (this.videoCountBadge) this.videoCountBadge.textContent = 'No videos found in ' + currentLabel;
+      if (this.emptyState) {
+        this.emptyState.style.display = 'block';
+        const p = this.emptyState.querySelector('p');
+        if (p) {
+          p.textContent = this.videos.length === 0 
+            ? 'Awaiting approved video submissions from the Google Sheet.' 
+            : 'Try adjusting your search terms or selecting another wave.';
+        }
+      }
+      if (this.videoCountBadge) {
+        this.videoCountBadge.textContent = this.videos.length === 0 
+          ? '0 videos approved' 
+          : 'No videos found in ' + currentLabel;
+      }
       return;
     }
 
