@@ -1,4 +1,4 @@
-﻿/**
+/**
  * GBblitz - Known Video Aspect Ratios Override Dictionary
  * Maps Google Drive File IDs to their calibrated aspect ratios (width / height).
  * 
@@ -9,6 +9,7 @@
  */
 export const KNOWN_ASPECT_RATIOS = {
   // Known portrait videos (aspect < 0.95)
+  '10orpHS-vuqal8moH-Epjs89DswBaeFK_': 0.5625,
   '1un9shx6qb1r5hejoMlrJdF-fjmsEvFem': 0.5625,
   '1VGgwbRnIq05t8kejbpBGUGg5K4iWeeHi': 0.5625,
   '1RFugCmwfpIYwOr7zut4uz5i_QmO7ixyT': 0.5625,

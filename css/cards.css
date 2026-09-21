@@ -150,27 +150,28 @@
   background: transparent;
 }
 
-/* Landscape Video Preview - Scaled 160% down to fit width cleanly, cropping Drive top bar */
+/* Landscape Video Preview - Scaled 122% to fill 3:2 frame cleanly without black bars, cropping Drive UI */
 .video-preview-iframe {
   position: absolute;
-  top: -46px;
-  left: 0;
-  width: 160%;
-  height: calc(160% + 56px);
-  transform: scale(0.625);
-  transform-origin: 0 0;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%) scale(1.22);
+  transform-origin: center center;
   border: none;
   pointer-events: none;
 }
 
-/* Portrait Video Preview - Scaled to fill horizontal 3:2 thumbnail window without black bars */
+/* Portrait Video Preview - Scaled 272% to fill horizontal 3:2 window edge-to-edge without black pillar bars */
 .video-card.is-portrait .video-preview-iframe {
-  top: -50px;
-  left: 0;
-  width: 160%;
-  height: calc(285% + 60px);
-  transform: scale(0.625);
-  transform-origin: 0 0;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%) scale(2.72);
+  transform-origin: center center;
   border: none;
   pointer-events: none;
 }

@@ -3,7 +3,7 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.39.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.40.0';
 
 export class HighlightCarousel {
   constructor(options = {}) {
@@ -15,6 +15,7 @@ export class HighlightCarousel {
     this.progressFill = document.getElementById(options.progressFillId || 'carousel-progress-fill');
     this.onPlayVideo = options.onPlayVideo || (() => {});
     this.hoverPreviewManager = options.hoverPreviewManager || null;
+    this.aspectRatioCache = options.aspectRatioCache || {};
 
     this.videos = [];
     this.currentIndex = 0;
@@ -53,8 +54,9 @@ export class HighlightCarousel {
     this.videos.forEach((video, index) => {
       const isApproved = (video.designation || '').toLowerCase().includes('approved');
       const desigPart = (!video.designation || isApproved) ? '' : ` • ${video.designation}`;
+      const isPortrait = video.isPortrait || (this.aspectRatioCache[video.driveFileId] && this.aspectRatioCache[video.driveFileId] < 0.95);
       const li = document.createElement('li');
-      li.className = 'carousel-slide ' + (index === 0 ? 'active' : '');
+      li.className = 'carousel-slide ' + (index === 0 ? 'active ' : '') + (isPortrait ? 'is-portrait' : 'is-landscape');
       li.style.cursor = 'pointer';
       li.setAttribute('role', 'button');
       li.setAttribute('tabindex', '0');
