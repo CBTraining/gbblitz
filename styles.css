@@ -17,12 +17,12 @@
  * - css/responsive.css     Tablet and mobile viewport media queries
  */
 
-@import url('css/variables.css?v=5.28.0');
-@import url('css/base.css?v=5.28.0');
-@import url('css/header.css?v=5.28.0');
-@import url('css/hero.css?v=5.28.0');
-@import url('css/carousel.css?v=5.28.0');
-@import url('css/gallery.css?v=5.28.0');
-@import url('css/modal.css?v=5.28.0');
-@import url('css/magic-pointer.css?v=5.28.0');
-@import url('css/responsive.css?v=5.28.0');
+@import url('css/variables.css?v=5.29.0');
+@import url('css/base.css?v=5.29.0');
+@import url('css/header.css?v=5.29.0');
+@import url('css/hero.css?v=5.29.0');
+@import url('css/carousel.css?v=5.29.0');
+@import url('css/gallery.css?v=5.29.0');
+@import url('css/modal.css?v=5.29.0');
+@import url('css/magic-pointer.css?v=5.29.0');
+@import url('css/responsive.css?v=5.29.0');
