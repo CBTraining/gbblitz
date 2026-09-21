@@ -3,14 +3,14 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.38.0';
-import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.38.0';
-import { HighlightCarousel } from './carousel.js?v=5.38.0';
-import { TheaterModal } from './theater-modal.js?v=5.38.0';
-import { HoverPreviewManager } from './hover-preview.js?v=5.38.0';
-import { createVideoCard } from './video-card.js?v=5.38.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.38.0';
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.38.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.39.0';
+import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.39.0';
+import { HighlightCarousel } from './carousel.js?v=5.39.0';
+import { TheaterModal } from './theater-modal.js?v=5.39.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.39.0';
+import { createVideoCard } from './video-card.js?v=5.39.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.39.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.39.0';
 
 export class VideoGalleryApp {
   constructor() {
@@ -23,14 +23,15 @@ export class VideoGalleryApp {
 
     // Calibrated aspect ratios dictionary & desktop hover preview manager
     this.aspectRatioCache = { ...KNOWN_ASPECT_RATIOS };
-    this.hoverPreviewManager = new HoverPreviewManager({ delayMs: 550 });
+    this.hoverPreviewManager = new HoverPreviewManager({ delayMs: 120 });
     this.cardRevealObserver = null;
 
     this.initElements();
 
     // 1. Initialize Sub-Components
     this.carousel = new HighlightCarousel({
-      onPlayVideo: (videoId) => this.openTheaterModal(videoId)
+      onPlayVideo: (videoId) => this.openTheaterModal(videoId),
+      hoverPreviewManager: this.hoverPreviewManager
     });
 
     this.modal = new TheaterModal({
@@ -165,7 +166,7 @@ export class VideoGalleryApp {
         }
       });
 
-      if (!isTouch && this.hoverPreviewManager) {
+      if (this.hoverPreviewManager) {
         this.hoverPreviewManager.attach(card, video);
       }
 

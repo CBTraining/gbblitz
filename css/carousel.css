@@ -89,6 +89,53 @@
   transform: scale(1.04);
 }
 
+/* Hover Preview Slot inside Carousel Slide */
+.carousel-slide .preview-iframe-slot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+  background: #07090c;
+  opacity: 0;
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carousel-slide .preview-iframe-slot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  background: transparent;
+}
+
+.carousel-slide.is-playing .preview-iframe-slot {
+  opacity: 1;
+}
+
+.carousel-slide.is-playing .preview-iframe-slot::after {
+  pointer-events: auto;
+}
+
+.carousel-slide.is-playing .carousel-img {
+  opacity: 0;
+}
+
+.carousel-slide.is-playing .carousel-overlay {
+  opacity: 0.25;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.carousel-slide.is-playing:hover .carousel-overlay {
+  opacity: 0.5;
+}
+
 .carousel-overlay {
   position: absolute;
   inset: 0;

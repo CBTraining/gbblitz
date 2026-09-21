@@ -3,7 +3,7 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.38.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.39.0';
 
 export class HighlightCarousel {
   constructor(options = {}) {
@@ -14,6 +14,7 @@ export class HighlightCarousel {
     this.nextBtn = document.getElementById(options.nextBtnId || 'carousel-next-btn');
     this.progressFill = document.getElementById(options.progressFillId || 'carousel-progress-fill');
     this.onPlayVideo = options.onPlayVideo || (() => {});
+    this.hoverPreviewManager = options.hoverPreviewManager || null;
 
     this.videos = [];
     this.currentIndex = 0;
@@ -67,6 +68,7 @@ export class HighlightCarousel {
           loading="${index === 0 ? 'eager' : 'lazy'}" 
           onerror="if (!this.dataset.retried) { this.dataset.retried = '1'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w1600'; } else { this.onerror=null; this.src='https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1600&q=80'; }"
         />
+        <div class="preview-iframe-slot" id="carousel-preview-slot-${video.id}"></div>
         <div class="carousel-overlay">
           <div class="carousel-caption">
             <div class="carousel-badge-row">
@@ -104,6 +106,10 @@ export class HighlightCarousel {
           e.stopPropagation();
           this.onPlayVideo(video.id);
         });
+      }
+
+      if (this.hoverPreviewManager) {
+        this.hoverPreviewManager.attach(li, video);
       }
 
       this.track.appendChild(li);

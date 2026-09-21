@@ -1,12 +1,13 @@
-﻿/**
+/**
  * GBblitz - Desktop Hover Video Preview Manager
  * Manages the inline hover preview iframe lifecycle, delay timer, scrub progress bar,
  * and ensures only a single preview streams at any given time (singleton pattern).
+ * Version: 5.39.0
  */
 
 export class HoverPreviewManager {
   constructor(options = {}) {
-    this.delayMs = options.delayMs || 550;
+    this.delayMs = options.delayMs || 120;
     this.activeCleaner = null;
   }
 
@@ -21,7 +22,7 @@ export class HoverPreviewManager {
   }
 
   /**
-   * Attaches hover preview listeners to a video card
+   * Attaches hover preview listeners to a video card or slide
    * @param {HTMLElement} card 
    * @param {Object} video 
    */
@@ -59,8 +60,12 @@ export class HoverPreviewManager {
         card.classList.add('is-playing');
         const iframe = document.createElement('iframe');
         iframe.className = 'video-preview-iframe';
-        iframe.src = `https://drive.google.com/file/d/${video.driveFileId}/preview`;
-        iframe.allow = 'autoplay';
+        const baseUrl = video.videoUrl || `https://drive.google.com/file/d/${video.driveFileId}/preview`;
+        const sep = baseUrl.includes('?') ? '&' : '?';
+        iframe.src = baseUrl + sep + 'autoplay=1&mute=1';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
+        iframe.setAttribute('allowfullscreen', 'true');
+        iframe.loading = 'eager';
         slot.appendChild(iframe);
 
         if (scrubBar) {
