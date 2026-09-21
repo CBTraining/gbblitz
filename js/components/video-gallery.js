@@ -3,13 +3,14 @@
  * Coordinates highlighted carousel, video grid, wave filters, live search, and theater modal.
  */
 
-import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.37.0';
-import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.37.0';
-import { HighlightCarousel } from './carousel.js?v=5.37.0';
-import { TheaterModal } from './theater-modal.js?v=5.37.0';
-import { HoverPreviewManager } from './hover-preview.js?v=5.37.0';
-import { SheetSyncService } from '../services/live-sync.js?v=5.37.0';
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.37.0';
+import { PRELOADED_VIDEOS } from '../data/preloaded-videos.js?v=5.38.0';
+import { KNOWN_ASPECT_RATIOS } from '../data/aspect-ratios.js?v=5.38.0';
+import { HighlightCarousel } from './carousel.js?v=5.38.0';
+import { TheaterModal } from './theater-modal.js?v=5.38.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.38.0';
+import { createVideoCard } from './video-card.js?v=5.38.0';
+import { SheetSyncService } from '../services/live-sync.js?v=5.38.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.38.0';
 
 export class VideoGalleryApp {
   constructor() {
@@ -152,93 +153,17 @@ export class VideoGalleryApp {
     }
 
     filtered.forEach((video, index) => {
-      const isHighlight = (video.designation || '').trim().toLowerCase().includes('highlight');
-      const thumbBadgeHtml = isHighlight ? `
-          <div class="thumb-badges">
-            <span class="type-pill badge-highlight">
-              ✨ HIGHLIGHTED
-            </span>
-          </div>` : '';
-
       const isPortrait = this.aspectRatioCache[video.driveFileId] && this.aspectRatioCache[video.driveFileId] < 0.95;
 
-      const card = document.createElement('article');
-      card.className = 'video-card ' + 
-        (isHighlight ? 'card-highlight ' : '') +
-        (isPortrait ? 'is-portrait' : 'is-landscape');
-      card.dataset.videoId = video.id;
-      card.dataset.index = index;
-      card.setAttribute('role', 'button');
-      card.setAttribute('tabindex', '0');
-
-      card.innerHTML = `
-        <div class="video-thumb-wrap" id="thumb-wrap-${video.id}">
-          <img 
-            class="video-thumb-img" 
-            src="${video.thumbnail}" 
-            alt="${video.title}" 
-            loading="lazy" 
-            onerror="if (!this.dataset.retried) { this.dataset.retried = '1'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w800'; } else { this.onerror=null; this.src='https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80'; }"
-          />
-
-          <!-- Hover Preview Slot -->
-          <div class="preview-iframe-slot" id="preview-slot-${video.id}"></div>
-
-          <!-- Centered Play Button Overlay -->
-          <div class="video-play-overlay">
-            <div class="video-play-btn-circle">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-            </div>
-          </div>
-
-          ${thumbBadgeHtml}
-
-          <div class="hover-scrub-bar">
-            <div class="hover-scrub-progress"></div>
-          </div>
-        </div>
-
-        <div class="video-card-body">
-          <h3 class="video-title" title="${video.title}">${video.title}</h3>
-          <div class="video-meta-row">
-            <span class="video-wave-tag" data-wave="${video.wave}" style="background: linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%) !important; color: #ffffff !important; border: none !important; font-weight: 700 !important; box-shadow: 0 2px 10px rgba(51, 135, 255, 0.4) !important;">${(video.wave || '').toUpperCase()}</span>
-          </div>
-        </div>
-      `;
-
-      card.addEventListener('click', () => {
-        this.openTheaterModal(video.id);
-      });
-
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          this.openTheaterModal(video.id);
+      const card = createVideoCard(video, index, {
+        isPortrait,
+        onPlay: (id) => this.openTheaterModal(id),
+        onRatioDetected: (ratio, isPort) => {
+          this.aspectRatioCache[video.driveFileId] = ratio;
+          video.isPortrait = isPort;
+          video.aspectRatio = ratio;
         }
       });
-
-      // Dynamic aspect ratio detection from loaded thumbnail
-      const thumbImg = card.querySelector('.video-thumb-img');
-      if (thumbImg) {
-        const detect = () => {
-          if (thumbImg.naturalWidth && thumbImg.naturalHeight) {
-            const ratio = thumbImg.naturalWidth / thumbImg.naturalHeight;
-            const isPort = ratio < 0.95;
-            this.aspectRatioCache[video.driveFileId] = ratio;
-            video.isPortrait = isPort;
-            video.aspectRatio = ratio;
-            card.classList.toggle('is-portrait', isPort);
-            card.classList.toggle('is-landscape', !isPort);
-          }
-        };
-        if (thumbImg.complete && thumbImg.naturalWidth) {
-          detect();
-        } else {
-          thumbImg.addEventListener('load', detect, { once: true });
-        }
-      }
 
       if (!isTouch && this.hoverPreviewManager) {
         this.hoverPreviewManager.attach(card, video);

@@ -11,18 +11,20 @@
  * - css/header.css         Frosted vignette header & responsive Googlebook logo
  * - css/hero.css           Hero stage canvas, narrative column, solid badges & feature chips
  * - css/carousel.css       Compact highlighted video showcase carousel & controls
- * - css/gallery.css        Video gallery grid, search bar, wave filters, cards & tags
+ * - css/gallery.css        Sticky gallery header, search bar, wave filters & toolbar
+ * - css/cards.css          Video grid, 3:2 card thumbnails, hover preview slots, play overlay, badges & tags
  * - css/modal.css          Expanded theater modal player, Google Drive iframe & actions
  * - css/magic-pointer.css  Magic pointer easter egg cursor, hover glow, clicking & sparkles
  * - css/responsive.css     Tablet and mobile viewport media queries
  */
 
-@import url('css/variables.css?v=5.37.0');
-@import url('css/base.css?v=5.37.0');
-@import url('css/header.css?v=5.37.0');
-@import url('css/hero.css?v=5.37.0');
-@import url('css/carousel.css?v=5.37.0');
-@import url('css/gallery.css?v=5.37.0');
-@import url('css/modal.css?v=5.37.0');
-@import url('css/magic-pointer.css?v=5.37.0');
-@import url('css/responsive.css?v=5.37.0');
+@import url('css/variables.css?v=5.38.0');
+@import url('css/base.css?v=5.38.0');
+@import url('css/header.css?v=5.38.0');
+@import url('css/hero.css?v=5.38.0');
+@import url('css/carousel.css?v=5.38.0');
+@import url('css/gallery.css?v=5.38.0');
+@import url('css/cards.css?v=5.38.0');
+@import url('css/modal.css?v=5.38.0');
+@import url('css/magic-pointer.css?v=5.38.0');
+@import url('css/responsive.css?v=5.38.0');
