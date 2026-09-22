@@ -54,7 +54,7 @@
   display: flex;
   flex-direction: column;
   gap: 3.5rem;
-  overflow-x: clip;
+  overflow: visible;
 }
 
 .section-header {
@@ -102,7 +102,7 @@
 .album-section {
   width: 100%;
   max-width: 100%;
-  overflow-x: clip;
+  overflow: visible;
 }
 
 .hero-split-row {
