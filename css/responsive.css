@@ -289,8 +289,7 @@
   }
 
   .video-counter {
-    font-size: 0.75rem;
-    text-align: right;
+    display: none !important;
   }
 
   /* Single Column Feed for All Phone Viewports */
