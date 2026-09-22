@@ -3,11 +3,11 @@
  * Polls Google Sheet CSV with cache-busting, validates designations, and notifies on change.
  */
 
-import { GOOGLE_SHEET_ID, GOOGLE_SHEET_TABS, getTabCsvUrl } from '../config.js?v=5.45.0';
-import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.45.0';
+import { GOOGLE_SHEET_ID, GOOGLE_SHEET_TABS, getTabCsvUrl } from '../config.js?v=5.46.0';
+import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.46.0';
 
-const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v30';
-const CACHE_SIG_KEY = 'gbblitz_cached_sig_v30';
+const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v31';
+const CACHE_SIG_KEY = 'gbblitz_cached_sig_v31';
 const MIN_COOLDOWN_MS = 30000; // 30s cooldown between visibility/focus syncs
 
 function detectHeaders(headerRow) {
@@ -213,6 +213,14 @@ export class SheetSyncService {
       }
 
       this.consecutiveFailures = 0;
+
+      // CRITICAL GUARD: Never wipe displayed videos if fetch returned 0 items
+      // (e.g. transient network glitch, rate limit, or temporary sheet issue)
+      if (liveVideos.length === 0) {
+        console.warn('SheetSync: Live fetch returned 0 usable videos. Retaining existing gallery videos.');
+        return;
+      }
+
       const signature = liveVideos.map(v => `${v.driveFileId}_${v.title}_${v.designation}_${v.wave}`).join('||');
       if (this.lastSignature === signature && this.hasDeliveredInitial) return;
       this.lastSignature = signature;
