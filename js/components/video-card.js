@@ -1,7 +1,7 @@
 /**
  * GBBlitz - Video Card Component
  * Creates and renders individual video card elements for the gallery grid.
- * Version: 5.48.0
+ * Version: 5.49.0
  */
 
 /**
@@ -39,9 +39,9 @@ export function createVideoCard(video, index, { isPortrait = false, onPlay, onRa
         class="video-thumb-img" 
         src="${video.thumbnail}" 
         alt="${video.title}" 
-        loading="lazy" 
+        loading="${index < 6 ? 'eager' : 'lazy'}" 
         referrerpolicy="no-referrer"
-        onerror="if (!this.dataset.retried) { this.dataset.retried = '1'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w800'; } else { this.onerror=null; this.src='Graphic%20Assets/video-placeholder.svg'; }"
+        onerror="if (!this.dataset.step) { this.dataset.step = '1'; this.referrerPolicy = 'no-referrer'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w800'; } else if (this.dataset.step === '1') { this.dataset.step = '2'; this.referrerPolicy = 'no-referrer'; this.src = 'https://lh3.googleusercontent.com/d/' + encodeURIComponent('${video.driveFileId}') + '=w800'; } else if (this.dataset.step === '2') { this.dataset.step = '3'; this.referrerPolicy = 'no-referrer'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=s800'; } else { this.onerror = null; this.src = 'Graphic%20Assets/video-placeholder.svg'; }"
       />
 
       <!-- Hover Preview Slot -->
@@ -84,9 +84,27 @@ export function createVideoCard(video, index, { isPortrait = false, onPlay, onRa
     });
   }
 
-  // Dynamic aspect ratio detection from loaded thumbnail
+  // Dynamic aspect ratio detection and progressive fallback error listener
   const thumbImg = card.querySelector('.video-thumb-img');
   if (thumbImg) {
+    thumbImg.addEventListener('error', () => {
+      const step = parseInt(thumbImg.dataset.step || '0', 10);
+      thumbImg.referrerPolicy = 'no-referrer';
+      if (step === 0) {
+        thumbImg.dataset.step = '1';
+        thumbImg.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(video.driveFileId)}&sz=w800`;
+      } else if (step === 1) {
+        thumbImg.dataset.step = '2';
+        thumbImg.src = `https://lh3.googleusercontent.com/d/${encodeURIComponent(video.driveFileId)}=w800`;
+      } else if (step === 2) {
+        thumbImg.dataset.step = '3';
+        thumbImg.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(video.driveFileId)}&sz=s800`;
+      } else {
+        thumbImg.onerror = null;
+        thumbImg.src = 'Graphic%20Assets/video-placeholder.svg';
+      }
+    });
+
     const detect = () => {
       if (thumbImg.naturalWidth && thumbImg.naturalHeight) {
         const ratio = thumbImg.naturalWidth / thumbImg.naturalHeight;

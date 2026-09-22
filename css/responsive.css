@@ -326,3 +326,20 @@
     padding: 0.25rem 0.6rem;
   }
 }
+
+/* ==========================================================================
+   Touch / Mobile Inline Preview Suppression
+   Disables inline thumbnail preview slots and scrub bars on touch / coarse-pointer
+   devices so tapping a video card strictly opens the theater modal player.
+   ========================================================================== */
+@media (pointer: coarse), (hover: none), (max-width: 768px) {
+  .preview-iframe-slot,
+  .carousel-slide .preview-iframe-slot {
+    display: none !important;
+    pointer-events: none !important;
+  }
+  .hover-scrub-bar {
+    display: none !important;
+  }
+}
+

@@ -3,7 +3,7 @@
  * Handles auto-playing Google Drive video modal playback, controls, fullscreen, and keyboard navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.48.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.49.0';
 
 export class TheaterModal {
   constructor(options = {}) {

@@ -3,7 +3,7 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.48.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.49.0';
 
 export class HighlightCarousel {
   constructor(options = {}) {
@@ -69,7 +69,7 @@ export class HighlightCarousel {
           alt="${video.title}" 
           loading="${index === 0 ? 'eager' : 'lazy'}" 
           referrerpolicy="no-referrer"
-          onerror="if (!this.dataset.retried) { this.dataset.retried = '1'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w1600'; } else { this.onerror=null; this.src='Graphic%20Assets/video-placeholder.svg'; }"
+          onerror="if (!this.dataset.step) { this.dataset.step = '1'; this.referrerPolicy = 'no-referrer'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w1600'; } else if (this.dataset.step === '1') { this.dataset.step = '2'; this.referrerPolicy = 'no-referrer'; this.src = 'https://lh3.googleusercontent.com/d/' + encodeURIComponent('${video.driveFileId}') + '=w1600'; } else if (this.dataset.step === '2') { this.dataset.step = '3'; this.referrerPolicy = 'no-referrer'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=s1600'; } else { this.onerror = null; this.src = 'Graphic%20Assets/video-placeholder.svg'; }"
         />
         <div class="preview-iframe-slot" id="carousel-preview-slot-${video.id}"></div>
         <div class="carousel-overlay">
@@ -93,12 +93,14 @@ export class HighlightCarousel {
       // Click on entire slide / thumbnail opens video player
       li.addEventListener('click', (e) => {
         if (e.target.closest('.carousel-nav') || e.target.closest('.carousel-indicators')) return;
+        if (this.hoverPreviewManager) this.hoverPreviewManager.stopActive();
         this.onPlayVideo(video.id);
       });
 
       li.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
+          if (this.hoverPreviewManager) this.hoverPreviewManager.stopActive();
           this.onPlayVideo(video.id);
         }
       });
@@ -107,6 +109,7 @@ export class HighlightCarousel {
       if (playBtn) {
         playBtn.addEventListener('click', (e) => {
           e.stopPropagation();
+          if (this.hoverPreviewManager) this.hoverPreviewManager.stopActive();
           this.onPlayVideo(video.id);
         });
       }
@@ -117,6 +120,24 @@ export class HighlightCarousel {
 
       const cImg = li.querySelector('.carousel-img');
       if (cImg) {
+        cImg.addEventListener('error', () => {
+          const step = parseInt(cImg.dataset.step || '0', 10);
+          cImg.referrerPolicy = 'no-referrer';
+          if (step === 0) {
+            cImg.dataset.step = '1';
+            cImg.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(video.driveFileId)}&sz=w1600`;
+          } else if (step === 1) {
+            cImg.dataset.step = '2';
+            cImg.src = `https://lh3.googleusercontent.com/d/${encodeURIComponent(video.driveFileId)}=w1600`;
+          } else if (step === 2) {
+            cImg.dataset.step = '3';
+            cImg.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(video.driveFileId)}&sz=s1600`;
+          } else {
+            cImg.onerror = null;
+            cImg.src = 'Graphic%20Assets/video-placeholder.svg';
+          }
+        });
+
         const detect = () => {
           if (cImg.naturalWidth && cImg.naturalHeight) {
             const ratio = cImg.naturalWidth / cImg.naturalHeight;
