@@ -1,7 +1,7 @@
 /**
  * GBBlitz - Video Card Component
  * Creates and renders individual video card elements for the gallery grid.
- * Version: 5.57.0
+ * Version: 5.58.0
  */
 
 /**
@@ -32,6 +32,13 @@ export function createVideoCard(video, index, { isPortrait = false, onPlay, onRa
   card.dataset.index = index;
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
+
+  const cat = video.category || video.wave || 'Sentiment';
+  const isTeachBack = cat.toLowerCase().includes('teach');
+  const catLabel = isTeachBack ? 'TEACH-BACK' : 'SENTIMENT';
+  const catStyle = isTeachBack
+    ? 'background: linear-gradient(90deg, #0ebc5f 0%, #78c9ff 100%) !important; color: #ffffff !important; border: none !important; font-weight: 700 !important; box-shadow: 0 2px 10px rgba(14, 188, 95, 0.4) !important;'
+    : 'background: linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%) !important; color: #ffffff !important; border: none !important; font-weight: 700 !important; box-shadow: 0 2px 10px rgba(51, 135, 255, 0.4) !important;';
 
   card.innerHTML = `
     <div class="video-thumb-wrap" id="thumb-wrap-${video.id}">
@@ -64,7 +71,7 @@ export function createVideoCard(video, index, { isPortrait = false, onPlay, onRa
     <div class="video-card-body">
       <h3 class="video-title" title="${video.title}">${video.title}</h3>
       <div class="video-meta-row">
-        <span class="video-wave-tag" data-wave="${video.wave}" style="background: linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%) !important; color: #ffffff !important; border: none !important; font-weight: 700 !important; box-shadow: 0 2px 10px rgba(51, 135, 255, 0.4) !important;">${(video.wave || '').toUpperCase()}</span>
+        <span class="video-wave-tag video-category-tag" data-category="${isTeachBack ? 'Teach-back' : 'Sentiment'}" data-wave="${isTeachBack ? 'Teach-back' : 'Sentiment'}" style="${catStyle}">${catLabel}</span>
       </div>
     </div>
   `;

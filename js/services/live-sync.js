@@ -3,26 +3,39 @@
  * Polls Google Sheet CSV with cache-busting, validates designations, and notifies on change.
  */
 
-import { GOOGLE_SHEET_ID, GOOGLE_SHEET_TABS, getTabCsvUrl } from '../config.js?v=5.57.0';
-import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.57.0';
+import { GOOGLE_SHEET_ID, GOOGLE_SHEET_TABS, getTabCsvUrl } from '../config.js?v=5.58.0';
+import { isUsableDesignation, parseCSV } from './sheet-service.js?v=5.58.0';
 
 const CACHE_STORAGE_KEY = 'gbblitz_cached_videos_v31';
 const CACHE_SIG_KEY = 'gbblitz_cached_sig_v31';
 const MIN_COOLDOWN_MS = 30000; // 30s cooldown between visibility/focus syncs
 
 function detectHeaders(headerRow) {
-  const map = { title: 0, link: 1, designation: 2, wave: 3 };
+  const map = { title: -1, link: -1, designation: -1, category: -1 };
   if (!headerRow || headerRow.length === 0) return map;
 
   headerRow.forEach((col, idx) => {
     const c = String(col).toLowerCase().trim();
-    if (c.includes('title')) map.title = idx;
-    else if (c.includes('teach-back') || c.includes('video') || c.includes('submit') || c.includes('link') || c.includes('url')) map.link = idx;
-    else if (c.includes('wave') || c.includes('blitz')) map.wave = idx;
-    else if (c.includes('designation') || c.includes('status')) map.designation = idx;
+    if (c.includes('title')) {
+      map.title = idx;
+    } else if (c.includes('link') || c.includes('url') || (c.includes('submit') && c.includes('video'))) {
+      map.link = idx;
+    } else if (c.includes('teach-back') || c.includes('sentiment') || c.includes('wave') || c.includes('blitz')) {
+      map.category = idx;
+    } else if (c.includes('designation') || c.includes('status')) {
+      map.designation = idx;
+    }
   });
 
   return map;
+}
+
+function normalizeCategory(val) {
+  if (!val) return 'Sentiment';
+  const clean = String(val).trim().toLowerCase();
+  if (clean.includes('teach')) return 'Teach-back';
+  if (clean.includes('sent')) return 'Sentiment';
+  return 'Sentiment';
 }
 
 export class SheetSyncService {
@@ -136,49 +149,75 @@ export class SheetSyncService {
 
           for (let i = 1; i < rows.length; i++) {
             const row = rows[i];
-            const link = (row[headerMap.link] || '').trim();
-            let rawDesignation = (row[headerMap.designation] || '').trim();
-            const title = (row[headerMap.title] || '').trim();
-            let wave = (row[headerMap.wave] || '').trim() || 'Wave 1';
-
-            // Smart designation resolution: if headerMap.designation does not yield an approved/highlighted status,
-            // check wave or candidate columns C/D (supporting both standard and swapped layouts)
-            if (!isUsableDesignation(rawDesignation)) {
-              if (isUsableDesignation(wave)) {
-                const temp = rawDesignation;
-                rawDesignation = wave;
-                wave = temp;
-              } else if (row[2] && isUsableDesignation(row[2].trim())) {
-                rawDesignation = row[2].trim();
-                if (!wave || wave === rawDesignation) wave = (row[3] || '').trim();
-              } else if (row[3] && isUsableDesignation(row[3].trim())) {
-                rawDesignation = row[3].trim();
-                if (!wave || wave === rawDesignation) wave = (row[2] || '').trim();
+            
+            // 1. Identify link & fileId
+            let link = (headerMap.link >= 0 ? (row[headerMap.link] || '').trim() : '');
+            let fileId = null;
+            let idMatch = link.match(/id=([a-zA-Z0-9_-]+)/) || link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (idMatch) {
+              fileId = idMatch[1];
+            } else {
+              for (let c = 0; c < row.length; c++) {
+                const val = (row[c] || '').trim();
+                const m = val.match(/id=([a-zA-Z0-9_-]+)/) || val.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                if (m) {
+                  link = val;
+                  fileId = m[1];
+                  break;
+                }
               }
             }
-
-            // Ensure wave is sensible and not holding the designation text
-            if (!wave || isUsableDesignation(wave)) {
-              if (row[2] && !isUsableDesignation(row[2].trim()) && row[2].trim().length > 0) {
-                wave = row[2].trim();
-              } else if (row[3] && !isUsableDesignation(row[3].trim()) && row[3].trim().length > 0) {
-                wave = row[3].trim();
-              } else {
-                wave = 'Wave 1';
-              }
-            }
-
-            if (!link || !isUsableDesignation(rawDesignation)) continue;
-
-            const idMatch = link.match(/id=([a-zA-Z0-9_-]+)/) || link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-            const fileId = idMatch ? idMatch[1] : null;
             if (!fileId) continue;
+
+            // 2. Identify designation (strictly Approved or Highlighted)
+            let rawDesignation = (headerMap.designation >= 0 ? (row[headerMap.designation] || '').trim() : '');
+            if (!isUsableDesignation(rawDesignation)) {
+              for (let c = 0; c < row.length; c++) {
+                const val = (row[c] || '').trim();
+                if (isUsableDesignation(val)) {
+                  rawDesignation = val;
+                  break;
+                }
+              }
+            }
+            if (!isUsableDesignation(rawDesignation)) continue;
+
+            // 3. Identify category (Sentiment or Teach-back)
+            // Priority: Column E (row[4]) per user specification, followed by header map, then cell scan
+            let category = '';
+            if (row[4] && (row[4].toLowerCase().includes('teach') || row[4].toLowerCase().includes('sent'))) {
+              category = normalizeCategory(row[4]);
+            } else if (headerMap.category >= 0 && row[headerMap.category]) {
+              category = normalizeCategory(row[headerMap.category]);
+            } else {
+              for (let c = 0; c < row.length; c++) {
+                const val = (row[c] || '').trim().toLowerCase();
+                if (val.includes('teach') || val.includes('sentiment')) {
+                  category = normalizeCategory(val);
+                  break;
+                }
+              }
+            }
+            if (!category) category = 'Sentiment';
+
+            // 4. Identify title
+            let title = (headerMap.title >= 0 ? (row[headerMap.title] || '').trim() : '');
+            if (!title || title === link || isUsableDesignation(title) || title.toLowerCase() === 'sentiment' || title.toLowerCase().includes('teach-back')) {
+              for (let c = 0; c < row.length; c++) {
+                const val = (row[c] || '').trim();
+                if (!val || val === link || isUsableDesignation(val)) continue;
+                if (val.toLowerCase() === 'sentiment' || val.toLowerCase().includes('teach-back')) continue;
+                if (val.includes('@') || /^\d{1,2}\/\d{1,2}\/\d{4}/.test(val)) continue;
+                title = val;
+                break;
+              }
+            }
 
             tabVideos.push({
               fileId,
-              title,
+              title: title || 'Googlebook Video',
               rawDesignation,
-              wave
+              category
             });
           }
           return tabVideos;
@@ -197,17 +236,17 @@ export class SheetSyncService {
           liveVideos.push({
             id: 'drive-' + item.fileId,
             driveFileId: item.fileId,
-            title: item.title || ('Video #' + (liveVideos.length + 1)),
+            title: item.title,
             designation: item.rawDesignation,
             type: item.rawDesignation,
-            wave: item.wave,
-            category: item.wave,
+            wave: item.category,
+            category: item.category,
             duration: 'HD',
             thumbnail: 'https://lh3.googleusercontent.com/d/' + item.fileId + '=s800',
             videoUrl: 'https://drive.google.com/file/d/' + item.fileId + '/preview',
             streamUrl: 'https://drive.google.com/uc?export=download&id=' + item.fileId,
             driveUrl: 'https://drive.google.com/file/d/' + item.fileId + '/view',
-            description: item.wave + (item.rawDesignation && !item.rawDesignation.toLowerCase().includes('approved') ? ' • ' + item.rawDesignation : '')
+            description: item.category + (item.rawDesignation && !item.rawDesignation.toLowerCase().includes('approved') ? ' • ' + item.rawDesignation : '')
           });
         }
       }
@@ -221,7 +260,7 @@ export class SheetSyncService {
         return;
       }
 
-      const signature = liveVideos.map(v => `${v.driveFileId}_${v.title}_${v.designation}_${v.wave}`).join('||');
+      const signature = liveVideos.map(v => `${v.driveFileId}_${v.title}_${v.designation}_${v.category}`).join('||');
       if (this.lastSignature === signature && this.hasDeliveredInitial) return;
       this.lastSignature = signature;
       this.hasDeliveredInitial = true;

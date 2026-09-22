@@ -99,11 +99,18 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #ffffff !important;
-  background: var(--grad-wave-1, linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%)) !important;
+  background: var(--grad-sentiment, linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%)) !important;
   padding: 0.24rem 0.75rem;
   border-radius: var(--radius-pill);
   box-shadow: 0 2px 10px rgba(51, 135, 255, 0.4) !important;
   border: none !important;
+}
+
+.theater-badge[data-category="Teach-back"],
+.theater-badge[data-category="TEACH-BACK"],
+.theater-badge[data-wave="Teach-back"] {
+  background: var(--grad-teachback, linear-gradient(90deg, #0ebc5f 0%, #78c9ff 100%)) !important;
+  box-shadow: 0 2px 10px rgba(14, 188, 95, 0.4) !important;
 }
 
 .theater-title {

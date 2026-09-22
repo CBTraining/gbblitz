@@ -194,12 +194,23 @@
     3px 0 16px -2px rgba(255, 70, 65, 0.3);
 }
 
-/* Active Wave 1 Filter Pill: Solid Gradient #3387ff to #a9a8ff with White Text */
+/* Active Sentiment Filter Pill: Solid Blue Gradient #3387ff to #a9a8ff with White Text */
+.filter-pill[data-category="Sentiment"].active,
+.filter-pill[data-wave="Sentiment"].active,
 .filter-pill[data-wave="Wave 1"].active {
-  background: var(--grad-wave-1, linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%)) !important;
+  background: var(--grad-sentiment, linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%)) !important;
   color: #ffffff !important;
   border: none !important;
   box-shadow: 0 2px 14px rgba(51, 135, 255, 0.5) !important;
+}
+
+/* Active Teach-back Filter Pill: Solid Green to Light Blue Gradient #0ebc5f to #78c9ff with White Text */
+.filter-pill[data-category="Teach-back"].active,
+.filter-pill[data-wave="Teach-back"].active {
+  background: var(--grad-teachback, linear-gradient(90deg, #0ebc5f 0%, #78c9ff 100%)) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 2px 14px rgba(14, 188, 95, 0.5) !important;
 }
 
 .video-counter {

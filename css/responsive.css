@@ -171,7 +171,8 @@
     padding: 0.22rem 0.6rem;
   }
 
-  .carousel-wave-badge {
+  .carousel-wave-badge,
+  .carousel-category-badge {
     font-size: 0.62rem;
     padding: 0.18rem 0.5rem;
   }
@@ -319,7 +320,8 @@
     align-items: center;
   }
 
-  .video-wave-tag {
+  .video-wave-tag,
+  .video-category-tag {
     font-size: 0.7rem;
     padding: 0.2rem 0.6rem;
   }

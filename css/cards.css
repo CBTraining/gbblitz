@@ -380,11 +380,13 @@
 }
 
 .video-wave-tag,
-.wave-pill {
+.wave-pill,
+.category-pill,
+.video-category-tag {
   font-size: 0.68rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;
-  background: var(--grad-wave-1, linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%)) !important;
+  background: var(--grad-sentiment, linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%)) !important;
   border: none !important;
   padding: 0.24rem 0.72rem !important;
   border-radius: var(--radius-pill) !important;
@@ -395,6 +397,15 @@
   text-transform: uppercase !important;
   display: inline-flex !important;
   align-items: center !important;
+}
+
+.video-wave-tag[data-category="Teach-back"],
+.video-wave-tag[data-category="TEACH-BACK"],
+.video-wave-tag[data-wave="Teach-back"],
+.category-pill[data-category="Teach-back"],
+.video-category-tag[data-category="Teach-back"] {
+  background: var(--grad-teachback, linear-gradient(90deg, #0ebc5f 0%, #78c9ff 100%)) !important;
+  box-shadow: 0 2px 10px rgba(14, 188, 95, 0.4) !important;
 }
 
 .video-designation-badge {

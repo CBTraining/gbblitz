@@ -3,8 +3,8 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.57.0';
-import { HoverPreviewManager } from './hover-preview.js?v=5.57.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.58.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.58.0';
 
 export class HighlightCarousel {
   constructor(options = {}) {
@@ -63,6 +63,13 @@ export class HighlightCarousel {
       li.setAttribute('tabindex', '0');
       li.setAttribute('aria-label', `Play highlighted video: ${video.title}`);
 
+      const cat = video.category || video.wave || 'Sentiment';
+      const isTeachBack = cat.toLowerCase().includes('teach');
+      const catLabel = isTeachBack ? 'TEACH-BACK' : 'SENTIMENT';
+      const catStyle = isTeachBack
+        ? 'background: linear-gradient(90deg, #0ebc5f 0%, #78c9ff 100%) !important; color: #ffffff !important; border: none !important; font-weight: 700 !important; box-shadow: 0 2px 10px rgba(14, 188, 95, 0.4) !important;'
+        : 'background: linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%) !important; color: #ffffff !important; border: none !important; font-weight: 700 !important; box-shadow: 0 2px 10px rgba(51, 135, 255, 0.4) !important;';
+
       li.innerHTML = `
         <img 
           class="carousel-img" 
@@ -74,10 +81,10 @@ export class HighlightCarousel {
         <div class="carousel-overlay">
           <div class="carousel-caption">
             <div class="carousel-badge-row">
-              <span class="carousel-wave-badge" style="background: linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%) !important; color: #ffffff !important; border: none !important; font-weight: 700 !important; box-shadow: 0 2px 10px rgba(51, 135, 255, 0.4) !important;">${video.wave.toUpperCase()}</span>
+              <span class="carousel-wave-badge carousel-category-badge" data-category="${isTeachBack ? 'Teach-back' : 'Sentiment'}" data-wave="${isTeachBack ? 'Teach-back' : 'Sentiment'}" style="${catStyle}">${catLabel}</span>
             </div>
             <h3 class="carousel-slide-title">${video.title}</h3>
-            <p class="carousel-slide-desc">${video.wave}${desigPart} • Featured Presentation</p>
+            <p class="carousel-slide-desc">${isTeachBack ? 'Teach-back' : 'Sentiment'}${desigPart} • Featured Presentation</p>
             
             <button class="btn btn-primary carousel-play-btn" data-video-id="${video.id}">
               <svg viewBox="0 0 24 24" fill="currentColor" class="btn-icon">

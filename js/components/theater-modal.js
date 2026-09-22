@@ -3,7 +3,7 @@
  * Handles auto-playing Google Drive video modal playback, controls, fullscreen, and keyboard navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.57.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.58.0';
 
 export class TheaterModal {
   constructor(options = {}) {
@@ -39,11 +39,18 @@ export class TheaterModal {
     }
 
     if (this.title) this.title.textContent = video.title;
-    const waveText = (video.wave || 'WAVE 1').toUpperCase();
+    const cat = video.category || video.wave || 'Sentiment';
+    const isTeachBack = cat.toLowerCase().includes('teach');
+    const catLabel = isTeachBack ? 'TEACH-BACK' : 'SENTIMENT';
+    const catStyle = isTeachBack
+      ? 'background: linear-gradient(90deg, #0ebc5f 0%, #78c9ff 100%) !important; color: #ffffff !important; border: none !important; font-weight: 700 !important; box-shadow: 0 2px 10px rgba(14, 188, 95, 0.4) !important;'
+      : 'background: linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%) !important; color: #ffffff !important; border: none !important; font-weight: 700 !important; box-shadow: 0 2px 10px rgba(51, 135, 255, 0.4) !important;';
+
     if (this.categoryBadge) {
-      this.categoryBadge.textContent = waveText;
-      this.categoryBadge.setAttribute('data-wave', video.wave || 'Wave 1');
-      this.categoryBadge.style.cssText = 'background: linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%) !important; color: #ffffff !important; border: none !important; font-weight: 700 !important; box-shadow: 0 2px 10px rgba(51, 135, 255, 0.4) !important;';
+      this.categoryBadge.textContent = catLabel;
+      this.categoryBadge.setAttribute('data-category', isTeachBack ? 'Teach-back' : 'Sentiment');
+      this.categoryBadge.setAttribute('data-wave', isTeachBack ? 'Teach-back' : 'Sentiment');
+      this.categoryBadge.style.cssText = catStyle;
     }
     if (this.desc) {
       this.desc.textContent = '';

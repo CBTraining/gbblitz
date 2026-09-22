@@ -24,6 +24,8 @@
   --googlebook-border-glow: linear-gradient(135deg, #3186ff 0%, #0ebc5f 38%, #ffcc00 70%, #ff4641 100%);
   --googlebook-soft-glow: linear-gradient(135deg, rgba(49, 134, 255, 0.7) 0%, rgba(14, 188, 95, 0.5) 38%, rgba(255, 204, 0, 0.5) 70%, rgba(255, 70, 65, 0.7) 100%);
   --grad-blue: linear-gradient(90deg, #1a73e8 0%, #A9A8FF 100%);
+  --grad-sentiment: linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%);
+  --grad-teachback: linear-gradient(90deg, #0ebc5f 0%, #78c9ff 100%);
   --grad-wave-1: linear-gradient(90deg, #3387ff 0%, #a9a8ff 100%);
   --grad-red: linear-gradient(90deg, #ea4335 0%, #FF63A0 100%);
   --grad-yellow: linear-gradient(90deg, #f9ab00 0%, #FFB5E8 100%);
