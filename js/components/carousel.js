@@ -3,7 +3,7 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.47.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.48.0';
 
 export class HighlightCarousel {
   constructor(options = {}) {
@@ -68,7 +68,8 @@ export class HighlightCarousel {
           src="${video.thumbnail}" 
           alt="${video.title}" 
           loading="${index === 0 ? 'eager' : 'lazy'}" 
-          onerror="if (!this.dataset.retried) { this.dataset.retried = '1'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w1600'; } else { this.onerror=null; this.src='https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1600&q=80'; }"
+          referrerpolicy="no-referrer"
+          onerror="if (!this.dataset.retried) { this.dataset.retried = '1'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w1600'; } else { this.onerror=null; this.src='Graphic%20Assets/video-placeholder.svg'; }"
         />
         <div class="preview-iframe-slot" id="carousel-preview-slot-${video.id}"></div>
         <div class="carousel-overlay">

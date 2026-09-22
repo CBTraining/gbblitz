@@ -1,7 +1,7 @@
 /**
  * GBBlitz - Video Card Component
  * Creates and renders individual video card elements for the gallery grid.
- * Version: 5.47.0
+ * Version: 5.48.0
  */
 
 /**
@@ -40,7 +40,8 @@ export function createVideoCard(video, index, { isPortrait = false, onPlay, onRa
         src="${video.thumbnail}" 
         alt="${video.title}" 
         loading="lazy" 
-        onerror="if (!this.dataset.retried) { this.dataset.retried = '1'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w800'; } else { this.onerror=null; this.src='https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80'; }"
+        referrerpolicy="no-referrer"
+        onerror="if (!this.dataset.retried) { this.dataset.retried = '1'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w800'; } else { this.onerror=null; this.src='Graphic%20Assets/video-placeholder.svg'; }"
       />
 
       <!-- Hover Preview Slot -->
