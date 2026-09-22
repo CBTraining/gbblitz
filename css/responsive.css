@@ -46,8 +46,9 @@
     max-width: 100%;
   }
   .hero-intro-stage {
-    height: 40vh;
-    min-height: 300px;
+    height: 52vh;
+    min-height: 380px;
+    max-height: 480px;
   }
   .video-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -73,9 +74,9 @@
   }
 
   .hero-intro-stage {
-    height: 32vh;
-    min-height: 240px;
-    max-height: 340px;
+    height: 44vh;
+    min-height: 320px;
+    max-height: 420px;
   }
 
   .main-content {

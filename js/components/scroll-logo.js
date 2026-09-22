@@ -41,7 +41,7 @@ export class ScrollLogoManager {
 
   updateDimensions() {
     const heroHeight = this.heroStage.clientHeight || 400;
-    const targetCenterY = heroHeight * 0.48; // center of hero stage in un-scrolled page
+    const targetCenterY = heroHeight * 0.45; // center of hero stage in un-scrolled page
     
     // Logo element dimensions
     const logoImg = this.brandLink.querySelector('.brand-logo-img');
@@ -59,15 +59,15 @@ export class ScrollLogoManager {
     if (window.innerWidth < 640) {
       this.initialScale = 1.0;
       this.finalScale = 0.42;   // ~37px docked
-      this.scrollDistance = 200;
+      this.scrollDistance = 220;
     } else if (window.innerWidth < 1024) {
       this.initialScale = 1.0;
       this.finalScale = 0.35;   // ~45px docked
-      this.scrollDistance = 250;
+      this.scrollDistance = 280;
     } else {
       this.initialScale = 1.0;
       this.finalScale = 0.335;  // ~51px docked
-      this.scrollDistance = 300;
+      this.scrollDistance = 340;
     }
 
     this.onScroll();

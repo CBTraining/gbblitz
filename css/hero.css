@@ -5,14 +5,29 @@
 .hero-intro-stage {
   position: relative;
   width: 100%;
-  height: 52vh;
-  min-height: 400px;
-  max-height: 575px;
+  height: 68vh;
+  min-height: 520px;
+  max-height: 740px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: auto;
+  -webkit-mask-image: linear-gradient(180deg, #000000 0%, #000000 60%, rgba(0, 0, 0, 0.4) 82%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(180deg, #000000 0%, #000000 60%, rgba(0, 0, 0, 0.4) 82%, rgba(0, 0, 0, 0) 100%);
+}
+
+/* Subtle cosmic bottom fade overlay ensuring seamless dissolution into page background */
+.hero-intro-stage::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(180deg, rgba(7, 9, 12, 0) 0%, rgba(7, 9, 12, 0.45) 55%, var(--bg-black, #07090c) 100%);
+  pointer-events: none;
+  z-index: 2;
 }
 
 #lattice-canvas {
