@@ -2,7 +2,7 @@
  * GBblitz - Desktop Hover Video Preview Manager
  * Manages the inline hover preview iframe lifecycle, delay timer, scrub progress bar,
  * and ensures only a single preview streams at any given time (singleton pattern).
- * Version: 5.51.0
+ * Version: 5.52.0
  */
 
 export class HoverPreviewManager {
@@ -10,23 +10,22 @@ export class HoverPreviewManager {
     this.delayMs = options.delayMs || 120;
     this.activeCleaner = null;
     this.pendingTimeout = null;
+    this.lastTouchTime = 0;
+
+    // Track touch interactions to differentiate finger taps from true mouse hovers
+    if (typeof window !== 'undefined') {
+      window.addEventListener('touchstart', () => {
+        this.lastTouchTime = Date.now();
+      }, { passive: true });
+    }
   }
 
   /**
-   * Detects whether the user is on a touch / coarse pointer / mobile device.
-   * Inline hover previews are strictly disabled on touch devices to prevent
-   * dual audio/video streams when opening the theater modal.
+   * Backward-compatible stub: hover previews are handled adaptively via touch event tracking.
    * @returns {boolean}
    */
   static isTouchDevice() {
-    if (typeof window === 'undefined') return false;
-    return (
-      (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ||
-      (window.matchMedia && window.matchMedia('(hover: none)').matches) ||
-      ('ontouchstart' in window) ||
-      (navigator.maxTouchPoints > 0) ||
-      (window.innerWidth <= 768)
-    );
+    return false;
   }
 
   /**
@@ -45,14 +44,13 @@ export class HoverPreviewManager {
 
   /**
    * Attaches hover preview listeners to a video card or slide.
-   * Completely bypasses attachment on mobile / touch / pointer: coarse devices.
+   * Works on all desktop/laptop mice and trackpads.
+   * Suppresses synthetic mouse events caused by mobile touch taps.
    * @param {HTMLElement} card 
    * @param {Object} video 
    */
   attach(card, video) {
-    if (!card || HoverPreviewManager.isTouchDevice()) {
-      return;
-    }
+    if (!card) return;
 
     let hoverTimeout = null;
     const slot = card.querySelector('.preview-iframe-slot');
@@ -78,14 +76,16 @@ export class HoverPreviewManager {
     };
 
     const startPreview = () => {
-      // Re-check touch condition at event time
-      if (HoverPreviewManager.isTouchDevice()) return;
+      // If user recently tapped the screen with a finger, ignore synthetic mouseenter
+      if (Date.now() - this.lastTouchTime < 800) {
+        return;
+      }
 
       if (hoverTimeout) clearTimeout(hoverTimeout);
       hoverTimeout = setTimeout(() => {
         this.pendingTimeout = null;
         if (!slot || slot.querySelector('iframe')) return;
-        if (HoverPreviewManager.isTouchDevice()) return;
+        if (Date.now() - this.lastTouchTime < 800) return;
 
         // Clean up any other active preview first (singleton pattern)
         if (this.activeCleaner && this.activeCleaner !== stopPreview) {

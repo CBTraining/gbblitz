@@ -3,8 +3,8 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.51.0';
-import { HoverPreviewManager } from './hover-preview.js?v=5.51.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.52.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.52.0';
 
 export class HighlightCarousel {
   constructor(options = {}) {
@@ -113,7 +113,7 @@ export class HighlightCarousel {
         });
       }
 
-      if (this.hoverPreviewManager && !HoverPreviewManager.isTouchDevice()) {
+      if (this.hoverPreviewManager) {
         this.hoverPreviewManager.attach(li, video);
       }
 
