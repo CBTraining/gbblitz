@@ -23,6 +23,7 @@ export const KNOWN_ASPECT_RATIOS = {
   '1yex_GRwom3D4h12tU4YhMUpcFgdgiTS9': 0.8388,
   '1yl6q0Nxmiv57Pky72NWEaT6JsoLG0o-a': 0.5675,
   '1dKI1nsIEpujh_4-_Pezs0zgAUZTTRZwh': 0.5625,
+  '1ZBsuBDs3ty1C6CL2aidBxaTJuWODELDb': 0.5625,
 
   // Prominent landscapes (1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF is 16:9 widescreen)
   '1KluNxVaagpuGBajxV-aPLiRTLZuJuCWF': 1.7778,

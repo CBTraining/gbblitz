@@ -126,11 +126,11 @@
 .carousel-slide.is-portrait .video-preview-iframe {
   position: absolute;
   top: -46px;
-  left: 0;
-  width: 100%;
-  height: calc(267% + 56px);
-  transform: none !important;
-  transform-origin: 0 0;
+  left: 50%;
+  width: 160%;
+  height: calc(160% + 56px);
+  transform: translateX(-50%) scale(1.72) !important;
+  transform-origin: 50% 18% !important;
   border: none;
   pointer-events: none;
 }
