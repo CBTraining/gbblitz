@@ -1,7 +1,7 @@
 /**
  * GBBlitz - Video Card Component
  * Creates and renders individual video card elements for the gallery grid.
- * Version: 5.41.0
+ * Version: 5.42.0
  */
 
 /**
@@ -89,7 +89,7 @@ export function createVideoCard(video, index, { isPortrait = false, onPlay, onRa
     const detect = () => {
       if (thumbImg.naturalWidth && thumbImg.naturalHeight) {
         const ratio = thumbImg.naturalWidth / thumbImg.naturalHeight;
-        const isPort = isPortrait || ratio < 0.95;
+        const isPort = isPortrait || card.classList.contains('is-portrait') || ratio < 0.95;
         card.classList.toggle('is-portrait', isPort);
         card.classList.toggle('is-landscape', !isPort);
         if (typeof onRatioDetected === 'function') {

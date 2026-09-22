@@ -3,7 +3,7 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.41.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.42.0';
 
 export class HighlightCarousel {
   constructor(options = {}) {
@@ -112,6 +112,26 @@ export class HighlightCarousel {
 
       if (this.hoverPreviewManager) {
         this.hoverPreviewManager.attach(li, video);
+      }
+
+      const cImg = li.querySelector('.carousel-img');
+      if (cImg) {
+        const detect = () => {
+          if (cImg.naturalWidth && cImg.naturalHeight) {
+            const ratio = cImg.naturalWidth / cImg.naturalHeight;
+            const isPort = isPortrait || li.classList.contains('is-portrait') || ratio < 0.95;
+            li.classList.toggle('is-portrait', isPort);
+            li.classList.toggle('is-landscape', !isPort);
+            if (this.aspectRatioCache) {
+              this.aspectRatioCache[video.driveFileId] = ratio;
+            }
+          }
+        };
+        if (cImg.complete && cImg.naturalWidth) {
+          detect();
+        } else {
+          cImg.addEventListener('load', detect, { once: true });
+        }
       }
 
       this.track.appendChild(li);

@@ -150,7 +150,7 @@
   background: transparent;
 }
 
-/* Video Preview iFrame - Perfectly fits the 3:2 viewport width, matching Highlighted Videos preview */
+/* Video Preview iFrame - Landscape default fits the 3:2 viewport width */
 .video-preview-iframe {
   position: absolute;
   top: -46px;
@@ -158,6 +158,19 @@
   width: 160%;
   height: calc(160% + 56px);
   transform: scale(0.625);
+  transform-origin: 0 0;
+  border: none;
+  pointer-events: none;
+}
+
+/* Portrait Hover Preview iFrame - Sized so 9:16 vertical video fits 100% width of 3:2 viewport without black pillar bars */
+.video-card.is-portrait .video-preview-iframe {
+  position: absolute;
+  top: -46px;
+  left: 0;
+  width: 100%;
+  height: calc(267% + 56px);
+  transform: none !important;
   transform-origin: 0 0;
   border: none;
   pointer-events: none;

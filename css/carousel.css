@@ -122,6 +122,19 @@
   pointer-events: auto;
 }
 
+/* Portrait Hover Preview iFrame for Highlighted Carousel slides */
+.carousel-slide.is-portrait .video-preview-iframe {
+  position: absolute;
+  top: -46px;
+  left: 0;
+  width: 100%;
+  height: calc(267% + 56px);
+  transform: none !important;
+  transform-origin: 0 0;
+  border: none;
+  pointer-events: none;
+}
+
 .carousel-slide.is-playing .carousel-img {
   opacity: 0;
 }
