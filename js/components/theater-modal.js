@@ -3,7 +3,7 @@
  * Handles auto-playing Google Drive video modal playback, controls, fullscreen, and keyboard navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.43.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.44.0';
 
 export class TheaterModal {
   constructor(options = {}) {
@@ -21,6 +21,7 @@ export class TheaterModal {
 
     this.onNavigate = options.onNavigate || (() => {});
     this.onClose = options.onClose || (() => {});
+    this.closeTimeout = null;
 
     this.initEvents();
   }
@@ -31,6 +32,11 @@ export class TheaterModal {
 
   open(video, aspect = 1.7778) {
     if (!this.modal || !video || !isUsableDesignation(video.designation)) return;
+
+    if (this.closeTimeout) {
+      clearTimeout(this.closeTimeout);
+      this.closeTimeout = null;
+    }
 
     if (this.title) this.title.textContent = video.title;
     const waveText = (video.wave || 'WAVE 1').toUpperCase();
@@ -61,16 +67,32 @@ export class TheaterModal {
     this.modal.classList.remove('active');
     this.modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+
+    // Stop video playback immediately
     if (this.playerContainer) {
       this.playerContainer.innerHTML = '';
-      this.playerContainer.style.backgroundImage = '';
-      this.playerContainer.style.aspectRatio = '';
     }
-    const theaterCard = this.modal.querySelector('.theater-card');
-    if (theaterCard) {
-      theaterCard.style.maxWidth = '';
-      theaterCard.classList.remove('is-portrait', 'is-landscape');
+
+    // Preserve card dimensions & portrait/landscape shape during the 360ms fade-out animation
+    // so portrait videos fade out cleanly in place, identically to landscape videos.
+    if (this.closeTimeout) {
+      clearTimeout(this.closeTimeout);
     }
+    this.closeTimeout = setTimeout(() => {
+      this.closeTimeout = null;
+      if (!this.isOpen()) {
+        if (this.playerContainer) {
+          this.playerContainer.style.backgroundImage = '';
+          this.playerContainer.style.aspectRatio = '';
+        }
+        const theaterCard = this.modal.querySelector('.theater-card');
+        if (theaterCard) {
+          theaterCard.style.maxWidth = '';
+          theaterCard.classList.remove('is-portrait', 'is-landscape');
+        }
+      }
+    }, 360);
+
     this.onClose();
   }
 
