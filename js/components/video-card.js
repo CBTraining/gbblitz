@@ -1,7 +1,7 @@
 /**
  * GBBlitz - Video Card Component
  * Creates and renders individual video card elements for the gallery grid.
- * Version: 5.56.0
+ * Version: 5.57.0
  */
 
 /**

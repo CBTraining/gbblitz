@@ -320,8 +320,8 @@
 .carousel-dot.active {
   width: 32px;
   opacity: 1;
-  background: var(--googlebook-gradient);
-  box-shadow: 0 0 8px rgba(49, 134, 255, 0.5);
+  background: var(--accent-blue);
+  box-shadow: 0 0 10px rgba(49, 134, 255, 0.6);
 }
 
 .carousel-progress-bar {
