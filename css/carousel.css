@@ -304,14 +304,22 @@
   width: 20px;
   height: 3px;
   border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.25);
+  background: #ffffff;
+  opacity: 0.9;
   border: none;
   cursor: pointer;
   transition: all var(--transition-fast);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.carousel-dot:hover:not(.active) {
+  opacity: 1;
+  background: #ffffff;
 }
 
 .carousel-dot.active {
   width: 32px;
+  opacity: 1;
   background: var(--googlebook-gradient);
   box-shadow: 0 0 8px rgba(49, 134, 255, 0.5);
 }

@@ -2,7 +2,7 @@
  * GBblitz - Desktop Hover Video Preview Manager
  * Manages the inline hover preview iframe lifecycle, delay timer, scrub progress bar,
  * and ensures only a single preview streams at any given time (singleton pattern).
- * Version: 5.54.0
+ * Version: 5.55.0
  */
 
 export class HoverPreviewManager {
