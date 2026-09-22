@@ -3,7 +3,8 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.49.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.50.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.50.0';
 
 export class HighlightCarousel {
   constructor(options = {}) {
@@ -69,7 +70,6 @@ export class HighlightCarousel {
           alt="${video.title}" 
           loading="${index === 0 ? 'eager' : 'lazy'}" 
           referrerpolicy="no-referrer"
-          onerror="if (!this.dataset.step) { this.dataset.step = '1'; this.referrerPolicy = 'no-referrer'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=w1600'; } else if (this.dataset.step === '1') { this.dataset.step = '2'; this.referrerPolicy = 'no-referrer'; this.src = 'https://lh3.googleusercontent.com/d/' + encodeURIComponent('${video.driveFileId}') + '=w1600'; } else if (this.dataset.step === '2') { this.dataset.step = '3'; this.referrerPolicy = 'no-referrer'; this.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent('${video.driveFileId}') + '&sz=s1600'; } else { this.onerror = null; this.src = 'Graphic%20Assets/video-placeholder.svg'; }"
         />
         <div class="preview-iframe-slot" id="carousel-preview-slot-${video.id}"></div>
         <div class="carousel-overlay">
@@ -114,26 +114,23 @@ export class HighlightCarousel {
         });
       }
 
-      if (this.hoverPreviewManager) {
+      if (this.hoverPreviewManager && !HoverPreviewManager.isTouchDevice()) {
         this.hoverPreviewManager.attach(li, video);
       }
 
       const cImg = li.querySelector('.carousel-img');
       if (cImg) {
+        let step = 0;
         cImg.addEventListener('error', () => {
-          const step = parseInt(cImg.dataset.step || '0', 10);
+          step++;
           cImg.referrerPolicy = 'no-referrer';
-          if (step === 0) {
-            cImg.dataset.step = '1';
+          if (step === 1) {
             cImg.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(video.driveFileId)}&sz=w1600`;
-          } else if (step === 1) {
-            cImg.dataset.step = '2';
-            cImg.src = `https://lh3.googleusercontent.com/d/${encodeURIComponent(video.driveFileId)}=w1600`;
           } else if (step === 2) {
-            cImg.dataset.step = '3';
+            cImg.src = `https://lh3.googleusercontent.com/d/${encodeURIComponent(video.driveFileId)}=w1600`;
+          } else if (step === 3) {
             cImg.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(video.driveFileId)}&sz=s1600`;
           } else {
-            cImg.onerror = null;
             cImg.src = 'Graphic%20Assets/video-placeholder.svg';
           }
         });
@@ -144,6 +141,7 @@ export class HighlightCarousel {
             const isPort = isPortrait || li.classList.contains('is-portrait') || ratio < 0.95;
             li.classList.toggle('is-portrait', isPort);
             li.classList.toggle('is-landscape', !isPort);
+            video.thumbnail = cImg.src;
             if (this.aspectRatioCache) {
               this.aspectRatioCache[video.driveFileId] = ratio;
             }
@@ -151,9 +149,8 @@ export class HighlightCarousel {
         };
         if (cImg.complete && cImg.naturalWidth) {
           detect();
-        } else {
-          cImg.addEventListener('load', detect, { once: true });
         }
+        cImg.addEventListener('load', detect);
       }
 
       this.track.appendChild(li);
