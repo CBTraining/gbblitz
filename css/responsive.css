@@ -31,6 +31,12 @@
   .video-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+  .gallery-sticky-header {
+    width: calc(100% + 36px);
+    margin-left: -18px;
+    margin-right: -18px;
+    max-width: calc(100% + 36px);
+  }
 }
 
 @media (max-width: 900px) {
@@ -53,6 +59,12 @@
   .video-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.15rem;
+  }
+  .gallery-sticky-header {
+    width: calc(100% + 24px);
+    margin-left: -12px;
+    margin-right: -12px;
+    max-width: calc(100% + 24px);
   }
 }
 
@@ -196,15 +208,18 @@
   }
 
   .header-blur-backdrop {
-    height: 66px;
+    height: 105px;
   }
 
   /* Sticky Gallery Header: Compact & Clean on Mobile */
   .gallery-sticky-header {
+    width: calc(100% + 16px);
+    margin-left: -8px;
+    margin-right: -8px;
+    max-width: calc(100% + 16px);
     padding: 0.75rem 0.85rem;
     margin-bottom: 1.25rem;
     border-radius: var(--radius-inner);
-    max-width: 100%;
     box-sizing: border-box;
   }
 

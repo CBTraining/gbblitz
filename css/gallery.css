@@ -20,14 +20,17 @@
   top: var(--docked-header-height, 94px);
   z-index: 40;
   margin-bottom: 2rem;
-  padding: 1.15rem 1.35rem 1.05rem;
+  width: calc(100% + 56px);
+  max-width: calc(100% + 56px);
+  margin-left: -28px;
+  margin-right: -28px;
+  padding: 1.15rem 1.6rem 1.05rem;
   background: rgba(10, 13, 17, 0.88);
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
-  max-width: 100%;
   box-sizing: border-box;
   transition: 
     padding var(--transition-fast), 
@@ -88,7 +91,7 @@
 
 /* Active Sticky (Stuck) State while scrolling through video grid */
 .gallery-sticky-header.is-stuck {
-  padding: 0.75rem 1.25rem 0.65rem;
+  padding: 0.75rem 1.5rem 0.65rem;
   background: rgba(7, 9, 12, 0.95);
   border-color: rgba(49, 134, 255, 0.32);
   box-shadow: 
