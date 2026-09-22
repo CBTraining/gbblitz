@@ -1,7 +1,7 @@
 /**
  * GBBlitz - Video Card Component
  * Creates and renders individual video card elements for the gallery grid.
- * Version: 5.50.0
+ * Version: 5.51.0
  */
 
 /**
@@ -40,7 +40,6 @@ export function createVideoCard(video, index, { isPortrait = false, onPlay, onRa
         src="${video.thumbnail}" 
         alt="${video.title}" 
         loading="${index < 6 ? 'eager' : 'lazy'}" 
-        referrerpolicy="no-referrer"
       />
 
       <!-- Hover Preview Slot -->
@@ -89,13 +88,12 @@ export function createVideoCard(video, index, { isPortrait = false, onPlay, onRa
     let step = 0;
     thumbImg.addEventListener('error', () => {
       step++;
-      thumbImg.referrerPolicy = 'no-referrer';
       if (step === 1) {
-        thumbImg.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(video.driveFileId)}&sz=w800`;
+        thumbImg.src = `https://lh3.googleusercontent.com/u/0/d/${encodeURIComponent(video.driveFileId)}=s800`;
       } else if (step === 2) {
         thumbImg.src = `https://lh3.googleusercontent.com/d/${encodeURIComponent(video.driveFileId)}=w800`;
       } else if (step === 3) {
-        thumbImg.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(video.driveFileId)}&sz=s800`;
+        thumbImg.src = `https://drive.google.com/thumbnail?authuser=0&sz=w800&id=${encodeURIComponent(video.driveFileId)}`;
       } else {
         thumbImg.src = 'Graphic%20Assets/video-placeholder.svg';
       }

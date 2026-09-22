@@ -3,8 +3,8 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.50.0';
-import { HoverPreviewManager } from './hover-preview.js?v=5.50.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.51.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.51.0';
 
 export class HighlightCarousel {
   constructor(options = {}) {
@@ -69,7 +69,6 @@ export class HighlightCarousel {
           src="${video.thumbnail}" 
           alt="${video.title}" 
           loading="${index === 0 ? 'eager' : 'lazy'}" 
-          referrerpolicy="no-referrer"
         />
         <div class="preview-iframe-slot" id="carousel-preview-slot-${video.id}"></div>
         <div class="carousel-overlay">
@@ -123,13 +122,12 @@ export class HighlightCarousel {
         let step = 0;
         cImg.addEventListener('error', () => {
           step++;
-          cImg.referrerPolicy = 'no-referrer';
           if (step === 1) {
-            cImg.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(video.driveFileId)}&sz=w1600`;
+            cImg.src = `https://lh3.googleusercontent.com/u/0/d/${encodeURIComponent(video.driveFileId)}=s1600`;
           } else if (step === 2) {
             cImg.src = `https://lh3.googleusercontent.com/d/${encodeURIComponent(video.driveFileId)}=w1600`;
           } else if (step === 3) {
-            cImg.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(video.driveFileId)}&sz=s1600`;
+            cImg.src = `https://drive.google.com/thumbnail?authuser=0&sz=w1600&id=${encodeURIComponent(video.driveFileId)}`;
           } else {
             cImg.src = 'Graphic%20Assets/video-placeholder.svg';
           }
