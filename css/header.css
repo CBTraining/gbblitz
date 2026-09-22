@@ -15,11 +15,12 @@
 
 /* Blurred and Darkened Top Vignette that emerges smoothly as user scrolls */
 .header-blur-backdrop {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 135px;
+  z-index: 20;
   pointer-events: none;
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
