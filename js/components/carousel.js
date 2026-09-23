@@ -3,8 +3,8 @@
  * Manages highlighted video slide cycling, auto-advance progress, touch gestures, and navigation.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.59.0';
-import { HoverPreviewManager } from './hover-preview.js?v=5.59.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.60.0';
+import { HoverPreviewManager } from './hover-preview.js?v=5.60.0';
 
 export class HighlightCarousel {
   constructor(options = {}) {
@@ -37,10 +37,10 @@ export class HighlightCarousel {
   }
 
   render() {
-    if (!this.track || !this.indicators) return;
+    if (!this.track) return;
     this.stopAutoplay();
     this.track.innerHTML = '';
-    this.indicators.innerHTML = '';
+    if (this.indicators) this.indicators.innerHTML = '';
 
     const headerTitle = document.getElementById('carousel-header-title');
     if (this.videos.length === 0) {
@@ -159,14 +159,6 @@ export class HighlightCarousel {
       }
 
       this.track.appendChild(li);
-
-      const dot = document.createElement('button');
-      dot.className = 'carousel-dot ' + (index === 0 ? 'active' : '');
-      dot.setAttribute('aria-label', 'Go to highlighted video ' + (index + 1));
-      dot.addEventListener('click', () => {
-        this.goToSlide(index);
-      });
-      this.indicators.appendChild(dot);
     });
 
     this.currentIndex = 0;

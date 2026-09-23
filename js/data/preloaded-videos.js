@@ -4,7 +4,7 @@
  * Contains all validated Wave 1-5 videos for instant offline / cold-start render.
  */
 
-import { isUsableDesignation } from '../services/sheet-service.js?v=5.59.0';
+import { isUsableDesignation } from '../services/sheet-service.js?v=5.60.0';
 
 function createVideo([fileId, title, designation, category]) {
   const cat = (!category || category === 'Wave 1') ? 'Sentiment' : category;
